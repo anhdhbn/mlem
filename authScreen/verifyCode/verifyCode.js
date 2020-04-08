@@ -56,8 +56,26 @@ class verifyCode extends Component {
     return (
       <>
         <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
-          <View style={{ alignItems: "center", marginTop: 10 }}>
-            <Text style={{ color: "white", fontWeight: "bold" }}>
+          <View
+            style={{
+              marginTop: 10,
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
+              <Image
+                source={require("./icon/back.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                flex: 6,
+              }}
+            >
               Nhập mã xác thực
             </Text>
           </View>
@@ -68,7 +86,7 @@ class verifyCode extends Component {
                 width: 80,
                 height: 80,
               }}
-            ></Image>
+            />
           </View>
           <View style={{ alignItems: "center" }}>
             <Text style={{ color: "white" }}>

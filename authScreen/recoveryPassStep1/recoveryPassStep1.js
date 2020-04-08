@@ -18,6 +18,12 @@ export default class recoveryPassStep1 extends Component {
     return (
       <>
         <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
+          <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
+            <Image
+              source={require("./icon/back.png")}
+              style={{ width: 30, height: 30 }}
+            />
+          </TouchableOpacity>
           <View style={{ alignItems: "center", marginTop: 10 }}>
             <Text style={{ color: "white", fontWeight: "bold" }}>
               Quên mật khẩu
