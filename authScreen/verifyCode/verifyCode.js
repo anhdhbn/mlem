@@ -90,7 +90,10 @@ class verifyCode extends Component {
           </View>
           <View style={{ alignItems: "center" }}>
             <Text style={{ color: "white" }}>
-              Vui lòng nhập mã xác thực đã được gửi vào thư điện tử
+              Mã xác thực đã được gửi qua Email của bạn.
+            </Text>
+            <Text style={{ color: "white" }}>
+              Vui lòng nhập mã xác thực để lấy lại mật khẩu.
             </Text>
           </View>
 
@@ -99,9 +102,9 @@ class verifyCode extends Component {
               <CodeInput
                 ref="codeInputRef2"
                 keyboardType="numeric"
-                codeLength={5}
+                codeLength={4}
                 className={"border-circle"}
-                compareWithCode="12345"
+                compareWithCode="1234"
                 autoFocus={false}
                 codeInputStyle={{ fontWeight: "800" }}
                 onFulfill={(isValid, code) =>
@@ -124,10 +127,11 @@ class verifyCode extends Component {
           </View>
           <View
             style={{
-              flexDirection: "row",
-              marginLeft: 60,
               marginTop: 10,
               marginBottom: 30,
+              flex: 1,
+              justifyContent: "flex-end",
+              marginBottom: 36,
             }}
           >
             <Text style={{ color: "white", fontSize: 12 }}>
