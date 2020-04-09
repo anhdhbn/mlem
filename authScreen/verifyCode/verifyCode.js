@@ -81,7 +81,7 @@ class verifyCode extends Component {
           </View>
           <View style={{ alignItems: "center", paddingVertical: 10 }}>
             <Image
-              source={require("../../icon/envelope.png")}
+              source={require("../../icon/email.png")}
               style={{
                 width: 80,
                 height: 80,

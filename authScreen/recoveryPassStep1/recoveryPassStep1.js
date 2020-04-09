@@ -32,7 +32,7 @@ export default class recoveryPassStep1 extends Component {
             <View style={{ alignItems: "center" }}>
               <View style={styles.viewInput}>
                 <Image
-                  source={require("../../icon/envelope.png")}
+                  source={require("../../icon/email.png")}
                   style={{
                     width: 20,
                     height: 20,
