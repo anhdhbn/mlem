@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -13,33 +13,26 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "./style";
+
 export default class recoveryPassStep1 extends Component {
   render() {
     return (
       <>
         <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
-          <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
-            <Image
-              source={require("./icon/back.png")}
-              style={{ width: 30, height: 30 }}
-            />
-          </TouchableOpacity>
           <View style={{ alignItems: "center", marginTop: 10 }}>
             <Text style={{ color: "white", fontWeight: "bold" }}>
               Quên mật khẩu
             </Text>
           </View>
           <View style={{ alignItems: "center", marginTop: 15 }}>
-            <Text style={{ color: "yellow", fontWeight: "bold", fontSize: 50 }}>
-              Mlem?Mlem
-            </Text>
+            <Text style={styles.mlem}>Mlem?Mlem</Text>
           </View>
 
           <KeyboardAvoidingView behavior="padding">
             <View style={{ alignItems: "center" }}>
               <View style={styles.viewInput}>
                 <Image
-                  source={require("./asset/envelope.png")}
+                  source={require("../../icon/envelope.png")}
                   style={{
                     width: 20,
                     height: 20,

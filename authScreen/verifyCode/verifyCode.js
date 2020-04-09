@@ -65,7 +65,7 @@ class verifyCode extends Component {
           >
             <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
               <Image
-                source={require("./icon/back.png")}
+                source={require("../../icon/back.png")}
                 style={{ width: 30, height: 30 }}
               />
             </TouchableOpacity>
@@ -81,7 +81,7 @@ class verifyCode extends Component {
           </View>
           <View style={{ alignItems: "center", paddingVertical: 10 }}>
             <Image
-              source={require("./asset/envelope.png")}
+              source={require("../../icon/envelope.png")}
               style={{
                 width: 80,
                 height: 80,
