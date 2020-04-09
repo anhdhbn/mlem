@@ -1,20 +1,12 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
+  header: {
+    backgroundColor: "#fff",
     justifyContent: "center",
-  },
-  tab: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  tabs: {
     height: 60,
     flexDirection: "row",
-    backgroundColor: "#fff",
     // Shadow
     shadowColor: "#000",
     shadowOffset: {
@@ -24,5 +16,20 @@ export default StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
+  },
+  button: {
+    flex: 1,
+    alignItems: "center",
+  },
+  title: {
+    flex: 6,
+    textAlign: "center",
+    color: "#DF0000",
+    fontWeight: "bold",
+    fontSize: 24,
+  },
+  icon_button: {
+    width: 20,
+    height: 20,
   },
 });
