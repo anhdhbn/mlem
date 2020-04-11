@@ -61,6 +61,7 @@ class verifyCode extends Component {
               marginTop: 10,
               flexDirection: "row",
               justifyContent: "center",
+              position: 'relative'
             }}
           >
             <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
@@ -69,17 +70,21 @@ class verifyCode extends Component {
                 style={{ width: 30, height: 30 }}
               />
             </TouchableOpacity>
+            <View style={{ position: 'absolute', alignItems:'center', marginTop:8 }}>
             <Text
               style={{
                 color: "white",
                 fontWeight: "bold",
                 flex: 6,
+                fontSize: 20
+                
               }}
             >
               Nhập mã xác thực
             </Text>
+            </View>
           </View>
-          <View style={{ alignItems: "center", paddingVertical: 10 }}>
+          <View style={{ alignItems: "center", paddingVertical: 10,marginTop:30 }}>
             <Image
               source={require("../../icon/email.png")}
               style={{
@@ -128,15 +133,15 @@ class verifyCode extends Component {
           <View
             style={{
               marginTop: 10,
-              marginBottom: 30,
+              marginBottom: 50,
               flex: 1,
               justifyContent: "flex-end",
-              marginBottom: 36,
+              alignItems:'center'
             }}
           >
-            <Text style={{ color: "white", fontSize: 12 }}>
-              Quay lại đăng nhập
-            </Text>
+            <TouchableOpacity>
+              <Text style={{ color:'white',fontSize: 14 }}>Quay lại đăng nhập!</Text>
+            </TouchableOpacity>
           </View>
         </LinearGradient>
       </>
