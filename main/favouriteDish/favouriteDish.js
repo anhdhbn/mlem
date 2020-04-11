@@ -45,14 +45,41 @@ import ScrollableTabView, {
 } from "react-native-scrollable-tab-view";
 import Header from "../../template/header/header";
 import TabBar from "../../template/tabBar/tabBar";
+import SmartDishCard from "../smartDishCard/smartDishCard";
 import styles from "./style";
-export default class FavouriteFood extends Component {
+
+export default class FavouriteDish extends Component {
   constructor(props) {
     super(props);
 
-    // this.state = {
-    //   nameScreen: "",
-    // };
+    this.state = {
+      listFavouriteDishs: [
+        {
+          linkImageDish:
+            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
+          nameDish: "Món 1",
+          describeDish: "Miêu tả món ăn",
+          price: "100000",
+          promoPrice: "50000",
+        },
+        {
+          linkImageDish:
+            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
+          nameDish: "Món 2",
+          describeDish: "Miêu tả món ăn",
+          price: "100000",
+          promoPrice: "50000",
+        },
+        {
+          linkImageDish:
+            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
+          nameDish: "Món 3",
+          describeDish: "Món này không được giảm giá",
+          price: "100000",
+          promoPrice: null,
+        },
+      ],
+    };
   }
 
   render() {
@@ -68,7 +95,15 @@ export default class FavouriteFood extends Component {
           >
             <View tabLabel="Trang chủ" style={styles.tabView}>
               <Header title="Món yêu thích"></Header>
-              <Text>Tab 1</Text>
+              {this.state.listFavouriteDishs.map((dish) => (
+                <SmartDishCard
+                  linkImageDish={dish.linkImageDish}
+                  nameDish={dish.nameDish}
+                  describeDish={dish.describeDish}
+                  price={dish.price}
+                  promoPrice={dish.promoPrice}
+                ></SmartDishCard>
+              ))}
             </View>
             <View tabLabel="Đặt bàn" style={styles.tabView}>
               <Text>Tab 2</Text>
