@@ -51,6 +51,7 @@ import styles from "./style";
 export default class FavouriteDish extends Component {
   constructor(props) {
     super(props);
+    this.handClickIcon = this.handClickIcon.bind(this);
 
     this.state = {
       listFavouriteDishs: [
@@ -61,6 +62,7 @@ export default class FavouriteDish extends Component {
           describeDish: "Miêu tả món ăn",
           price: "100000",
           promoPrice: "50000",
+          isLike: true,
         },
         {
           linkImageDish:
@@ -69,6 +71,7 @@ export default class FavouriteDish extends Component {
           describeDish: "Miêu tả món ăn",
           price: "100000",
           promoPrice: "50000",
+          isLike: false,
         },
         {
           linkImageDish:
@@ -77,9 +80,18 @@ export default class FavouriteDish extends Component {
           describeDish: "Món này không được giảm giá",
           price: "100000",
           promoPrice: null,
+          isLike: false,
         },
       ],
     };
+  }
+
+  handClickIcon(nameDish) {
+    // console.log("[INFO] CLick icon in favouriteDish.js");
+    let newListFavouriteDishs = this.state.listFavouriteDishs.map((dish) =>
+      dish.nameDish === nameDish ? { ...dish, isLike: !dish.isLike } : dish
+    );
+    this.setState({ listFavouriteDishs: newListFavouriteDishs });
   }
 
   render() {
@@ -102,6 +114,11 @@ export default class FavouriteDish extends Component {
                   describeDish={dish.describeDish}
                   price={dish.price}
                   promoPrice={dish.promoPrice}
+                  // For icon
+                  linkIconActive={require("../../icon/heart.png")}
+                  linkIconInactive={require("../../icon/heart-unlike.png")}
+                  handClickIcon={this.handClickIcon}
+                  isActive={dish.isLike}
                 ></SmartDishCard>
               ))}
             </View>
