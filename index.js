@@ -9,10 +9,7 @@ import signUP from "./authScreen/signUp/signUp";
 import signIn from "./authScreen/signIn/signIn";
 import verifyCode from "./authScreen/verifyCode/verifyCode";
 import recoveryPassStep1 from "./authScreen/recoveryPassStep1/recoveryPassStep1";
+import recoveryPassStep2 from "./authScreen/recoveryPassStep2/recoveryPassStep2";
 import favouriteFood from "./main/favouriteFood/favouriteFood";
 import mainBody from "./main/mainBody";
-<<<<<<< HEAD
-AppRegistry.registerComponent(appName, () => recoveryPassStep1);
-=======
-AppRegistry.registerComponent(appName, () => mainBody);
->>>>>>> origin/datdt_dev
+AppRegistry.registerComponent(appName, () => recoveryPassStep2);

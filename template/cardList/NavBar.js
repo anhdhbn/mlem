@@ -60,10 +60,12 @@ export default function () {
 }
 const styles = StyleSheet.create({
   container: {
-    top:150,
+    top:155,
+    marginTop:4,
+    backgroundColor:'white'
   },
   element: {
-    padding: 10,
+     padding: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },

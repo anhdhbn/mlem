@@ -9,21 +9,23 @@ export default function (props) {
         <Text style={styles.title}>
           {title.toUpperCase()}
         </Text>
-        <TouchableOpacity >
-          <Text style={{marginLeft:'auto'}} >Xem Tất Cả >></Text>
+        <View  style={styles.seeAll}>
+        <TouchableOpacity>
+          <Text  style={{ fontSize:11,color:'#de3333'}}>Xem Tất Cả >></Text>
         </TouchableOpacity>
+        </View>
       </View>
       <FlatList
         horizontal={true}
         data={cardData}
         renderItem={({ item }) => {
           return <View style={{
-            padding: 5
+            paddingBottom:2,
           }}>
-            <TouchableOpacity>
+            <TouchableOpacity style={{ backgroundColor: '#f0f3f5',padding:4,borderRadius:10 }}>
               <Image
                 source={{ uri: item.image }}
-                style={{ width: 100, height: 100 }}
+                style={{ width: 130, height: 110 }}
               />
 
               <Text style={styles.foodname}>{item.name}</Text>
@@ -39,18 +41,24 @@ export default function (props) {
 }
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
-    top: 150,
+    top: 155,
+    marginTop:4,
+    backgroundColor:'white'
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
+    paddingLeft: 8
+  },
+  seeAll:{
+    marginLeft:250,
+    marginTop: 8
   },
   foodname: {
-    fontSize: 16,
+    fontSize: 11,
   },
   price: {
-    fontSize: 13,
+    fontSize: 9,
     color: '#009FFF'
   }
 })
