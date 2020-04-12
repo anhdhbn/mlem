@@ -19,14 +19,40 @@ export default class recoveryPassStep1 extends Component {
     return (
       <>
         <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
-          <View style={{ alignItems: "center", marginTop: 10 }}>
-            <Text style={{ color: "white", fontWeight: "bold" }}>
-              Quên mật khẩu
-            </Text>
+          <View
+            style={{
+              marginTop: 10,
+              flexDirection: "row",
+              justifyContent: "center",
+              position: 'relative'
+            }}
+          >
+            <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
+              <Image
+                source={require("../../icon/back.png")}
+                style={{ width: 30, height: 30 }}
+              />
+            </TouchableOpacity>
+            <View style={{ position: 'absolute', alignItems: 'center', marginTop: 8 }}>
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  flex: 6,
+                  fontSize: 16
+
+                }}
+              >
+                Quên mật khẩu
+              </Text>
+            </View>
+
+
           </View>
-          <View style={{ alignItems: "center", marginTop: 15 }}>
-            <Text style={styles.mlem}>Mlem?Mlem</Text>
+          <View style={{ alignItems: "center", marginTop: 40 }}>
+            <Text style={styles.mlem}>Mlem Mlem</Text>
           </View>
+
 
           <KeyboardAvoidingView behavior="padding">
             <View style={{ alignItems: "center" }}>
@@ -60,15 +86,16 @@ export default class recoveryPassStep1 extends Component {
           </View>
           <View
             style={{
-              flexDirection: "row",
-              marginLeft: 60,
               marginTop: 10,
-              marginBottom: 30,
+              flex: 1,
+              justifyContent: "flex-end",
+              marginBottom: 50,
+              alignItems:'center'
             }}
           >
-            <Text style={{ color: "white", fontSize: 12 }}>
-              Quay lại đăng nhập
-            </Text>
+            <TouchableOpacity>
+              <Text style={{ color:'white',fontSize: 14 }}>Quay lại đăng nhập!</Text>
+            </TouchableOpacity>
           </View>
         </LinearGradient>
       </>

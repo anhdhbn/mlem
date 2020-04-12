@@ -11,4 +11,4 @@ import verifyCode from "./authScreen/verifyCode/verifyCode";
 import recoveryPassStep1 from "./authScreen/recoveryPassStep1/recoveryPassStep1";
 import favouriteDish from "./main/favouriteDish/favouriteDish";
 import mainBody from "./main/mainBody";
-AppRegistry.registerComponent(appName, () => favouriteDish);
+AppRegistry.registerComponent(appName, () => recoveryPassStep1);
