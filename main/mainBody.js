@@ -8,6 +8,7 @@ import {
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view'
 import styles from './style'
 import TabBar from '../template/tabBar/tabBar'
+import HomePage from './home/home';
 console.disableYellowBox = true;
 function mainBody () {
         return (
@@ -20,8 +21,7 @@ function mainBody () {
                     renderTabBar={() => <TabBar />}
                 >
                     <View tabLabel="Trang chủ" style={styles.tabView}>
-                        <Text>Tab 1</Text>
-                       
+                        <HomePage />
                     </View>
                     <View tabLabel="Đặt bàn" style={styles.tabView}>
                         <Text>Tab 2</Text>

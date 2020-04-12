@@ -11,4 +11,8 @@ import verifyCode from "./authScreen/verifyCode/verifyCode";
 import recoveryPassStep1 from "./authScreen/recoveryPassStep1/recoveryPassStep1";
 import favouriteFood from "./main/favouriteFood/favouriteFood";
 import mainBody from "./main/mainBody";
+<<<<<<< HEAD
 AppRegistry.registerComponent(appName, () => recoveryPassStep1);
+=======
+AppRegistry.registerComponent(appName, () => mainBody);
+>>>>>>> origin/datdt_dev
