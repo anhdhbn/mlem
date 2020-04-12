@@ -16,6 +16,7 @@ export default class SmartDishCard extends Component {
   constructor(props) {
     super(props);
     this.displayPrice = this.displayPrice.bind(this);
+    // this.displayIcon = this.displayIcon.bind(this);
 
     // this.state = {
     //   nameScreen: "",
@@ -61,10 +62,23 @@ export default class SmartDishCard extends Component {
             }}
             style={{ width: 100, height: 100, marginHorizontal: 10, flex: 3 }}
           ></Image>
-          <View style={{ flex: 7, flexDirection: "column" }}>
+          <View style={{ flex: 5, flexDirection: "column" }}>
             <Text style={{ fontSize: 20 }}>{this.props.nameDish}</Text>
             <Text>{this.props.describeDish}</Text>
-            <View style={{ bottom: 0 }}>{this.displayPrice()}</View>
+            <View style={{}}>{this.displayPrice()}</View>
+          </View>
+          <View
+            style={{ flex: 2, alignItems: "center", justifyContent: "center" }}
+          >
+            <TouchableOpacity activeOpacity={0.5} style={{}}>
+              <Image
+                source={require("../../icon/heart.png")}
+                style={{
+                  height: 35,
+                  width: 35,
+                }}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </>
