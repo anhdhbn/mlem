@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet} from 'react-native';
 
 import HeaderImage from '../../template/cardList/headerCardList';
 import CardList from '../../template/cardList/cardList';
@@ -32,8 +32,9 @@ export default function () {
   return (
     < >
       
-      <HeaderImage/>
+      
       <ScrollView style={styles.home}>
+        <HeaderImage/>
           <NavBar />
           <CardList cardData={cardData} title={'Buffet'} />
           <CardList cardData={cardData} title={'Nướng'} />
@@ -47,8 +48,6 @@ const styles = StyleSheet.create({
   home: {
     backgroundColor: '#dee1e3',
     flex: 1,
-    top:155,
-    position:'absolute'
   },
 })
 

@@ -6,10 +6,12 @@ export default function (props) {
   const { cardData, title } = props;
   return (
     <ScrollView style={styles.container}>
-      <View style={{flexDirection:'row'}}>
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+        <View>
         <Text style={styles.title}>
           {title.toUpperCase()}
         </Text>
+        </View>
         <View  style={styles.seeAll}>
         <TouchableOpacity>
           <Text  style={{ fontSize:11,color:'#de3333'}}>Xem Tất Cả >></Text>
@@ -53,8 +55,8 @@ const styles = StyleSheet.create({
     paddingLeft: 8
   },
   seeAll:{
-    marginLeft:250,
-    marginTop: 8
+    marginTop: 8,
+    marginRight: 10
   },
   foodname: {
     fontSize: 11,
