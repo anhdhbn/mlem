@@ -40,6 +40,7 @@ class verifyCode extends Component {
   }
 
   _onFinishCheckingCode2(isValid, code) {
+    this.props.navigation.navigate("RecoveryPassStep2");
     console.log(isValid);
     if (!isValid) {
       Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
@@ -61,30 +62,41 @@ class verifyCode extends Component {
               marginTop: 10,
               flexDirection: "row",
               justifyContent: "center",
-              position: 'relative'
+              position: "relative",
             }}
           >
-            <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={{ flex: 2 }}
+              onPress={() => this.props.navigation.navigate("SignIn")}
+            >
               <Image
                 source={require("../../icon/back.png")}
                 style={{ width: 30, height: 30 }}
               />
             </TouchableOpacity>
-            <View style={{ position: 'absolute', alignItems:'center', marginTop:8 }}>
-            <Text
+            <View
               style={{
-                color: "white",
-                fontWeight: "bold",
-                flex: 6,
-                fontSize: 20
-                
+                position: "absolute",
+                alignItems: "center",
+                marginTop: 8,
               }}
             >
-              Nhập mã xác thực
-            </Text>
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  flex: 6,
+                  fontSize: 20,
+                }}
+              >
+                Nhập mã xác thực
+              </Text>
             </View>
           </View>
-          <View style={{ alignItems: "center", paddingVertical: 10,marginTop:30 }}>
+          <View
+            style={{ alignItems: "center", paddingVertical: 10, marginTop: 30 }}
+          >
             <Image
               source={require("../../icon/email.png")}
               style={{
@@ -136,11 +148,15 @@ class verifyCode extends Component {
               marginBottom: 50,
               flex: 1,
               justifyContent: "flex-end",
-              alignItems:'center'
+              alignItems: "center",
             }}
           >
-            <TouchableOpacity>
-              <Text style={{ color:'white',fontSize: 14 }}>Quay lại đăng nhập!</Text>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("SignIn")}
+            >
+              <Text style={{ color: "white", fontSize: 14 }}>
+                Quay lại đăng nhập!
+              </Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>
