@@ -92,9 +92,6 @@ export default StyleSheet.create({
         fontWeight: 'bold'
     },
     footer: {
-        flexDirection: 'row',
-        marginLeft: 60,
-        marginTop: 10,
-        marginBottom: 30
+        alignItems: 'center'
     }
 })

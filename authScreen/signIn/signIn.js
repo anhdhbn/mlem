@@ -78,10 +78,12 @@ function signIn() {
                 </TouchableOpacity>
             </View>
             <View style={styles.footer}>
+                <View style={{ flexDirection:'row',marginTop: 120 }}>
                 <Text style={{ color: 'white', fontSize: 12 }}>Bạn chưa có tài khoản? </Text>
                 <TouchableOpacity>
                     <Text style={styles.textDecoration}> Đăng ký ngay!</Text>
                 </TouchableOpacity>
+                </View>
             </View>
         </LinearGradient>
     )

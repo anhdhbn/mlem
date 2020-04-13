@@ -12,4 +12,4 @@ import recoveryPassStep1 from "./authScreen/recoveryPassStep1/recoveryPassStep1"
 import favouriteDish from "./main/favouriteDish/favouriteDish";
 import mainBody from "./main/mainBody";
 import slider from "./template/slider/slider"
-AppRegistry.registerComponent(appName, () => mainBody);
+AppRegistry.registerComponent(appName, () => signIn);
