@@ -88,7 +88,10 @@ class SignIn extends Component {
           </View>
         </KeyboardAvoidingView>
         <View style={{ marginTop: 10, alignItems: "center" }}>
-          <TouchableOpacity style={styles.submitBtn}>
+          <TouchableOpacity
+            style={styles.submitBtn}
+            onPress={() => this.props.navigation.navigate("MainBody")}
+          >
             <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
           </TouchableOpacity>
         </View>

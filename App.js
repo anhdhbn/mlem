@@ -21,6 +21,8 @@ import SignIn from "./authScreen/signIn/signIn";
 import SignUp from "./authScreen/signUp/signUp";
 import VerifyCode from "./authScreen/verifyCode/verifyCode";
 
+import MainBody from "./main/mainBody";
+
 const Stack = createStackNavigator();
 
 export default class App extends Component {
@@ -38,6 +40,7 @@ export default class App extends Component {
       <Stack.Screen name="VerifyCode" component={VerifyCode} />
       <Stack.Screen name="RecoveryPassStep1" component={RecoveryPassStep1} />
       <Stack.Screen name="RecoveryPassStep2" component={RecoveryPassStep2} />
+      <Stack.Screen name="MainBody" component={MainBody} />
     </Stack.Navigator>
   );
   render() {
