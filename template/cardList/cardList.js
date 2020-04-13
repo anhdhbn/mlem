@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function (props) {
   const { cardData, title } = props;
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={{flexDirection:'row'}}>
         <Text style={styles.title}>
           {title.toUpperCase()}
@@ -35,13 +36,13 @@ export default function (props) {
         }}
       >
       </FlatList>
-    </View>
+    </ScrollView>
 
   )
 }
 const styles = StyleSheet.create({
   container: {
-    top: 155,
+    // top: 155,
     marginTop:4,
     backgroundColor:'white'
   },

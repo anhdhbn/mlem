@@ -80,3 +80,51 @@
 //     </NavigationContainer>
 //   );
 // }
+
+
+
+
+
+
+
+import React, { Component } from 'react'
+import { AppRegistry,Dimensions,Image, StyleSheet, Text, View } from 'react-native'
+
+import Swiper from 'react-native-swiper'
+export const { width, height } = Dimensions.get('window');
+const styles = StyleSheet.create({
+  
+  child: {
+        height: 155,
+        width,
+        justifyContent: 'center'
+      },
+    slide: {
+        width,
+        height: 155,
+        resizeMode: 'cover',
+        borderBottomLeftRadius: 12,
+        borderBottomRightRadius: 12,
+      }
+})
+
+export default class SwiperComponent extends Component {
+  render() {
+    return (
+      <Swiper  showsButtons={false} autoplay={true} autoplayTimeout={8} showsPagination={false}>
+            <View style={styles.child}>
+             <Image style={styles.slide} source={ require('./icon/slider/1.jpg')} />
+           </View>
+           <View style={styles.child}>
+           <Image style={styles.slide} source={ require('./icon/slider/2.png')} />
+           </View>
+           <View style={styles.child}>
+           <Image style={styles.slide} source={ require('./icon/slider/3.jpg')} />
+           </View>
+           <View style={styles.child}>
+           <Image style={styles.slide} source={ require('./icon/slider/4.jpg')} />
+           </View>
+      </Swiper>
+    )
+  }
+}

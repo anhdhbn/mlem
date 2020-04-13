@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image,TouchableOpacity,FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 
 import buffet from '../../icon/food/buffet.png';
 import seafood from '../../icon/food/seafood.png';
@@ -60,12 +60,12 @@ export default function () {
 }
 const styles = StyleSheet.create({
   container: {
-    top:155,
-    marginTop:4,
-    backgroundColor:'white'
+    // top:155,
+    marginTop: 4,
+    backgroundColor: 'white'
   },
   element: {
-     padding: 10,
+    padding: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },

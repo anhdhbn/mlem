@@ -1,34 +1,27 @@
 import React from 'react';
-import { Image, TextInput, StyleSheet, View, TouchableOpacity } from 'react-native';
-
+import { Image, TextInput, StyleSheet, View, TouchableOpacity,Dimensions,Text } from 'react-native';
+import SliderSwiper from '../slider/slider'
 import search from '../../icon/search.png';
 import setting from '../../icon/settings.png';
-import background from '../../icon/background.jpeg';
 export default function () {
   return (
+    <>
+    <SliderSwiper/>
     <View
-      style={styles.header}
-    >
-      <Image
-        source={background}
-        style={styles.image}
-      ></Image>
-
+      style={styles.header}>
       <View style={{ justifyContent:'center',flexDirection: 'row' }}>
       <View style={styles.viewInput}>
         <Image source={search} style={{ width: 15, height: 15, marginLeft: 10, marginTop: 8 }} />
         <TextInput style={styles.input} placeholder={'press to search....'}></TextInput>
       </View>
-      <TouchableOpacity>
-        <Image source={setting} style={{ width: 25, height: 25, marginLeft: 70, marginTop: 10}} />
-      </TouchableOpacity>
       </View>
     </View>
+    </>
   )
 }
 const styles = StyleSheet.create({
   header: {
-    flex: 1,
+    position:'absolute',
     flexDirection: 'row'
   },
   image: {
@@ -44,19 +37,22 @@ const styles = StyleSheet.create({
   },
   viewInput: {
     position: 'relative',
-    width: 250,
+    width: 280,
     borderRadius: 10,
     height: 30,
-    marginLeft: 50,
+    marginLeft: 60,
     marginTop: 10,
-    backgroundColor: '#F3F3F3',
+    backgroundColor: '#c4c1c0',
     flexDirection: 'row',
-    overflow: "hidden"
+    overflow: "hidden",
+    shadowOpacity: 0.5
+    
   },
   input: {
     height: 35,
     borderRadius: 10,
     width: 300,
-    backgroundColor: '#F3F3F3'
+    backgroundColor: '#c4c1c0',
   }
 })
+
