@@ -18,9 +18,6 @@ export default class SmartDishCard extends Component {
     this.displayPrice = this.displayPrice.bind(this);
     this.handPressIcon = this.handPressIcon.bind(this);
     this.checkProps = this.checkProps.bind(this);
-    this.state = {
-      linkToIcon: "../../icon/heart.png",
-    };
   }
 
   checkProps() {
