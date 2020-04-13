@@ -17,6 +17,7 @@ export default function (props) {
         </View>
       </View>
       <FlatList
+        showsHorizontalScrollIndicator={false}
         horizontal={true}
         data={cardData}
         renderItem={({ item }) => {
