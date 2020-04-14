@@ -3,9 +3,9 @@ import { View, Text, SafeAreaView, StatusBar } from "react-native";
 import ScrollableTabView, {
   DefaultTabBar,
 } from "react-native-scrollable-tab-view";
-import styles from "./style";
-import TabBar from "../template/tabBar/tabBar";
-import HomePage from "./home/home";
+import styles from "../styles/homeStyle";
+import TabBar from "../components/tabBar/tabBar";
+import HomePage from "./home";
 console.disableYellowBox = true;
 export default class MainBody extends Component {
   render() {

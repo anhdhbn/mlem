@@ -98,7 +98,7 @@ export default class SmartDishCard extends Component {
               >
                 {this.props.isActive ? (
                   <Image
-                    // source={require("../../icon/heart.png")}
+                    // source={require("../../assets/icon/heart.png")}
                     source={this.props.linkIconActive}
                     style={{
                       height: 35,

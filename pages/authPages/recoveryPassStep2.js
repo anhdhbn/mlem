@@ -12,9 +12,9 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import styles from "./style";
+import styles from "../../styles/authScreen/recoveryPassStep2Style";
 
-export default class recoveryPassStep1 extends Component {
+export default class recoveryPassStep2 extends Component {
   render() {
     return (
       <>
@@ -33,7 +33,7 @@ export default class recoveryPassStep1 extends Component {
               onPress={() => this.props.navigation.navigate("SignIn")}
             >
               <Image
-                source={require("../../icon/back.png")}
+                source={require("../../assets/icon/back.png")}
                 style={{ width: 30, height: 30 }}
               />
             </TouchableOpacity>
@@ -52,11 +52,11 @@ export default class recoveryPassStep1 extends Component {
                   fontSize: 16,
                 }}
               >
-                Quên mật khẩu
+                Thay đổi mật khẩu
               </Text>
             </View>
           </View>
-          <View style={{ alignItems: "center", marginTop: 40 }}>
+          <View style={{ alignItems: "center", marginTop: 80 }}>
             <Text style={styles.mlem}>Mlem Mlem</Text>
           </View>
 
@@ -64,19 +64,26 @@ export default class recoveryPassStep1 extends Component {
             <View style={{ alignItems: "center" }}>
               <View style={styles.viewInput}>
                 <Image
-                  source={require("../../icon/email.png")}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    padding: 12,
-                    margin: 10,
-                    marginLeft: 45,
-                  }}
+                  source={require("../../assets/icon/key.png")}
+                  style={styles.image}
                 />
                 <TextInput
                   style={styles.textInput}
-                  placeholder="email / số điện thoại"
+                  placeholder="Mật khẩu"
                   placeholderTextColor="#c2bbba"
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.viewInput}>
+                <Image
+                  source={require("../../assets/icon/key.png")}
+                  style={styles.image}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Mật khẩu"
+                  placeholderTextColor="#c2bbba"
+                  secureTextEntry={true}
                 />
               </View>
             </View>
@@ -84,12 +91,12 @@ export default class recoveryPassStep1 extends Component {
           <View style={{ marginTop: 10, alignItems: "center" }}>
             <TouchableOpacity
               style={styles.submitBtn}
-              onPress={() => this.props.navigation.navigate("VerifyCode")}
+              onPress={() => this.props.navigation.navigate("SignIn")}
             >
               <Text
                 style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
               >
-                Gửi
+                Xác nhận
               </Text>
             </TouchableOpacity>
           </View>

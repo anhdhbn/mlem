@@ -1,20 +1,30 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow
+ */
+
 import React, { Component, useState } from "react";
 import {
   View,
   Text,
   Image,
+  StyleSheet,
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import styles from "./style";
-class SignIn extends Component {
+import styles from "../../styles/authScreen/signUpStyle";
+
+export default class SignUp extends Component {
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
-        <View style={{ alignItems: "center", marginTop: 10 }}>
-          <Text style={{ color: "white", fontWeight: "bold" }}>ĐĂNG NHẬP</Text>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ color: "white", fontWeight: "bold" }}>ĐĂNG KÝ</Text>
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
           <Text style={styles.mlem}>Mlem Mlem</Text>
@@ -22,7 +32,7 @@ class SignIn extends Component {
         <View style={{ alignItems: "center", marginTop: 50 }}>
           <TouchableOpacity style={styles.fbWay}>
             <Image
-              source={require("../../icon/fb.png")}
+              source={require("../../assets/icon/fb.png")}
               style={styles.imgFBGG}
             />
             <Text style={{ paddingRight: 30, color: "white" }}>
@@ -33,7 +43,7 @@ class SignIn extends Component {
         <View style={{ alignItems: "center", marginTop: 10 }}>
           <TouchableOpacity style={styles.ggWay}>
             <Image
-              source={require("../../icon/gg.png")}
+              source={require("../../assets/icon/gg.png")}
               style={styles.imgFBGG}
             />
             <Text style={{ paddingRight: 30, color: "black" }}>
@@ -41,30 +51,34 @@ class SignIn extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ alignItems: "center" }}>
-          <View style={{ flexDirection: "row" }}>
-            <View style={styles.line}></View>
-            <Text style={{ color: "white", fontSize: 11 }}>hoặc</Text>
-            <View style={styles.line}></View>
-          </View>
-        </View>
+
         <KeyboardAvoidingView behavior="padding">
           <View style={{ alignItems: "center" }}>
             <View style={styles.viewInput}>
               <Image
-                source={require("../../icon/email.png")}
+                source={require("../../assets/icon/email.png")}
                 style={styles.image}
               />
               <TextInput
                 style={styles.textInput}
-                placeholder="Email / số điện thoại"
+                placeholder="Nhập email"
                 placeholderTextColor="#c2bbba"
               />
             </View>
-
             <View style={styles.viewInput}>
               <Image
-                source={require("../../icon/key.png")}
+                source={require("../../assets/icon/phone.png")}
+                style={styles.image}
+              />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Số điện thoại"
+                placeholderTextColor="#c2bbba"
+              />
+            </View>
+            <View style={styles.viewInput}>
+              <Image
+                source={require("../../assets/icon/key.png")}
                 style={styles.image}
               />
               <TextInput
@@ -74,36 +88,25 @@ class SignIn extends Component {
                 secureTextEntry={true}
               />
             </View>
-            <View style={{ marginLeft: 120, marginTop: 3 }}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("RecoveryPassStep1")
-                }
-              >
-                <Text style={{ color: "white", fontSize: 11 }}>
-                  Quên mật khẩu?
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </KeyboardAvoidingView>
-        <View style={{ marginTop: 20, alignItems: "center" }}>
+        <View style={{ marginTop: 25, alignItems: "center" }}>
           <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("SignIn")}
             style={styles.submitBtn}
-            onPress={() => this.props.navigation.navigate("MainBody")}
           >
-            <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
+            <Text style={styles.textBtnSubmit}>Đăng ký</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.footer}>
-          <View style={{ flexDirection:'row', marginTop:60 }}>
+          <View style={{ flexDirection: "row", marginTop: 60 }}>
             <Text style={{ color: "white", fontSize: 12 }}>
-              Bạn chưa có tài khoản?{" "}
+              Bạn đã có tài khoản?{" "}
             </Text>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("SignUp")}
+              onPress={() => this.props.navigation.navigate("SignIn")}
             >
-              <Text style={styles.textDecoration}> Đăng ký ngay!</Text>
+              <Text style={styles.textDecoration}> Đăng nhập!</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -111,5 +114,3 @@ class SignIn extends Component {
     );
   }
 }
-
-export default SignIn;

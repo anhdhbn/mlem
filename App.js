@@ -15,13 +15,13 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import RecoveryPassStep1 from "./authScreen/recoveryPassStep1/recoveryPassStep1";
-import RecoveryPassStep2 from "./authScreen/recoveryPassStep2/recoveryPassStep2";
-import SignIn from "./authScreen/signIn/signIn";
-import SignUp from "./authScreen/signUp/signUp";
-import VerifyCode from "./authScreen/verifyCode/verifyCode";
+import RecoveryPassStep1 from "./pages/authPages/recoveryPassStep1";
+import RecoveryPassStep2 from "./pages/authPages/recoveryPassStep2";
+import SignIn from "./pages/authPages/signIn";
+import SignUp from "./pages/authPages/signUp";
+import VerifyCode from "./pages/authPages/verifyCode";
 
-import MainBody from "./main/mainBody";
+import MainBody from "./pages/mainBody";
 
 const Stack = createStackNavigator();
 

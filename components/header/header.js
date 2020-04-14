@@ -27,14 +27,14 @@ export default class Header extends Component {
         <View style={styles.header}>
           <TouchableOpacity activeOpacity={0.5} style={styles.button}>
             <Image
-              source={require("../../icon/back.png")}
+              source={require("../../assets/icon/back.png")}
               style={styles.icon_button}
             />
           </TouchableOpacity>
           <Text style={styles.title}>{this.props.title}</Text>
           <TouchableOpacity activeOpacity={0.5} style={styles.button}>
             <Image
-              source={require("../../icon/settings.png")}
+              source={require("../../assets/icon/settings.png")}
               style={styles.icon_button}
             />
           </TouchableOpacity>

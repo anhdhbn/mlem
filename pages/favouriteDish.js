@@ -43,10 +43,10 @@ import {
 import ScrollableTabView, {
   DefaultTabBar,
 } from "react-native-scrollable-tab-view";
-import Header from "../../template/header/header";
-import TabBar from "../../template/tabBar/tabBar";
-import SmartDishCard from "../../template/smartDishCard/smartDishCard";
-import styles from "./style";
+import Header from "../template/header/header";
+import TabBar from "../template/tabBar/tabBar";
+import SmartDishCard from "../components/smartDishCard/smartDishCard";
+import styles from "../styles/favouriteDishStyle";
 
 export default class FavouriteDish extends Component {
   constructor(props) {
@@ -115,8 +115,8 @@ export default class FavouriteDish extends Component {
                   price={dish.price}
                   promoPrice={dish.promoPrice}
                   // For icon
-                  linkIconActive={require("../../icon/heart.png")}
-                  linkIconInactive={require("../../icon/heart-unlike.png")}
+                  linkIconActive={require("../assets/icon/heart.png")}
+                  linkIconInactive={require("../assets/icon/heart-unlike.png")}
                   handClickIcon={this.handClickIcon}
                   isActive={dish.isLike}
                 ></SmartDishCard>

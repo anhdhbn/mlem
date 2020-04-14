@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import CodeInput from "react-native-confirmation-code-input";
-import styles from "./style";
+import styles from "../../styles/authScreen/verifyCodeStyle";
 class verifyCode extends Component {
   constructor(props) {
     super(props);
@@ -71,7 +71,7 @@ class verifyCode extends Component {
               onPress={() => this.props.navigation.navigate("SignIn")}
             >
               <Image
-                source={require("../../icon/back.png")}
+                source={require("../../assets/icon/back.png")}
                 style={{ width: 30, height: 30 }}
               />
             </TouchableOpacity>
@@ -98,7 +98,7 @@ class verifyCode extends Component {
             style={{ alignItems: "center", paddingVertical: 10, marginTop: 30 }}
           >
             <Image
-              source={require("../../icon/email.png")}
+              source={require("../../assets/icon/email.png")}
               style={{
                 width: 80,
                 height: 80,
