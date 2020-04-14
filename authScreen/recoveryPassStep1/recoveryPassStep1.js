@@ -24,35 +24,41 @@ export default class recoveryPassStep1 extends Component {
               marginTop: 10,
               flexDirection: "row",
               justifyContent: "center",
-              position: 'relative'
+              position: "relative",
             }}
           >
-            <TouchableOpacity activeOpacity={0.5} style={{ flex: 2 }}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={{ flex: 2 }}
+              onPress={() => this.props.navigation.navigate("SignIn")}
+            >
               <Image
                 source={require("../../icon/back.png")}
                 style={{ width: 30, height: 30 }}
               />
             </TouchableOpacity>
-            <View style={{ position: 'absolute', alignItems: 'center', marginTop: 8 }}>
+            <View
+              style={{
+                position: "absolute",
+                alignItems: "center",
+                marginTop: 8,
+              }}
+            >
               <Text
                 style={{
                   color: "white",
                   fontWeight: "bold",
                   flex: 6,
-                  fontSize: 16
-
+                  fontSize: 16,
                 }}
               >
                 Quên mật khẩu
               </Text>
             </View>
-
-
           </View>
           <View style={{ alignItems: "center", marginTop: 40 }}>
             <Text style={styles.mlem}>Mlem Mlem</Text>
           </View>
-
 
           <KeyboardAvoidingView behavior="padding">
             <View style={{ alignItems: "center" }}>
@@ -76,7 +82,10 @@ export default class recoveryPassStep1 extends Component {
             </View>
           </KeyboardAvoidingView>
           <View style={{ marginTop: 10, alignItems: "center" }}>
-            <TouchableOpacity style={styles.submitBtn}>
+            <TouchableOpacity
+              style={styles.submitBtn}
+              onPress={() => this.props.navigation.navigate("VerifyCode")}
+            >
               <Text
                 style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
               >
@@ -90,11 +99,15 @@ export default class recoveryPassStep1 extends Component {
               flex: 1,
               justifyContent: "flex-end",
               marginBottom: 50,
-              alignItems:'center'
+              alignItems: "center",
             }}
           >
-            <TouchableOpacity>
-              <Text style={{ color:'white',fontSize: 14 }}>Quay lại đăng nhập!</Text>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("SignIn")}
+            >
+              <Text style={{ color: "white", fontSize: 14 }}>
+                Quay lại đăng nhập!
+              </Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>

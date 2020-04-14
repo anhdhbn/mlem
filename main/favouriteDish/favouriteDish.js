@@ -45,7 +45,7 @@ import ScrollableTabView, {
 } from "react-native-scrollable-tab-view";
 import Header from "../../template/header/header";
 import TabBar from "../../template/tabBar/tabBar";
-import SmartDishCard from "../smartDishCard/smartDishCard";
+import SmartDishCard from "../../template/smartDishCard/smartDishCard";
 import styles from "./style";
 
 export default class FavouriteDish extends Component {
