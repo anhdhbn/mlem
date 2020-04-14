@@ -23,13 +23,13 @@ export default class SignUp extends Component {
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
+        <View style={{ alignItems: "center" }}>
           <Text style={{ color: "white", fontWeight: "bold" }}>ĐĂNG KÝ</Text>
         </View>
         <View style={{ alignItems: "center", marginTop: 20 }}>
           <Text style={styles.mlem}>Mlem Mlem</Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 10 }}>
+        <View style={{ alignItems: "center", marginTop: 50 }}>
           <TouchableOpacity style={styles.fbWay}>
             <Image
               source={require("../../icon/fb.png")}
@@ -99,6 +99,7 @@ export default class SignUp extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.footer}>
+          <View style={{ flexDirection:'row',marginTop: 60 }}>
           <Text style={{ color: "white", fontSize: 12 }}>
             Bạn đã có tài khoản?{" "}
           </Text>
@@ -107,6 +108,7 @@ export default class SignUp extends Component {
           >
             <Text style={styles.textDecoration}> Đăng nhập!</Text>
           </TouchableOpacity>
+          </View>
         </View>
       </LinearGradient>
     );

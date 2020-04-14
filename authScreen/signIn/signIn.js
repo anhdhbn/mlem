@@ -16,10 +16,10 @@ class SignIn extends Component {
         <View style={{ alignItems: "center", marginTop: 10 }}>
           <Text style={{ color: "white", fontWeight: "bold" }}>ĐĂNG NHẬP</Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 15 }}>
+        <View style={{ alignItems: "center", marginTop: 20 }}>
           <Text style={styles.mlem}>Mlem Mlem</Text>
         </View>
-        <View style={{ alignItems: "center", marginTop: 10 }}>
+        <View style={{ alignItems: "center", marginTop: 50 }}>
           <TouchableOpacity style={styles.fbWay}>
             <Image
               source={require("../../icon/fb.png")}
@@ -87,7 +87,7 @@ class SignIn extends Component {
             </View>
           </View>
         </KeyboardAvoidingView>
-        <View style={{ marginTop: 10, alignItems: "center" }}>
+        <View style={{ marginTop: 20, alignItems: "center" }}>
           <TouchableOpacity
             style={styles.submitBtn}
             onPress={() => this.props.navigation.navigate("MainBody")}
@@ -96,14 +96,16 @@ class SignIn extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.footer}>
-          <Text style={{ color: "white", fontSize: 12 }}>
-            Bạn chưa có tài khoản?{" "}
-          </Text>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("SignUp")}
-          >
-            <Text style={styles.textDecoration}> Đăng ký ngay!</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection:'row', marginTop:60 }}>
+            <Text style={{ color: "white", fontSize: 12 }}>
+              Bạn chưa có tài khoản?{" "}
+            </Text>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("SignUp")}
+            >
+              <Text style={styles.textDecoration}> Đăng ký ngay!</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </LinearGradient>
     );

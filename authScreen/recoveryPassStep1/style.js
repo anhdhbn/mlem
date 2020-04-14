@@ -23,7 +23,7 @@ export default StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     height: 40,
-    marginTop: 10,
+    marginTop: 40,
     backgroundColor: "#461321",
     flexDirection: "row",
     overflow: "hidden",
