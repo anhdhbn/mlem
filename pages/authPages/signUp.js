@@ -18,8 +18,21 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/signUpStyle";
+import authServices from "../../services/authServices"
 
 export default class SignUp extends Component {
+
+  test() {
+    authServices.createUser({
+      "email": "ahihi@gmail.com",
+      "password": "ahihi123456",
+      "confirmPassword": "ahihi123456",
+      "phone": "0987123456",
+    }).then(res => {
+      console.log(res)
+    })
+  }
+
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
@@ -92,7 +105,8 @@ export default class SignUp extends Component {
         </KeyboardAvoidingView>
         <View style={{ marginTop: 25, alignItems: "center" }}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("SignIn")}
+            // onPress={() => this.props.navigation.navigate("SignIn")}
+            onPress={() => this.test()}
             style={styles.submitBtn}
           >
             <Text style={styles.textBtnSubmit}>Đăng ký</Text>
