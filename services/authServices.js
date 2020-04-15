@@ -15,8 +15,8 @@ export default {
   forgotPassword,
   verifyCode,
   recoveryPass,
-  getUserInfoByUsername,
-  updateUserInfoByUsername,
-  logout,
+  // getUserInfoByUsername,
+  // updateUserInfoByUsername,
+  // logout,
   createUser
 };
