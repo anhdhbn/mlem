@@ -24,10 +24,10 @@ export default class SignUp extends Component {
 
   test() {
     authServices.createUser({
-      "email": "ahihi@gmail.com",
+      "email": "ahihidf@gmail.com",
       "password": "ahihi123456",
       "confirmPassword": "ahihi123456",
-      "phone": "0987123456",
+      "phone": "0987123457",
     }).then(res => {
       console.log(res)
     })
