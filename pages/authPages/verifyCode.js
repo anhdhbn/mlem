@@ -17,42 +17,56 @@ import styles from "../../styles/authScreen/verifyCodeStyle";
 class verifyCode extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      code: "",
+      navigation: this.props,
+      error: null,
+      loading: false,
+      response: null,
+      // email: null,
+      email: "vietlinh15@coldmail.com",
     };
+
+    this.setLoading = this.setLoading.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this._onFulfill = this._onFulfill.bind(this);
+  }
+
+  setLoading(state) {
+    this.setState({ loading: state });
+  }
+
+  async onSubmit(code) {
+    this.setLoading(true);
+    let data = {
+      id: this.props.response,
+      passwordRecoveryCode: code.toString(),
+    };
+    let response = await authServices.verifyCode(data);
+    this.setLoading(false);
+    this.props.navigation.navigate("VerifyCode", { response });
   }
 
   _onFulfill(code) {
     // TODO: call API to check code here
     // If code does not match, clear input with: this.refs.codeInputRef1.clear()
-    if (code == "Q234E") {
-      Alert.alert("Confirmation Code", "Successful!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-    } else {
-      Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-
-      this.refs.codeInputRef1.clear();
-    }
+    this.onSubmit(code);
+    this.refs.codeInputRef1.clear();
   }
 
-  _onFinishCheckingCode2(isValid, code) {
-    this.props.navigation.navigate("RecoveryPassStep2");
-    console.log(isValid);
-    if (!isValid) {
-      Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-    } else {
-      this.setState({ code });
-      Alert.alert("Confirmation Code", "Successful!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-    }
-  }
+  // _onFinishCheckingCode(isValid, code) {
+  //   this.props.navigation.navigate("RecoveryPassStep2");
+  //   console.log(isValid);
+  //   if (!isValid) {
+  //     Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
+  //       cancelable: false,
+  //     });
+  //   } else {
+  //     this.setState({ code });
+  //     Alert.alert("Confirmation Code", "Successful!", [{ text: "OK" }], {
+  //       cancelable: false,
+  //     });
+  //   }
+  // }
   render() {
     return (
       <>
@@ -121,12 +135,12 @@ class verifyCode extends Component {
                 keyboardType="numeric"
                 codeLength={4}
                 className={"border-circle"}
-                compareWithCode="1234"
+                // compareWithCode="1234"
                 autoFocus={false}
                 codeInputStyle={{ fontWeight: "800" }}
-                onFulfill={(isValid, code) =>
-                  this._onFinishCheckingCode2(isValid, code)
-                }
+                onFulfill={(code) => {
+                  this._onFulfill(code);
+                }}
                 onCodeChange={(code) => {
                   this.state.code = code;
                 }}
