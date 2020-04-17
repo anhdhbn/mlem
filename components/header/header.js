@@ -15,22 +15,19 @@ import styles from "./style";
 export default class Header extends Component {
   constructor(props) {
     super(props);
-
-    // this.state = {
-    //   nameScreen: "",
-    // };
   }
 
   render() {
     return (
       <>
-        <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.5} style={styles.button}>
+        <View style={styles.header} >
+          {this.props.hideButtonBack? (<View style={styles.button}></View>):
+           (<TouchableOpacity activeOpacity={0.5} style={styles.button}>
             <Image
               source={require("../../assets/icon/back.png")}
               style={styles.icon_button}
             />
-          </TouchableOpacity>
+          </TouchableOpacity>)}
           <Text style={styles.title}>{this.props.title}</Text>
           <TouchableOpacity activeOpacity={0.5} style={styles.button}>
             <Image
