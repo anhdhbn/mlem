@@ -6,10 +6,83 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/signInStyle";
+
+// For sign up
+import authServices from "../../services/authServices";
+
 class SignIn extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      navigation: this.props,
+      error: null,
+      loading: false,
+      response: null,
+      // email: null,
+      // password: null,
+      email: "vietlinh15@coldmail.com",
+      password: "1234567890",
+    };
+
+    this.handleEmail = this.handleEmail.bind(this);
+    this.handlePassword = this.handlePassword.bind(this);
+    this.setLoading = this.setLoading.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.getSignInData = this.getSignInData.bind(this);
+    this.checkData = this.checkData.bind(this);
+  }
+
+  handleEmail(text) {
+    this.setState({ email: text });
+  }
+
+  handlePassword(text) {
+    this.setState({ password: text, confirmPassword: text });
+  }
+
+  setLoading(state) {
+    this.setState({ loading: state });
+  }
+
+  getSignInData() {
+    return {
+      email: this.state.email.toString(),
+      password: this.state.password.toString(),
+    };
+  }
+
+  async onSubmit() {
+    if (this.checkData()) {
+      this.setLoading(true);
+      let data = this.getSignInData();
+      console.log(data);
+
+      let response = await authServices.login(data);
+      this.setLoading(false);
+      if (response.token !== null) {
+        this.props.navigation.navigate("MainBody", { response });
+      } else {
+        Alert.alert("User name or password wrong :(");
+      }
+    }
+  }
+
+  checkData() {
+    if (this.state.email === null) {
+      Alert.alert("Email error");
+      return false;
+    }
+    if (this.state.password === null) {
+      Alert.alert("Password error");
+      return false;
+    }
+    return true;
+  }
+
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
@@ -87,14 +160,18 @@ class SignIn extends Component {
             </View>
           </View>
         </KeyboardAvoidingView>
-        <View style={{ marginTop: 20, alignItems: "center" }}>
-          <TouchableOpacity
-            style={styles.submitBtn}
-            onPress={() => this.props.navigation.navigate("MainBody")}
-          >
-            <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
-          </TouchableOpacity>
-        </View>
+        {this.state.loading ? (
+          <Text>Loading</Text>
+        ) : (
+          <View style={{ marginTop: 20, alignItems: "center" }}>
+            <TouchableOpacity
+              style={styles.submitBtn}
+              onPress={() => this.onSubmit()}
+            >
+              <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.footer}>
           <View style={{ flexDirection: "row", marginTop: 60 }}>
             <Text style={{ color: "white", fontSize: 12 }}>

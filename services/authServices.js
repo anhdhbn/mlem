@@ -2,19 +2,19 @@ import { requestServices } from "./index";
 // http://mlem.herokuapp.com/auth/swagger/index.html
 const login = (params) =>
   requestServices.customAxios
-    .post(`auth/login`, params)
+    .post(`api/account/login`, params)
     .then((res) => res.data);
 const forgotPassword = (params) =>
   requestServices.customAxios
-    .post(`auth/forgot-password`, params)
+    .post(`api/account/forgot-password`, params)
     .then((res) => res.data);
 const verifyCode = (params) =>
   requestServices.customAxios
-    .post(`auth/verify-code`, params)
+    .post(`api/account/verify-code`, params)
     .then((res) => res.data);
 const recoveryPass = (params) =>
   requestServices.customAxios
-    .post(`auth​/recovery-password`, params)
+    .post(`api​/account​/recovery-password`, params)
     .then((res) => res.data);
 // Not work
 // const getUserInfoByUsername = (username) => requestServices.customAxios.get(`user/${username}`).then((res) => res.data);

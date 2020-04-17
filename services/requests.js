@@ -1,4 +1,3 @@
-
 // @flow
 import axios from "axios";
 
@@ -16,7 +15,7 @@ customAxios.interceptors.response.use(
       const { data } = error.response;
       const { code, type, message } = data;
       // message error
-      console.log(code, type, message, data);
+      console.log("[ERROR] In requests.js: ", code, type, message, data);
     }
     return Promise.reject(error);
   }
