@@ -13,8 +13,64 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/recoveryPassStep1Style";
+import authServices from "../../services/authServices";
 
 export default class recoveryPassStep1 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      navigation: this.props,
+      error: null,
+      loading: false,
+      response: null,
+      // email: null,
+      email: "vietlinh15@coldmail.com",
+    };
+
+    this.handleEmail = this.handleEmail.bind(this);
+    this.setLoading = this.setLoading.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.getData = this.getData.bind(this);
+    this.checkData = this.checkData.bind(this);
+  }
+
+  handleEmail(text) {
+    this.setState({ email: text });
+  }
+
+  setLoading(state) {
+    this.setState({ loading: state });
+  }
+
+  getData() {
+    return {
+      email: this.state.email.toString(),
+    };
+  }
+
+  async onSubmit() {
+    if (this.checkData()) {
+      this.setLoading(true);
+      let data = this.getData();
+      console.log(data);
+
+      let response = await authServices.forgotPassword(data);
+      this.setLoading(false);
+      this.props.navigation.navigate("VerifyCode");
+    }
+  }
+
+  checkData() {
+    if (this.state.email === null) {
+      Alert.alert("Email error");
+      return false;
+    }
+    if (this.state.password === null) {
+      Alert.alert("Password error");
+      return false;
+    }
+    return true;
+  }
   render() {
     return (
       <>
@@ -84,7 +140,7 @@ export default class recoveryPassStep1 extends Component {
           <View style={{ marginTop: 10, alignItems: "center" }}>
             <TouchableOpacity
               style={styles.submitBtn}
-              onPress={() => this.props.navigation.navigate("VerifyCode")}
+              onPress={() => this.onSubmit()}
             >
               <Text
                 style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
