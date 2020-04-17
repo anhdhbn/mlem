@@ -65,7 +65,7 @@ export default class SignUp extends Component {
   }
 
   async onSubmit() {
-    if (this.checkData) {
+    if (this.checkData()) {
       this.setLoading(true);
       let data = this.getSignUpData();
       console.log(data);
