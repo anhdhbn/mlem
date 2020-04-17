@@ -21,18 +21,22 @@ class verifyCode extends Component {
       navigation: this.props,
       error: null,
       loading: false,
+      resending: false,
       response: null,
-      // email: null,
-      email: "vietlinh15@coldmail.com",
     };
 
     this.setLoading = this.setLoading.bind(this);
+    this.setResending = this.setResending.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this._onFulfill = this._onFulfill.bind(this);
   }
 
   setLoading(state) {
     this.setState({ loading: state });
+  }
+
+  setResending(state) {
+    this.setState({ resending: state });
   }
 
   async onSubmit(code) {
@@ -43,7 +47,17 @@ class verifyCode extends Component {
     };
     let response = await authServices.verifyCode(data);
     this.setLoading(false);
-    this.props.navigation.navigate("VerifyCode", { response });
+    // TODO: Handle code incorrect
+
+    this.props.navigation.navigate("RecoveryPassStep2VerifyCode", {
+      id: response,
+    });
+  }
+
+  resendVerifyCode() {
+    this.setResending(true);
+    this.props.onSubmit();
+    this.setResending(false);
   }
 
   _onFulfill(code) {
@@ -147,15 +161,22 @@ class verifyCode extends Component {
               />
             </View>
           </KeyboardAvoidingView>
-          <View style={{ marginTop: 10, alignItems: "center" }}>
-            <TouchableOpacity style={styles.submitBtn}>
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+          {this.state.resending ? (
+            <Text> Resending verifyCode</Text>
+          ) : (
+            <View style={{ marginTop: 10, alignItems: "center" }}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => this.resendVerifyCode()}
               >
-                Gửi lại mã xác nhận
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Gửi lại mã xác nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <View
             style={{
               marginTop: 10,

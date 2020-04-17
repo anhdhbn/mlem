@@ -56,7 +56,11 @@ export default class recoveryPassStep1 extends Component {
 
       let response = await authServices.forgotPassword(data);
       this.setLoading(false);
-      this.props.navigation.navigate("VerifyCode", { response });
+      // TODO: Handle mail incorrect
+      this.props.navigation.navigate("VerifyCode", {
+        response: response,
+        onSubmit: this.onSubmit,
+      });
     }
   }
 
