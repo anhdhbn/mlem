@@ -56,7 +56,7 @@ export default class recoveryPassStep1 extends Component {
 
       let response = await authServices.forgotPassword(data);
       this.setLoading(false);
-      this.props.navigation.navigate("VerifyCode");
+      this.props.navigation.navigate("VerifyCode", { response });
     }
   }
 
@@ -137,18 +137,22 @@ export default class recoveryPassStep1 extends Component {
               </View>
             </View>
           </KeyboardAvoidingView>
-          <View style={{ marginTop: 10, alignItems: "center" }}>
-            <TouchableOpacity
-              style={styles.submitBtn}
-              onPress={() => this.onSubmit()}
-            >
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+          {this.state.loading ? (
+            <Text>loading</Text>
+          ) : (
+            <View style={{ marginTop: 10, alignItems: "center" }}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => this.onSubmit()}
               >
-                Gửi
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Gửi
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <View
             style={{
               marginTop: 10,
