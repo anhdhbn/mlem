@@ -8,8 +8,10 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import Icon from "react-native-vector-icons/FontAwesome";
 // import styles from "../styles/homeStyle";
 // import TabBar from "../components/tabBar/tabBar";
+
 import HomePage from "./home";
-// console.disableYellowBox = true;
+import History from "./history";
+import Profile from "./profile";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -72,7 +74,7 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Diary"
-          component={HomePage}
+          component={History}
           options={{
             tabBarLabel: "Nhật ký",
             tabBarIcon: ({ _, color }) => (
@@ -82,7 +84,7 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Profile"
-          component={HomePage}
+          component={Profile}
           options={{
             tabBarLabel: "Tôi",
             tabBarIcon: ({ _, color }) => (
