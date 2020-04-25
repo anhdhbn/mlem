@@ -64,7 +64,8 @@ class SignIn extends Component {
       let response = await authServices.login(data);
       this.setLoading(false);
       if (response.token !== null) {
-        this.props.navigation.navigate("MainBody", { response });
+        this.props.navigation.navigate("MainBody", { response: response });
+        console.log(response);
       } else {
         Alert.alert("User name or password wrong :(");
       }
