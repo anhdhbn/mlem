@@ -1,5 +1,5 @@
 import { requestServices } from "./index";
-// http://mlem.herokuapp.com/auth/swagger/index.html
+
 const login = (params) =>
   requestServices.customAxios
     .post(`api/account/login`, params)

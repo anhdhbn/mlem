@@ -9,7 +9,17 @@ const customAxios = axios.create({
 });
 
 customAxios.interceptors.response.use(
-  (response) => response,
+  // (response) => {
+  //   response, console.log("[INFO] Response in request: ", response.data.token);
+  // },
+  (response) => {
+    const token = response.data.token;
+    if (token) {
+      response.headers["Token"] = token;
+    }
+    // response.headers['Content-Type'] = 'application/json';
+    return response;
+  },
   (error) => {
     if (error.response) {
       const { data } = error.response;
