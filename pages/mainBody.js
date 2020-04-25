@@ -16,6 +16,9 @@ import Profile from "./profile";
 const Tab = createMaterialTopTabNavigator();
 
 export default class MainBody extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       // <SafeAreaView style={styles.container}>
@@ -40,7 +43,7 @@ export default class MainBody extends Component {
       //     </View>
       //   </ScrollableTabView>
       // </SafeAreaView>
-
+      // console.log("[INFO] Props in body: ", this.props),
       <Tab.Navigator
         initialRouteName="Home"
         tabBarPosition="bottom"
@@ -84,6 +87,7 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Profile"
+          initialParams={{ response: this.props.route.params.response }}
           component={Profile}
           options={{
             tabBarLabel: "Tôi",

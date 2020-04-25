@@ -39,6 +39,18 @@ export default function (props) {
     props.navigation.navigate("Detail");
   };
 
+  //   Id	Name
+  // 1	Lẩu - Buffet
+  // 2	Hải sản
+  // 3	Rau củ
+  // 4	Thịt
+  // 5	Đồ uống
+
+  // Id	Name
+  // 1	Size nhỏ
+  // 2	Size vừa
+  // 3	Size lớn
+
   return (
     <>
       <ScrollView style={styles.home}>
