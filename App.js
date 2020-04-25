@@ -22,28 +22,40 @@ import SignUp from "./pages/authPages/signUp";
 import VerifyCode from "./pages/authPages/verifyCode";
 
 import MainBody from "./pages/mainBody";
+import Detail from "./pages/detail";
 
 const Stack = createStackNavigator();
+
+class TopStack extends Component {
+  render() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="VerifyCode" component={VerifyCode} />
+        <Stack.Screen name="RecoveryPassStep1" component={RecoveryPassStep1} />
+        <Stack.Screen name="RecoveryPassStep2" component={RecoveryPassStep2} />
+        <Stack.Screen name="MainBody" component={MainBody} />
+        <Stack.Screen name="Detail" component={Detail} />
+      </Stack.Navigator>
+    );
+  }
+}
 
 export default class App extends Component {
   constructor(props) {
     super(props);
   }
-  createLoginStack = () => (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="SignIn" component={SignIn} />
-      <Stack.Screen name="SignUp" component={SignUp} />
-      <Stack.Screen name="VerifyCode" component={VerifyCode} />
-      <Stack.Screen name="RecoveryPassStep1" component={RecoveryPassStep1} />
-      <Stack.Screen name="RecoveryPassStep2" component={RecoveryPassStep2} />
-      <Stack.Screen name="MainBody" component={MainBody} />
-    </Stack.Navigator>
-  );
+
   render() {
-    return <NavigationContainer>{this.createLoginStack()}</NavigationContainer>;
+    return (
+      <NavigationContainer>
+        <TopStack />
+      </NavigationContainer>
+    );
   }
 }

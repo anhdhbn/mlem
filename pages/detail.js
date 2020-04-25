@@ -43,12 +43,12 @@ import {
 import ScrollableTabView, {
   DefaultTabBar,
 } from "react-native-scrollable-tab-view";
-import Header from "../template/header/header";
-import TabBar from "../template/tabBar/tabBar";
+import Header from "../components/header/header";
+import TabBar from "../components/tabBar/tabBar";
 import SmartDishCard from "../components/smartDishCard/smartDishCard";
 import styles from "../styles/favouriteDishStyle";
 
-export default class FavouriteDish extends Component {
+export default class Detail extends Component {
   constructor(props) {
     super(props);
     this.handClickIcon = this.handClickIcon.bind(this);
