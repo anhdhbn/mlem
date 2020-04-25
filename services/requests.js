@@ -1,7 +1,7 @@
 // @flow
 import axios from "axios";
 
-export const BASE_API_URL = "https://mlem.herokuapp.com/";
+export const BASE_API_URL = "http://admin.wepick.vn:20000";
 
 const customAxios = axios.create({
   baseURL: BASE_API_URL,
