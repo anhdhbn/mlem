@@ -6,7 +6,7 @@ import CardList from "../components/cardList/cardList";
 import NavBar from "../components/cardList/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function () {
+export default function (props) {
   const cardData = [
     {
       id: 1,
@@ -34,15 +34,36 @@ export default function () {
       price: "12000/nguoi",
     },
   ];
+
+  const onPressDetail = () => {
+    props.navigation.navigate("Detail");
+  };
+
   return (
     <>
       <ScrollView style={styles.home}>
         <HeaderImage />
         <NavBar />
-        <CardList cardData={cardData} title={"Buffet"} />
-        <CardList cardData={cardData} title={"Nướng"} />
-        <CardList cardData={cardData} title={"Lẩu"} />
-        <CardList cardData={cardData} title={"Đồ Ngọt"} />
+        <CardList
+          cardData={cardData}
+          onPressDetail={onPressDetail}
+          title={"Buffet"}
+        />
+        <CardList
+          cardData={cardData}
+          onPressDetail={onPressDetail}
+          title={"Nướng"}
+        />
+        <CardList
+          cardData={cardData}
+          onPressDetail={onPressDetail}
+          title={"Lẩu"}
+        />
+        <CardList
+          cardData={cardData}
+          onPressDetail={onPressDetail}
+          title={"Đồ Ngọt"}
+        />
       </ScrollView>
     </>
   );

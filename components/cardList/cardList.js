@@ -10,7 +10,7 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function (props) {
-  const { cardData, title } = props;
+  const { cardData, title, onPressDetail } = props;
   return (
     <ScrollView style={styles.container}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -18,7 +18,7 @@ export default function (props) {
           <Text style={styles.title}>{title.toUpperCase()}</Text>
         </View>
         <View style={styles.seeAll}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onPressDetail()}>
             <Text style={{ fontSize: 11, color: "#de3333" }}>
               Xem Tất Cả >>
             </Text>
