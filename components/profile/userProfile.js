@@ -17,13 +17,6 @@ import ItemUserProfile from "./itemUserProfile";
 export default class UserProfile extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      email: "vietlinh16@coldmail.com",
-      phoneNumber: "0123456716",
-      dateOfBirth: "01/01/2020",
-      adress: "186 Khương Trung, Thanh Xuân, Hà Nội",
-    };
   }
 
   render() {
@@ -50,22 +43,22 @@ export default class UserProfile extends Component {
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Email"}
-            body={this.state.email}
+            body={this.props.email}
           />
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Điện thoại"}
-            body={this.state.phoneNumber}
+            body={this.props.phoneNumber}
           />
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Ngày sinh"}
-            body={this.state.dateOfBirth}
+            body={this.props.dateOfBirth}
           />
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Địa chỉ"}
-            body={this.state.adress}
+            body={this.props.adress}
           />
         </View>
       </View>

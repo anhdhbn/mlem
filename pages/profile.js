@@ -75,7 +75,12 @@ export default class Profile extends Component {
             urlAvatar={this.state.urlAvatar}
             name={this.state.name}
           />
-          <UserProfile />
+          <UserProfile
+            email={this.state.data.email}
+            phoneNumber={this.state.data.phone}
+            dateOfBirth={this.state.data.dob}
+            address={this.state.data.address}
+          />
           <SettingProfile />
         </ScrollView>
       </SafeAreaView>
