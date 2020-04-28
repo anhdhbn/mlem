@@ -26,7 +26,6 @@ import Detail from "./pages/detail";
 
 const Stack = createStackNavigator();
 
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 class TopStack extends Component {
   render() {
     return (
@@ -57,14 +56,6 @@ export default class App extends Component {
       <NavigationContainer>
         <TopStack />
       </NavigationContainer>
-
-      // <SkeletonTheme color="#202020" highlightColor="#444">
-      //   <section>
-      //     <Skeleton count={3}></Skeleton>
-      //     <Skeleton width={100} />
-      //     <Skeleton circle={true} height={50} width={50} />
-      //   </section>
-      // </SkeletonTheme>
     );
   }
 }

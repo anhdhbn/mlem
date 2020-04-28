@@ -10,7 +10,7 @@ const listFavorite = (params) =>
     .then((res) => res.data);
 const listRecently = (params) =>
   requestServices.customAxios
-    .post(`api/food/list-recently`, params)
+    .post(`api/food/list-revently`, params)
     .then((res) => res.data);
 const listTopOrder = (params) =>
   requestServices.customAxios

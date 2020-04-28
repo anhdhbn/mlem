@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,11 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  YellowBox,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-import Skeleton from "react-loading-skeleton";
+import SkeletonContent from "react-native-skeleton-content-nonexpo";
 
 export default function (props) {
   // Example data
@@ -25,6 +26,11 @@ export default function (props) {
   // "priceEach": 20000,
   // "statusId": 1}
   const { isLoading, cardData, title, onPressDetail } = props;
+  useEffect(() => {
+    YellowBox.ignoreWarnings([
+      "Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`",
+    ]);
+  });
   return (
     <ScrollView style={styles.container}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -39,12 +45,17 @@ export default function (props) {
           </TouchableOpacity>
         </View>
       </View>
-      {isLoading ? (
-        <>
-          <Skeleton width={50} height={50} />
-          <Text> loading</Text>
-        </>
-      ) : (
+      <SkeletonContent
+        containerStyle={{ flex: 1, width: 300, flexDirection: "row" }}
+        isLoading={cardData ? false : true}
+        // isLoading={isLoading}
+        layout={[
+          { key: "1", width: 90, height: 90, margin: 10 },
+          { key: "2", width: 90, height: 90, margin: 10 },
+          { key: "3", width: 90, height: 90, margin: 10 },
+          { key: "4", width: 90, height: 90, margin: 10 },
+        ]}
+      >
         <FlatList
           showsHorizontalScrollIndicator={false}
           horizontal={true}
@@ -76,7 +87,7 @@ export default function (props) {
             );
           }}
         ></FlatList>
-      )}
+      </SkeletonContent>
     </ScrollView>
   );
 }
