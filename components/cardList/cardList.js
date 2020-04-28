@@ -9,8 +9,22 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
+import Skeleton from "react-loading-skeleton";
+
 export default function (props) {
-  const { cardData, title, onPressDetail } = props;
+  // Example data
+  // {"descreption": null,
+  // "discountRate": null,
+  // "errors": null,
+  // "foodFoodGroupingMappings": null,
+  // "foodFoodTypeMappings": null,
+  // "id": 2,
+  // "image": null,
+  // "imageId": null,
+  // "name": "Gimbap chiên",
+  // "priceEach": 20000,
+  // "statusId": 1}
+  const { isLoading, cardData, title, onPressDetail } = props;
   return (
     <ScrollView style={styles.container}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -25,37 +39,44 @@ export default function (props) {
           </TouchableOpacity>
         </View>
       </View>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        data={cardData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => {
-          return (
-            <View
-              style={{
-                paddingBottom: 2,
-              }}
-            >
-              <TouchableOpacity
+      {isLoading ? (
+        <>
+          <Skeleton width={50} height={50} />
+          <Text> loading</Text>
+        </>
+      ) : (
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          data={cardData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => {
+            return (
+              <View
                 style={{
-                  backgroundColor: "#f0f3f5",
-                  padding: 4,
-                  borderRadius: 10,
+                  paddingBottom: 2,
                 }}
               >
-                <Image
-                  source={{ uri: item.image }}
-                  style={{ width: 130, height: 110 }}
-                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#f0f3f5",
+                    padding: 4,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{ width: 130, height: 110 }}
+                  />
 
-                <Text style={styles.foodname}>{item.name}</Text>
-                <Text style={styles.price}>{item.price}</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        }}
-      ></FlatList>
+                  <Text style={styles.foodname}>{item.name}</Text>
+                  <Text style={styles.price}>{item.priceEach}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        ></FlatList>
+      )}
     </ScrollView>
   );
 }

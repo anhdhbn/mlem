@@ -52,7 +52,7 @@ export default class Profile extends Component {
 
   async get() {
     let response = await profileService.get();
-    // console.log("[INFO] Response in profile after GET", response);
+    console.log("[INFO] Response in profile after GET", response);
   }
 
   async update() {
@@ -82,6 +82,13 @@ export default class Profile extends Component {
             address={this.state.data.address}
           />
           <SettingProfile />
+          <TouchableOpacity
+            onPress={() => {
+              this.get();
+            }}
+          >
+            <Text>Get</Text>
+          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     );

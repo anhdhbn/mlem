@@ -43,6 +43,7 @@ import {
 import ScrollableTabView, {
   DefaultTabBar,
 } from "react-native-scrollable-tab-view";
+
 import Header from "../components/header/header";
 import TabBar from "../components/tabBar/tabBar";
 import SmartDishCard from "../components/smartDishCard/smartDishCard";
@@ -102,7 +103,7 @@ export default class Detail extends Component {
       <>
         <View tabLabel="Trang chủ" style={styles.tabView}>
           <Header
-            // onPressBack={this.props.navigation.navigate("MainBody")}
+            // onPressBack={navigation.navigate("MainBody")}
             title="Món yêu thích"
           ></Header>
           {this.state.listFavouriteDishs.map((dish) => (
