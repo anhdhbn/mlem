@@ -53,50 +53,43 @@ export default function (props) {
         setIsLoadingFavourite(false);
       });
       setIsLoadingFavourite(false);
-    }
-    if (isLoadingRecently === true) {
+    } else if (isLoadingRecently === true) {
       getListFoods(-2).then((data) => {
         setListRecently(data);
         setIsLoadingRecently(false);
       });
       setIsLoadingRecently(false);
-    }
-    if (isLoadingTop === true) {
+    } else if (isLoadingTop === true) {
       getListFoods(-1).then((data) => {
         setListTop(data);
         setIsLoadingTop(false);
       });
       setIsLoadingTop(false);
-    }
-    if (isLoadingLau === true) {
+    } else if (isLoadingLau === true) {
       getListFoods(1).then((data) => {
         setListLau(data);
         setIsLoadingLau(false);
       });
       setIsLoadingLau(false);
-    }
-    if (isLoadingHaisan === true) {
+    } else if (isLoadingHaisan === true) {
       getListFoods(2).then((data) => {
         setListHaisan(data);
         setIsLoadingHaisan(false);
       });
       setIsLoadingHaisan(false);
-    }
-    if (isLoadingRaucu === true) {
+    } else if (isLoadingRaucu === true) {
       getListFoods(3).then((data) => {
         setListRaucu(data);
         setIsLoadingRaucu(false);
       });
       setIsLoadingRaucu(false);
-    }
-    if (isLoadingThit === true) {
+    } else if (isLoadingThit === true) {
       getListFoods(4).then((data) => {
         setListThit(data);
         setIsLoadingThit(false);
       });
       setIsLoadingThit(false);
-    }
-    if (isLoadingDouong === true) {
+    } else if (isLoadingDouong === true) {
       getListFoods(5).then((data) => {
         setListDouong(data);
         setIsLoadingDouong(false);

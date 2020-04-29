@@ -50,7 +50,7 @@ export default class HeaderProfile extends Component {
             }}
           >
             <Image
-              source={{ uri: this.props.urlAvatar }}
+              source={{ uri: this.props.avatar }}
               style={{
                 flex: 1,
                 height: null,

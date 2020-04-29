@@ -24,6 +24,7 @@ export default class ItemUserProfile extends Component {
   render() {
     return (
       <TouchableOpacity
+        onPress={this.props.onPress}
         style={{
           paddingVertical: 10,
           flexDirection: "row",

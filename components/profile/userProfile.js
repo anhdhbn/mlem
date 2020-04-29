@@ -44,21 +44,25 @@ export default class UserProfile extends Component {
             icon={require("../../assets/icon/settings.png")}
             title={"Email"}
             body={this.props.email}
+            onPress={this.props.onPress}
           />
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Điện thoại"}
             body={this.props.phoneNumber}
+            onPress={this.props.onPress}
           />
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Ngày sinh"}
             body={this.props.dateOfBirth}
+            onPress={this.props.onPress}
           />
           <ItemUserProfile
             icon={require("../../assets/icon/settings.png")}
             title={"Địa chỉ"}
-            body={this.props.adress}
+            body={this.props.address}
+            onPress={this.props.onPress}
           />
         </View>
       </View>
