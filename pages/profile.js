@@ -14,7 +14,7 @@ import {
 } from "react-native";
 
 // import Form from "react-native-basic-form";
-import { Input } from "react-native-elements";
+import { Input, Overlay } from "react-native-elements";
 
 import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
@@ -31,7 +31,7 @@ export default class Profile extends Component {
 
     this.state = {
       // Modal
-      visible: false,
+      visible: props.route.params.showModal ? true : false,
       isLoading: false,
       error: null,
       // response was retured when login
@@ -143,8 +143,12 @@ export default class Profile extends Component {
         >
           <Text>Get</Text>
         </TouchableOpacity>
-        <Modal transparent={true} visible={this.state.visible}>
-          <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
+        <Overlay
+          isVisible={this.state.visible}
+          onBackdropPress={this._hideModal}
+          fullScreen={true}
+        >
+          {/* <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
             <View
               style={{
                 backgroundColor: "#ffffff",
@@ -153,126 +157,124 @@ export default class Profile extends Component {
                 borderRadius: 10,
                 flex: 1,
               }}
-            >
-              <SafeAreaView>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View>
-                    <Text
-                      style={{ fontWeight: "bold", fontSize: 20, padding: 10 }}
-                    >
-                      Thay đổi thông tin cá nhân
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.modalItemTitle}>Họ và tên</Text>
-                    <Input
-                      placeholder="Họ và tên"
-                      defaultValue={this.state.data.displayName}
-                      onChangeText={(text) => {
-                        this.setState({
-                          ...this.state,
-                          modal: {
-                            ...this.state.modal,
-                            displayName: text,
-                          },
-                        });
-                      }}
-                    ></Input>
-                  </View>
-                  <View>
-                    <Text style={styles.modalItemTitle}>Email</Text>
-                    <Input
-                      placeholder="Email"
-                      disabled={true}
-                      defaultValue={this.state.data.email}
-                      onChangeText={(text) => {
-                        this.setState({
-                          ...this.state,
-                          modal: {
-                            ...this.state.modal,
-                            email: text,
-                          },
-                        });
-                      }}
-                    ></Input>
-                  </View>
-                  <View>
-                    <Text style={styles.modalItemTitle}>Số điện thoại</Text>
-                    <Input
-                      placeholder="Số điện thoại"
-                      defaultValue={this.state.data.phone}
-                      onChangeText={(text) => {
-                        this.setState({
-                          ...this.state,
-                          modal: {
-                            ...this.state.modal,
-                            phone: text,
-                          },
-                        });
-                      }}
-                    ></Input>
-                  </View>
-                  <View>
-                    <Text style={styles.modalItemTitle}>Ngày sinh</Text>
-                    <Input
-                      placeholder="Ngày sinh"
-                      defaultValue={this.state.data.dob}
-                      onChangeText={(text) => {
-                        this.setState({
-                          ...this.state,
-                          modal: {
-                            ...this.state.modal,
-                            dob: text,
-                          },
-                        });
-                      }}
-                    ></Input>
-                  </View>
-                  <View>
-                    <Text style={styles.modalItemTitle}>Địa chỉ</Text>
-                    <Input
-                      placeholder="Địa chỉ"
-                      defaultValue={this.state.data.address}
-                      onChangeText={(text) => {
-                        this.setState({
-                          ...this.state,
-                          modal: {
-                            ...this.state.modal,
-                            address: text,
-                          },
-                        });
-                      }}
-                    ></Input>
-                  </View>
-                  <View style={{ flexDirection: "row", paddingBottom: 10 }}>
-                    <View style={{ flex: 1 }}>
-                      <TouchableOpacity onPress={() => this._hideModal()}>
-                        <Image
-                          source={require("../assets/icon/cross.png")}
-                          style={{ width: 20, height: 20, marginLeft: 10 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: "flex-end",
-                        alignItems: "flex-end",
-                      }}
-                    >
-                      <TouchableOpacity onPress={() => this._onsubmitModal()}>
-                        <Image
-                          source={require("../assets/icon/submit.png")}
-                          style={{ width: 20, height: 20, marginRight: 10 }}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </ScrollView>
-              </SafeAreaView>
-            </View>
-          </View>
-        </Modal>
+            > */}
+          <SafeAreaView>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View>
+                <Text style={{ fontWeight: "bold", fontSize: 25, padding: 10 }}>
+                  Cập nhật thông tin cá nhân
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.modalItemTitle}>Họ và tên</Text>
+                <Input
+                  placeholder="Họ và tên"
+                  defaultValue={this.state.data.displayName}
+                  onChangeText={(text) => {
+                    this.setState({
+                      ...this.state,
+                      modal: {
+                        ...this.state.modal,
+                        displayName: text,
+                      },
+                    });
+                  }}
+                ></Input>
+              </View>
+              <View>
+                <Text style={styles.modalItemTitle}>Email</Text>
+                <Input
+                  placeholder="Email"
+                  disabled={true}
+                  defaultValue={this.state.data.email}
+                  onChangeText={(text) => {
+                    this.setState({
+                      ...this.state,
+                      modal: {
+                        ...this.state.modal,
+                        email: text,
+                      },
+                    });
+                  }}
+                ></Input>
+              </View>
+              <View>
+                <Text style={styles.modalItemTitle}>Số điện thoại</Text>
+                <Input
+                  placeholder="Số điện thoại"
+                  defaultValue={this.state.data.phone}
+                  onChangeText={(text) => {
+                    this.setState({
+                      ...this.state,
+                      modal: {
+                        ...this.state.modal,
+                        phone: text,
+                      },
+                    });
+                  }}
+                ></Input>
+              </View>
+              <View>
+                <Text style={styles.modalItemTitle}>Ngày sinh</Text>
+                <Input
+                  placeholder="Ngày sinh"
+                  defaultValue={this.state.data.dob}
+                  onChangeText={(text) => {
+                    this.setState({
+                      ...this.state,
+                      modal: {
+                        ...this.state.modal,
+                        dob: text,
+                      },
+                    });
+                  }}
+                ></Input>
+              </View>
+              <View>
+                <Text style={styles.modalItemTitle}>Địa chỉ</Text>
+                <Input
+                  placeholder="Địa chỉ"
+                  defaultValue={this.state.data.address}
+                  onChangeText={(text) => {
+                    this.setState({
+                      ...this.state,
+                      modal: {
+                        ...this.state.modal,
+                        address: text,
+                      },
+                    });
+                  }}
+                ></Input>
+              </View>
+              <View style={{ flexDirection: "row", paddingBottom: 10 }}>
+                <View style={{ flex: 1 }}>
+                  <TouchableOpacity onPress={() => this._hideModal()}>
+                    <Image
+                      source={require("../assets/icon/cross.png")}
+                      style={{ width: 20, height: 20, marginLeft: 10 }}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <TouchableOpacity onPress={() => this._onsubmitModal()}>
+                    <Image
+                      source={require("../assets/icon/submit.png")}
+                      style={{ width: 20, height: 20, marginRight: 10 }}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+          {/* </View>
+          </View> */}
+        </Overlay>
       </ScrollView>
     );
   }

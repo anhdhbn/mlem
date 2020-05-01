@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, YellowBox } from "react-native";
+import { View, StyleSheet, YellowBox, Text } from "react-native";
+import { Button, Overlay } from "react-native-elements";
 
 import homeServices from "../services/homeServices";
 
@@ -46,56 +47,66 @@ export default function (props) {
   const [listThit, setListThit] = useState(undefined);
   const [listDouong, setListDouong] = useState(undefined);
 
+  const [visible, setVisible] = useState(false);
+  const [checkProfile, setCheckProfile] = useState(false);
+
   useEffect(() => {
-    if (isLoadingFavourite === true) {
-      getListFoods(-3).then((data) => {
-        setListFavourite(data);
-        setIsLoadingFavourite(false);
-      });
-      setIsLoadingFavourite(false);
-    } else if (isLoadingRecently === true) {
-      getListFoods(-2).then((data) => {
-        setListRecently(data);
-        setIsLoadingRecently(false);
-      });
-      setIsLoadingRecently(false);
-    } else if (isLoadingTop === true) {
-      getListFoods(-1).then((data) => {
-        setListTop(data);
-        setIsLoadingTop(false);
-      });
-      setIsLoadingTop(false);
-    } else if (isLoadingLau === true) {
-      getListFoods(1).then((data) => {
-        setListLau(data);
-        setIsLoadingLau(false);
-      });
-      setIsLoadingLau(false);
-    } else if (isLoadingHaisan === true) {
-      getListFoods(2).then((data) => {
-        setListHaisan(data);
-        setIsLoadingHaisan(false);
-      });
-      setIsLoadingHaisan(false);
-    } else if (isLoadingRaucu === true) {
-      getListFoods(3).then((data) => {
-        setListRaucu(data);
-        setIsLoadingRaucu(false);
-      });
-      setIsLoadingRaucu(false);
-    } else if (isLoadingThit === true) {
-      getListFoods(4).then((data) => {
-        setListThit(data);
-        setIsLoadingThit(false);
-      });
-      setIsLoadingThit(false);
-    } else if (isLoadingDouong === true) {
-      getListFoods(5).then((data) => {
-        setListDouong(data);
-        setIsLoadingDouong(false);
-      });
-      setIsLoadingDouong(false);
+    if (!checkProfile) {
+      setCheckProfile(true);
+      if (props.route.params.response.dob === null) {
+        _showModal();
+      }
     }
+
+    // if (isLoadingFavourite === true) {
+    //   getListFoods(-3).then((data) => {
+    //     setListFavourite(data);
+    //     setIsLoadingFavourite(false);
+    //   });
+    //   setIsLoadingFavourite(false);
+    // } else if (isLoadingRecently === true) {
+    //   getListFoods(-2).then((data) => {
+    //     setListRecently(data);
+    //     setIsLoadingRecently(false);
+    //   });
+    //   setIsLoadingRecently(false);
+    // } else if (isLoadingTop === true) {
+    //   getListFoods(-1).then((data) => {
+    //     setListTop(data);
+    //     setIsLoadingTop(false);
+    //   });
+    //   setIsLoadingTop(false);
+    // } else if (isLoadingLau === true) {
+    //   getListFoods(1).then((data) => {
+    //     setListLau(data);
+    //     setIsLoadingLau(false);
+    //   });
+    //   setIsLoadingLau(false);
+    // } else if (isLoadingHaisan === true) {
+    //   getListFoods(2).then((data) => {
+    //     setListHaisan(data);
+    //     setIsLoadingHaisan(false);
+    //   });
+    //   setIsLoadingHaisan(false);
+    // } else if (isLoadingRaucu === true) {
+    //   getListFoods(3).then((data) => {
+    //     setListRaucu(data);
+    //     setIsLoadingRaucu(false);
+    //   });
+    //   setIsLoadingRaucu(false);
+    // } else if (isLoadingThit === true) {
+    //   getListFoods(4).then((data) => {
+    //     setListThit(data);
+    //     setIsLoadingThit(false);
+    //   });
+    //   setIsLoadingThit(false);
+    // } else if (isLoadingDouong === true) {
+    //   getListFoods(5).then((data) => {
+    //     setListDouong(data);
+    //     setIsLoadingDouong(false);
+    //   });
+    //   setIsLoadingDouong(false);
+    // }
   });
 
   const getListFoods = async (code) => {
@@ -154,8 +165,38 @@ export default function (props) {
   const onPressDetail = (cardData) => {
     props.navigation.navigate("Detail", { data: cardData });
   };
+
+  // For modal
+  const _showModal = () => {
+    setVisible(true);
+  };
+  const _hideModal = () => {
+    setVisible(false);
+  };
+  const _onsubmitModal = () => {
+    _hideModal();
+    props.navigation.navigate("Profile", { showModal: true });
+  };
+
   return (
     <>
+      {/* Check is the first login then update profile */}
+
+      <Overlay
+        isVisible={visible}
+        // onBackdropPress={_hideModal}
+        overlayStyle={{ marginHorizontal: 10, paddingBottom: 10 }}
+      >
+        <Text style={{ fontWeight: "bold", fontSize: 20, padding: 10 }}>
+          Xin chào
+        </Text>
+        <Text style={{ fontSize: 20, padding: 10 }}>
+          Chào mừng bạn đến với ứng dụng Mlem Mlem, vui lòng cập nhật thông tin
+          cá nhân để chúng tôi có thể phục vụ bạn tốt hơn.
+        </Text>
+        <Button title="Cập nhật thông tin ngay" onPress={_onsubmitModal} />
+      </Overlay>
+
       {/* {console.log("Start Rendering")} */}
       <ScrollView style={styles.home}>
         <HeaderImage />

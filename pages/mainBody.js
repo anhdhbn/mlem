@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Component } from "react";
-// import { View, Text, SafeAreaView, StatusBar } from "react-native";
+import { View, Text, SafeAreaView, StatusBar } from "react-native";
 // import ScrollableTabView, {
 //   DefaultTabBar,
 // } from "react-native-scrollable-tab-view";
@@ -58,6 +58,7 @@ export default class MainBody extends Component {
         <Tab.Screen
           name="Home"
           component={HomePage}
+          initialParams={{ response: this.props.route.params.response }}
           options={{
             tabBarLabel: "Trang chủ".toLocaleLowerCase(),
             tabBarIcon: ({ _, color }) => (
@@ -67,7 +68,7 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Order"
-          component={HomePage}
+          component={History}
           options={{
             tabBarLabel: "Đặt bàn",
             tabBarIcon: ({ focused, color }) => (
