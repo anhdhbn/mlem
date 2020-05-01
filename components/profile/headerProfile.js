@@ -14,6 +14,8 @@ import {
   Dimensions,
 } from "react-native";
 
+import { Avatar } from "react-native-elements";
+
 var width = Dimensions.get("window").width;
 
 export default class HeaderProfile extends Component {
@@ -37,7 +39,28 @@ export default class HeaderProfile extends Component {
             //
           }}
         >
-          <View
+          <Avatar
+            rounded
+            size={150}
+            source={
+              this.props.avatar
+                ? {
+                    uri: this.props.avatar,
+                  }
+                : require("../../assets/icon/user.png")
+            }
+            // style={{ paddingVertical: 20 }}
+            imageProps={(resizeMode = "center")}
+            // showAccessory={true}
+            // onAccessoryPress={() => {
+            //   console.log("[INFO] Press accessoryPress");
+            // }}
+            onPress={() => {
+              console.log("[INFO] Press avatar");
+            }}
+            containerStyle={{ marginVertical: 20 }}
+          />
+          {/* <View
             style={{
               margin: 30,
               width: 150,
@@ -59,7 +82,7 @@ export default class HeaderProfile extends Component {
               }}
               resizeMode="center"
             ></Image>
-          </View>
+          </View> */}
 
           <View>
             <Text

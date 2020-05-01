@@ -11,10 +11,14 @@ import {
   KeyboardAvoidingView,
   Modal,
   Text,
+  YellowBox,
 } from "react-native";
+
+console.disableYellowBox = true;
 
 // import Form from "react-native-basic-form";
 import { Input, Overlay } from "react-native-elements";
+import { DatePicker } from "native-base";
 
 import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
@@ -109,6 +113,8 @@ export default class Profile extends Component {
     return data;
   };
 
+  // For Avatar
+
   // For modal
   _showModal = () => this.setState({ visible: true });
   _hideModal = () => this.setState({ visible: false });
@@ -117,6 +123,16 @@ export default class Profile extends Component {
     this.setState({ isLoading: true });
     this.update().then((response) => {
       this.setState({ data: response, isLoading: false });
+    });
+  };
+
+  _setDate = (newDate) => {
+    this.setState({
+      ...this.state,
+      modal: {
+        ...this.state.modal,
+        dob: newDate,
+      },
     });
   };
 
@@ -131,18 +147,11 @@ export default class Profile extends Component {
         <UserProfile
           email={this.state.data.email}
           phoneNumber={this.state.data.phone}
-          dateOfBirth={this.state.data.dob}
+          dateOfBirth={this.state.data.dob.toString().substr(0, 10)}
           address={this.state.data.address}
           onPress={this._showModal}
         />
         <SettingProfile />
-        <TouchableOpacity
-          onPress={() => {
-            this.get();
-          }}
-        >
-          <Text>Get</Text>
-        </TouchableOpacity>
         <Overlay
           isVisible={this.state.visible}
           onBackdropPress={this._hideModal}
@@ -216,7 +225,7 @@ export default class Profile extends Component {
               </View>
               <View>
                 <Text style={styles.modalItemTitle}>Ngày sinh</Text>
-                <Input
+                {/* <Input
                   placeholder="Ngày sinh"
                   defaultValue={this.state.data.dob}
                   onChangeText={(text) => {
@@ -228,7 +237,30 @@ export default class Profile extends Component {
                       },
                     });
                   }}
-                ></Input>
+                ></Input> */}
+                <DatePicker
+                  defaultDate={
+                    this.state.data.dob
+                      ? new Date(this.state.data.dob)
+                      : new Date(1999, 1, 1)
+                  }
+                  // defaultDate={new Date(1999, 1, 1)}
+                  minimumDate={new Date(1970, 1, 1)}
+                  maximumDate={new Date(2018, 12, 31)}
+                  locale={"vi"}
+                  timeZoneOffsetInMinutes={undefined}
+                  modalTransparent={false}
+                  animationType={"fade"}
+                  androidMode={"default"}
+                  placeHolderText="Chọn ngày"
+                  textStyle={{ color: "#000" }}
+                  placeHolderTextStyle={{ color: "#d3d3d3" }}
+                  onDateChange={this._setDate}
+                  disabled={false}
+                />
+                {/* <Text>
+                  Date: {this.state.chosenDate.toString().substr(4, 12)}
+                </Text> */}
               </View>
               <View>
                 <Text style={styles.modalItemTitle}>Địa chỉ</Text>
