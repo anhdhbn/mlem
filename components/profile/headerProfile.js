@@ -55,9 +55,7 @@ export default class HeaderProfile extends Component {
             // onAccessoryPress={() => {
             //   console.log("[INFO] Press accessoryPress");
             // }}
-            onPress={() => {
-              console.log("[INFO] Press avatar");
-            }}
+            onPress={this.props._changeAvatar}
             containerStyle={{ marginVertical: 20 }}
           />
           {/* <View
