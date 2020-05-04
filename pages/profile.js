@@ -86,14 +86,17 @@ export default class Profile extends Component {
 
   async get() {
     let response = await profileService.get();
-    console.log("[INFO] Response in profile after GET", response);
+    // response.avatar has 99999 line
+    // console.log("[INFO] Response in profile after GET", response);
   }
 
   async update() {
+    // response.avatar has 99999 line
     let params = this.createParams();
     // console.log("[INFO] Params in profile: ", params);
     let response = await profileService.update(params);
-    console.log("[INFO] Response in profile after UPDATE", response);
+    // response.avatar has 99999 line
+    // console.log("[INFO] Response in profile after UPDATE", response);
     return response;
   }
 
@@ -176,7 +179,7 @@ export default class Profile extends Component {
         // console.log("[INFO] Link image: ", source);
 
         // You can also display the image using data:
-        const source = { uri: "data:image/jpeg;base64," + response.data };
+        const source = "data:image/jpeg;base64," + response.data;
 
         this.setState({
           ...this.state,

@@ -59,13 +59,13 @@ class SignIn extends Component {
     if (this.checkData()) {
       this.setLoading(true);
       let data = this.getSignInData();
-      console.log(data);
+      // console.log(data);
 
       let response = await authServices.login(data);
       this.setLoading(false);
       if (response.token !== null) {
         this.props.navigation.navigate("MainBody", { response: response });
-        console.log(response);
+        // console.log(response);
       } else {
         Alert.alert("User name or password wrong :(");
       }

@@ -68,7 +68,7 @@ export default class SignUp extends Component {
     if (this.checkData()) {
       this.setLoading(true);
       let data = this.getSignUpData();
-      console.log(data);
+      // console.log(data);
 
       let response = await authServices.createUser(data);
       this.setLoading(false);
@@ -110,18 +110,18 @@ export default class SignUp extends Component {
     return true;
   }
 
-  test() {
-    authServices
-      .createUser({
-        email: "ahihidf@gmail.com",
-        password: "ahihi123456",
-        confirmPassword: "ahihi123456",
-        phone: "0987123457",
-      })
-      .then((res) => {
-        console.log(res);
-      });
-  }
+  // test() {
+  //   authServices
+  //     .createUser({
+  //       email: "ahihidf@gmail.com",
+  //       password: "ahihi123456",
+  //       confirmPassword: "ahihi123456",
+  //       phone: "0987123457",
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //     });
+  // }
 
   render() {
     return (
