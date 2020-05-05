@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import HomePage from "./home";
 import History from "./history";
 import Profile from "./profile";
+import Order from "./order";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -68,7 +69,7 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Order"
-          component={History}
+          component={Order}
           options={{
             tabBarLabel: "Đặt bàn",
             tabBarIcon: ({ focused, color }) => (
