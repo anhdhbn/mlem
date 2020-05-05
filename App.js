@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from "react-native";
+import { Provider as PaperProvider } from "react-native-paper";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -53,9 +54,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <NavigationContainer>
-        <TopStack />
-      </NavigationContainer>
+      <PaperProvider>
+        <NavigationContainer>
+          <TopStack />
+        </NavigationContainer>
+      </PaperProvider>
     );
   }
 }

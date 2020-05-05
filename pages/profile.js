@@ -27,6 +27,10 @@ import UserProfile from "../components/profile/userProfile";
 import SettingProfile from "../components/profile/settingProfile";
 
 import profileService from "../services/profileService";
+
+import SnackbarUpdating from "../components/common/snackbarUpdating";
+import { Snackbar } from "react-native-paper";
+
 import style from "../components/slider/style";
 
 export default class Profile extends Component {
@@ -194,29 +198,52 @@ export default class Profile extends Component {
     });
   };
 
+  _onDismissSnackBar = () => {
+    console.log("[INFO] Ondimiss snackbar");
+  };
   render() {
     return (
       // console.log("[INFO] Props in profile: ", this.state.response),
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <HeaderProfile
-          avatar={this.state.data.avatar}
-          _changeAvatar={this._changeAvatar}
-          name={this.state.data.displayName}
+      <>
+        <SnackbarUpdating
+          visible={this.state.isLoading}
+          _onDismissSnackBar={this._onDismissSnackBar}
         />
-        <UserProfile
-          email={this.state.data.email}
-          phoneNumber={this.state.data.phone}
-          dateOfBirth={this.state.data.dob.toString().substr(0, 10)}
-          address={this.state.data.address}
-          onPress={this._showModal}
-        />
-        <SettingProfile />
-        <Overlay
-          isVisible={this.state.visible}
-          onBackdropPress={this._hideModal}
-          fullScreen={true}
-        >
-          {/* <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({ isLoading: true });
+            }}
+          >
+            <Text>{this.state.isLoading ? "Show" : "Hide"}</Text>
+          </TouchableOpacity>
+          <HeaderProfile
+            avatar={this.state.data.avatar}
+            _changeAvatar={this._changeAvatar}
+            name={this.state.data.displayName}
+          />
+          <UserProfile
+            email={this.state.data.email}
+            phoneNumber={this.state.data.phone}
+            dateOfBirth={this.state.data.dob.toString().substr(0, 10)}
+            address={this.state.data.address}
+            onPress={this._showModal}
+          />
+          <View
+            style={
+              this.state.isLoading
+                ? { paddingBottom: 60 }
+                : { paddingBottom: 0 }
+            }
+          >
+            <SettingProfile />
+          </View>
+          <Overlay
+            isVisible={this.state.visible}
+            onBackdropPress={this._hideModal}
+            fullScreen={true}
+          >
+            {/* <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
             <View
               style={{
                 backgroundColor: "#ffffff",
@@ -226,65 +253,67 @@ export default class Profile extends Component {
                 flex: 1,
               }}
             > */}
-          <SafeAreaView>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View>
-                <Text style={{ fontWeight: "bold", fontSize: 25, padding: 10 }}>
-                  Cập nhật thông tin cá nhân
-                </Text>
-              </View>
-              <View>
-                <Text style={styles.modalItemTitle}>Họ và tên</Text>
-                <Input
-                  placeholder="Họ và tên"
-                  defaultValue={this.state.data.displayName}
-                  onChangeText={(text) => {
-                    this.setState({
-                      ...this.state,
-                      modal: {
-                        ...this.state.modal,
-                        displayName: text,
-                      },
-                    });
-                  }}
-                ></Input>
-              </View>
-              <View>
-                <Text style={styles.modalItemTitle}>Email</Text>
-                <Input
-                  placeholder="Email"
-                  disabled={true}
-                  defaultValue={this.state.data.email}
-                  onChangeText={(text) => {
-                    this.setState({
-                      ...this.state,
-                      modal: {
-                        ...this.state.modal,
-                        email: text,
-                      },
-                    });
-                  }}
-                ></Input>
-              </View>
-              <View>
-                <Text style={styles.modalItemTitle}>Số điện thoại</Text>
-                <Input
-                  placeholder="Số điện thoại"
-                  defaultValue={this.state.data.phone}
-                  onChangeText={(text) => {
-                    this.setState({
-                      ...this.state,
-                      modal: {
-                        ...this.state.modal,
-                        phone: text,
-                      },
-                    });
-                  }}
-                ></Input>
-              </View>
-              <View>
-                <Text style={styles.modalItemTitle}>Ngày sinh</Text>
-                {/* <Input
+            <SafeAreaView>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View>
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 25, padding: 10 }}
+                  >
+                    Cập nhật thông tin cá nhân
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.modalItemTitle}>Họ và tên</Text>
+                  <Input
+                    placeholder="Họ và tên"
+                    defaultValue={this.state.data.displayName}
+                    onChangeText={(text) => {
+                      this.setState({
+                        ...this.state,
+                        modal: {
+                          ...this.state.modal,
+                          displayName: text,
+                        },
+                      });
+                    }}
+                  ></Input>
+                </View>
+                <View>
+                  <Text style={styles.modalItemTitle}>Email</Text>
+                  <Input
+                    placeholder="Email"
+                    disabled={true}
+                    defaultValue={this.state.data.email}
+                    onChangeText={(text) => {
+                      this.setState({
+                        ...this.state,
+                        modal: {
+                          ...this.state.modal,
+                          email: text,
+                        },
+                      });
+                    }}
+                  ></Input>
+                </View>
+                <View>
+                  <Text style={styles.modalItemTitle}>Số điện thoại</Text>
+                  <Input
+                    placeholder="Số điện thoại"
+                    defaultValue={this.state.data.phone}
+                    onChangeText={(text) => {
+                      this.setState({
+                        ...this.state,
+                        modal: {
+                          ...this.state.modal,
+                          phone: text,
+                        },
+                      });
+                    }}
+                  ></Input>
+                </View>
+                <View>
+                  <Text style={styles.modalItemTitle}>Ngày sinh</Text>
+                  {/* <Input
                   placeholder="Ngày sinh"
                   defaultValue={this.state.data.dob}
                   onChangeText={(text) => {
@@ -297,76 +326,77 @@ export default class Profile extends Component {
                     });
                   }}
                 ></Input> */}
-                <DatePicker
-                  defaultDate={
-                    this.state.data.dob
-                      ? new Date(this.state.data.dob)
-                      : new Date(1999, 1, 1)
-                  }
-                  // defaultDate={new Date(1999, 1, 1)}
-                  minimumDate={new Date(1970, 1, 1)}
-                  maximumDate={new Date(2018, 12, 31)}
-                  locale={"vi"}
-                  timeZoneOffsetInMinutes={undefined}
-                  modalTransparent={false}
-                  animationType={"fade"}
-                  androidMode={"default"}
-                  placeHolderText="Chọn ngày"
-                  textStyle={{ color: "#000" }}
-                  placeHolderTextStyle={{ color: "#d3d3d3" }}
-                  onDateChange={this._setDate}
-                  disabled={false}
-                />
-                {/* <Text>
+                  <DatePicker
+                    defaultDate={
+                      this.state.data.dob
+                        ? new Date(this.state.data.dob)
+                        : new Date(1999, 1, 1)
+                    }
+                    // defaultDate={new Date(1999, 1, 1)}
+                    minimumDate={new Date(1970, 1, 1)}
+                    maximumDate={new Date(2018, 12, 31)}
+                    locale={"vi"}
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={"fade"}
+                    androidMode={"default"}
+                    placeHolderText="Chọn ngày"
+                    textStyle={{ color: "#000" }}
+                    placeHolderTextStyle={{ color: "#d3d3d3" }}
+                    onDateChange={this._setDate}
+                    disabled={false}
+                  />
+                  {/* <Text>
                   Date: {this.state.chosenDate.toString().substr(4, 12)}
                 </Text> */}
-              </View>
-              <View>
-                <Text style={styles.modalItemTitle}>Địa chỉ</Text>
-                <Input
-                  placeholder="Địa chỉ"
-                  defaultValue={this.state.data.address}
-                  onChangeText={(text) => {
-                    this.setState({
-                      ...this.state,
-                      modal: {
-                        ...this.state.modal,
-                        address: text,
-                      },
-                    });
-                  }}
-                ></Input>
-              </View>
-              <View style={{ flexDirection: "row", paddingBottom: 10 }}>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity onPress={() => this._hideModal()}>
-                    <Image
-                      source={require("../assets/icon/cross.png")}
-                      style={{ width: 20, height: 20, marginLeft: 10 }}
-                    />
-                  </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <TouchableOpacity onPress={() => this._onsubmitModal()}>
-                    <Image
-                      source={require("../assets/icon/submit.png")}
-                      style={{ width: 20, height: 20, marginRight: 10 }}
-                    />
-                  </TouchableOpacity>
+                <View>
+                  <Text style={styles.modalItemTitle}>Địa chỉ</Text>
+                  <Input
+                    placeholder="Địa chỉ"
+                    defaultValue={this.state.data.address}
+                    onChangeText={(text) => {
+                      this.setState({
+                        ...this.state,
+                        modal: {
+                          ...this.state.modal,
+                          address: text,
+                        },
+                      });
+                    }}
+                  ></Input>
                 </View>
-              </View>
-            </ScrollView>
-          </SafeAreaView>
-          {/* </View>
+                <View style={{ flexDirection: "row", paddingBottom: 10 }}>
+                  <View style={{ flex: 1 }}>
+                    <TouchableOpacity onPress={() => this._hideModal()}>
+                      <Image
+                        source={require("../assets/icon/cross.png")}
+                        style={{ width: 20, height: 20, marginLeft: 10 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "flex-end",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <TouchableOpacity onPress={() => this._onsubmitModal()}>
+                      <Image
+                        source={require("../assets/icon/submit.png")}
+                        style={{ width: 20, height: 20, marginRight: 10 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </ScrollView>
+            </SafeAreaView>
+            {/* </View>
           </View> */}
-        </Overlay>
-      </ScrollView>
+          </Overlay>
+        </ScrollView>
+      </>
     );
   }
 }
