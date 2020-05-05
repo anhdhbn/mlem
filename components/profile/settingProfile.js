@@ -53,6 +53,7 @@ export default class SettingProfile extends Component {
             title={"Đổi mật khẩu"}
           />
           <ItemUserProfile
+            onPress={this.props._signOut}
             icon={require("../../assets/icon/settings.png")}
             title={"Đăng xuất"}
           />

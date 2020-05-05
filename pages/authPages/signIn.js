@@ -55,20 +55,32 @@ class SignIn extends Component {
     };
   }
 
-  async onSubmit() {
+  // async onSubmit() {
+  //   if (this.checkData()) {
+  //     this.setLoading(true);
+  //     let data = this.getSignInData();
+  //     // console.log(data);
+
+  //     let response = await authServices.login(data);
+  //     this.setLoading(false);
+  //     if (response.token !== null) {
+  //       this.props.navigation.navigate("MainBody", { response: response });
+  //       // console.log(response);
+  //     } else {
+  //       Alert.alert("User name or password wrong :(");
+  //     }
+  //   }
+  // }
+
+  onSubmit() {
     if (this.checkData()) {
       this.setLoading(true);
       let data = this.getSignInData();
-      // console.log(data);
 
-      let response = await authServices.login(data);
+      // console.log("[INFO] Props in signIn: ", this.props.navigation);
+      this.props.signIn(data);
+
       this.setLoading(false);
-      if (response.token !== null) {
-        this.props.navigation.navigate("MainBody", { response: response });
-        // console.log(response);
-      } else {
-        Alert.alert("User name or password wrong :(");
-      }
     }
   }
 

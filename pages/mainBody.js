@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Component } from "react";
-import { View, Text, SafeAreaView, StatusBar } from "react-native";
+import { View, Text, SafeAreaView, StatusBar, YellowBox } from "react-native";
 // import ScrollableTabView, {
 //   DefaultTabBar,
 // } from "react-native-scrollable-tab-view";
@@ -13,6 +13,10 @@ import HomePage from "./home";
 import History from "./history";
 import Profile from "./profile";
 import Order from "./order";
+
+YellowBox.ignoreWarnings([
+  "Non-serializable values were found in the navigation state",
+]);
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -59,7 +63,7 @@ export default class MainBody extends Component {
         <Tab.Screen
           name="Home"
           component={HomePage}
-          initialParams={{ response: this.props.route.params.response }}
+          initialParams={{ response: this.props.response }}
           options={{
             tabBarLabel: "Trang chủ".toLocaleLowerCase(),
             tabBarIcon: ({ _, color }) => (
@@ -89,7 +93,10 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Profile"
-          initialParams={{ response: this.props.route.params.response }}
+          initialParams={{
+            response: this.props.response,
+            _signOut: this.props._signOut,
+          }}
           component={Profile}
           options={{
             tabBarLabel: "Tôi",

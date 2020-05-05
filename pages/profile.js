@@ -210,13 +210,14 @@ export default class Profile extends Component {
           _onDismissSnackBar={this._onDismissSnackBar}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableOpacity
+          {/* Test Snackbar */}
+          {/* <TouchableOpacity
             onPress={() => {
               this.setState({ isLoading: true });
             }}
           >
             <Text>{this.state.isLoading ? "Show" : "Hide"}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <HeaderProfile
             avatar={this.state.data.avatar}
             _changeAvatar={this._changeAvatar}
@@ -236,7 +237,7 @@ export default class Profile extends Component {
                 : { paddingBottom: 0 }
             }
           >
-            <SettingProfile />
+            <SettingProfile _signOut={this.props.route.params._signOut} />
           </View>
           <Overlay
             isVisible={this.state.visible}

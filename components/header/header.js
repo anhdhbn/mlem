@@ -12,9 +12,10 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import styles from "./style";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
+
 export default function Header(props) {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   return (
     <>
       <View style={styles.header}>
@@ -31,7 +32,7 @@ export default function Header(props) {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            onPress={() => navigation.navigate("MainBody")}
+            // onPress={() => navigation.navigate("MainBody")}
             activeOpacity={0.5}
             style={styles.button}
           >
