@@ -5,18 +5,58 @@ import { View, Text, SafeAreaView, StatusBar, YellowBox } from "react-native";
 // } from "react-native-scrollable-tab-view";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+
 import Icon from "react-native-vector-icons/FontAwesome";
 // import styles from "../styles/homeStyle";
 // import TabBar from "../components/tabBar/tabBar";
 
 import HomePage from "./home";
+import Detail from "./detail";
+
+import Order from "./order";
+import SelectDish from "./selectDish";
+
 import History from "./history";
 import Profile from "./profile";
-import Order from "./order";
 
 YellowBox.ignoreWarnings([
   "Non-serializable values were found in the navigation state",
 ]);
+
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen(props) {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <HomeStack.Screen
+        name="Home"
+        component={HomePage}
+        initialParams={{ response: props.route.params.response }}
+      />
+      <HomeStack.Screen name="Detail" component={Detail} />
+    </HomeStack.Navigator>
+  );
+}
+
+const OrderStack = createStackNavigator();
+
+function OrderStackScreen() {
+  return (
+    <OrderStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <OrderStack.Screen name="Order" component={Order} />
+      <OrderStack.Screen name="SelectDish" component={SelectDish} />
+    </OrderStack.Navigator>
+  );
+}
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -62,7 +102,7 @@ export default class MainBody extends Component {
       >
         <Tab.Screen
           name="Home"
-          component={HomePage}
+          component={HomeStackScreen}
           initialParams={{ response: this.props.response }}
           options={{
             tabBarLabel: "Trang chủ".toLocaleLowerCase(),
@@ -73,7 +113,7 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Order"
-          component={Order}
+          component={OrderStackScreen}
           options={{
             tabBarLabel: "Đặt bàn",
             tabBarIcon: ({ focused, color }) => (
