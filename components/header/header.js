@@ -12,34 +12,44 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import styles from "./style";
-export default class Header extends Component {
-  constructor(props) {
-    super(props);
+// import { useNavigation } from "@react-navigation/native";
 
-    // this.state = {
-    //   nameScreen: "",
-    // };
-  }
-
-  render() {
-    return (
-      <>
-        <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.5} style={styles.button}>
+export default function Header(props) {
+  // const navigation = useNavigation();
+  return (
+    <>
+      <View style={styles.header}>
+        {props.onPressBack ? (
+          <TouchableOpacity
+            onPress={() => props.onPressBack()}
+            activeOpacity={0.5}
+            style={styles.button}
+          >
             <Image
               source={require("../../assets/icon/back.png")}
               style={styles.icon_button}
             />
           </TouchableOpacity>
-          <Text style={styles.title}>{this.props.title}</Text>
-          <TouchableOpacity activeOpacity={0.5} style={styles.button}>
+        ) : (
+          <TouchableOpacity
+            // onPress={() => navigation.navigate("MainBody")}
+            activeOpacity={0.5}
+            style={styles.button}
+          >
             <Image
-              source={require("../../assets/icon/settings.png")}
+              source={require("../../assets/icon/back.png")}
               style={styles.icon_button}
             />
           </TouchableOpacity>
-        </View>
-      </>
-    );
-  }
+        )}
+        <Text style={styles.title}>{props.title}</Text>
+        <TouchableOpacity activeOpacity={0.5} style={styles.button}>
+          <Image
+            source={require("../../assets/icon/settings.png")}
+            style={styles.icon_button}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
 }

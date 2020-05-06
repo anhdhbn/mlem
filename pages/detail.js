@@ -43,12 +43,13 @@ import {
 import ScrollableTabView, {
   DefaultTabBar,
 } from "react-native-scrollable-tab-view";
-import Header from "../template/header/header";
-import TabBar from "../template/tabBar/tabBar";
+
+import Header from "../components/header/header";
+import TabBar from "../components/tabBar/tabBar";
 import SmartDishCard from "../components/smartDishCard/smartDishCard";
 import styles from "../styles/favouriteDishStyle";
 
-export default class FavouriteDish extends Component {
+export default class Detail extends Component {
   constructor(props) {
     super(props);
     this.handClickIcon = this.handClickIcon.bind(this);
@@ -56,6 +57,7 @@ export default class FavouriteDish extends Component {
     this.state = {
       listFavouriteDishs: [
         {
+          id: 6,
           linkImageDish:
             "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
           nameDish: "Món 1",
@@ -65,6 +67,7 @@ export default class FavouriteDish extends Component {
           isLike: true,
         },
         {
+          id: 5,
           linkImageDish:
             "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
           nameDish: "Món 2",
@@ -74,6 +77,7 @@ export default class FavouriteDish extends Component {
           isLike: false,
         },
         {
+          id: 4,
           linkImageDish:
             "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
           nameDish: "Món 3",
@@ -97,42 +101,27 @@ export default class FavouriteDish extends Component {
   render() {
     return (
       <>
-        <SafeAreaView style={styles.container}>
-          {/* <StatusBar barStyle="dark-content" backgroundColor='transparent' translucent={true} /> */}
-          <ScrollableTabView
-            style={styles.container}
-            tabBarPosition="bottom"
-            initialPage={0}
-            renderTabBar={() => <TabBar />}
-          >
-            <View tabLabel="Trang chủ" style={styles.tabView}>
-              <Header title="Món yêu thích"></Header>
-              {this.state.listFavouriteDishs.map((dish) => (
-                <SmartDishCard
-                  linkImageDish={dish.linkImageDish}
-                  nameDish={dish.nameDish}
-                  describeDish={dish.describeDish}
-                  price={dish.price}
-                  promoPrice={dish.promoPrice}
-                  // For icon
-                  linkIconActive={require("../assets/icon/heart.png")}
-                  linkIconInactive={require("../assets/icon/heart-unlike.png")}
-                  handClickIcon={this.handClickIcon}
-                  isActive={dish.isLike}
-                ></SmartDishCard>
-              ))}
-            </View>
-            <View tabLabel="Đặt bàn" style={styles.tabView}>
-              <Text>Tab 2</Text>
-            </View>
-            <View tabLabel="Nhật ký" style={styles.tabView}>
-              <Text>Tab 3</Text>
-            </View>
-            <View tabLabel="Tài khoản" style={styles.tabView}>
-              <Text>Tab 4</Text>
-            </View>
-          </ScrollableTabView>
-        </SafeAreaView>
+        <View tabLabel="Trang chủ" style={styles.tabView}>
+          <Header
+            // onPressBack={navigation.navigate("MainBody")}
+            title="Món yêu thích"
+          ></Header>
+          {this.state.listFavouriteDishs.map((dish) => (
+            <SmartDishCard
+              key={dish.id}
+              linkImageDish={dish.linkImageDish}
+              nameDish={dish.nameDish}
+              describeDish={dish.describeDish}
+              price={dish.price}
+              promoPrice={dish.promoPrice}
+              // For icon
+              linkIconActive={require("../assets/icon/heart.png")}
+              linkIconInactive={require("../assets/icon/heart-unlike.png")}
+              handClickIcon={this.handClickIcon}
+              isActive={dish.isLike}
+            ></SmartDishCard>
+          ))}
+        </View>
       </>
     );
   }

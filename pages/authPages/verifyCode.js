@@ -17,42 +17,70 @@ import styles from "../../styles/authScreen/verifyCodeStyle";
 class verifyCode extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      code: "",
+      navigation: this.props,
+      error: null,
+      loading: false,
+      resending: false,
+      response: null,
     };
+
+    this.setLoading = this.setLoading.bind(this);
+    this.setResending = this.setResending.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this._onFulfill = this._onFulfill.bind(this);
+  }
+
+  setLoading(state) {
+    this.setState({ loading: state });
+  }
+
+  setResending(state) {
+    this.setState({ resending: state });
+  }
+
+  async onSubmit(code) {
+    this.setLoading(true);
+    let data = {
+      id: this.props.response,
+      passwordRecoveryCode: code.toString(),
+    };
+    let response = await authServices.verifyCode(data);
+    this.setLoading(false);
+    // TODO: Handle code incorrect
+
+    this.props.navigation.navigate("RecoveryPassStep2VerifyCode", {
+      id: response,
+    });
+  }
+
+  resendVerifyCode() {
+    this.setResending(true);
+    this.props.onSubmit();
+    this.setResending(false);
   }
 
   _onFulfill(code) {
     // TODO: call API to check code here
     // If code does not match, clear input with: this.refs.codeInputRef1.clear()
-    if (code == "Q234E") {
-      Alert.alert("Confirmation Code", "Successful!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-    } else {
-      Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-
-      this.refs.codeInputRef1.clear();
-    }
+    this.onSubmit(code);
+    this.refs.codeInputRef1.clear();
   }
 
-  _onFinishCheckingCode2(isValid, code) {
-    this.props.navigation.navigate("RecoveryPassStep2");
-    console.log(isValid);
-    if (!isValid) {
-      Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-    } else {
-      this.setState({ code });
-      Alert.alert("Confirmation Code", "Successful!", [{ text: "OK" }], {
-        cancelable: false,
-      });
-    }
-  }
+  // _onFinishCheckingCode(isValid, code) {
+  //   this.props.navigation.navigate("RecoveryPassStep2");
+  //   console.log(isValid);
+  //   if (!isValid) {
+  //     Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
+  //       cancelable: false,
+  //     });
+  //   } else {
+  //     this.setState({ code });
+  //     Alert.alert("Confirmation Code", "Successful!", [{ text: "OK" }], {
+  //       cancelable: false,
+  //     });
+  //   }
+  // }
   render() {
     return (
       <>
@@ -121,27 +149,34 @@ class verifyCode extends Component {
                 keyboardType="numeric"
                 codeLength={4}
                 className={"border-circle"}
-                compareWithCode="1234"
+                // compareWithCode="1234"
                 autoFocus={false}
                 codeInputStyle={{ fontWeight: "800" }}
-                onFulfill={(isValid, code) =>
-                  this._onFinishCheckingCode2(isValid, code)
-                }
+                onFulfill={(code) => {
+                  this._onFulfill(code);
+                }}
                 onCodeChange={(code) => {
                   this.state.code = code;
                 }}
               />
             </View>
           </KeyboardAvoidingView>
-          <View style={{ marginTop: 10, alignItems: "center" }}>
-            <TouchableOpacity style={styles.submitBtn}>
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+          {this.state.resending ? (
+            <Text> Resending verifyCode</Text>
+          ) : (
+            <View style={{ marginTop: 10, alignItems: "center" }}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => this.resendVerifyCode()}
               >
-                Gửi lại mã xác nhận
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Gửi lại mã xác nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <View
             style={{
               marginTop: 10,

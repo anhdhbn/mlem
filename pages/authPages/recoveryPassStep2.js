@@ -13,8 +13,88 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/recoveryPassStep2Style";
+import authServices from "../../services/authServices";
 
 export default class recoveryPassStep2 extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      navigation: this.props,
+      error: null,
+      loading: false,
+      email: null,
+      phoneNumber: null,
+      password: null,
+      confirmPassword: null,
+    };
+
+    this.handlePassword = this.handlePassword.bind(this);
+    this.handleConfirmPassword = this.handleConfirmPassword(this);
+    this.setLoading = this.setLoading.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.getData = this.getData.bind(this);
+    this.checkData = this.checkData.bind(this);
+  }
+
+  handlePassword(text) {
+    this.setState({ password: text });
+  }
+
+  handleConfirmPassword(text) {
+    this.setState({ confirmPassword: text });
+  }
+
+  setLoading(state) {
+    this.setState({ loading: state });
+  }
+
+  getData() {
+    return {
+      id: this.props.id,
+      password: this.state.password.toString(),
+      confirmPassword: this.state.password.toString(),
+    };
+  }
+
+  async onSubmit() {
+    if (this.checkData()) {
+      this.setLoading(true);
+      let data = this.getData();
+      console.log(data);
+
+      let response = await authServices.recoveryPass(data);
+      this.setLoading(false);
+      Alert.alert(
+        "Registration Successful",
+        response.message,
+        [
+          {
+            text: "OK",
+            onPress: () => this.props.navigation.navigate("SignIn"),
+          },
+        ],
+        { cancelable: false }
+      );
+      // } catch (error) {
+      //   setError(error.message);
+      //   this.setLoading(false);
+      // }
+    }
+  }
+
+  checkData() {
+    if (this.state.password === null) {
+      Alert.alert("Password error");
+      return false;
+    }
+    if (this.state.confirmPassword === null) {
+      Alert.alert("Confirm password error");
+      return false;
+    }
+    return true;
+  }
+
   render() {
     return (
       <>
@@ -72,6 +152,7 @@ export default class recoveryPassStep2 extends Component {
                   placeholder="Mật khẩu"
                   placeholderTextColor="#c2bbba"
                   secureTextEntry={true}
+                  onChangeText={this.handlePassword}
                 />
               </View>
               <View style={styles.viewInput}>
@@ -81,25 +162,30 @@ export default class recoveryPassStep2 extends Component {
                 />
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Mật khẩu"
+                  placeholder="Xác nhận mật khẩu"
                   placeholderTextColor="#c2bbba"
                   secureTextEntry={true}
+                  onChangeText={this.handleConfirmPassword}
                 />
               </View>
             </View>
           </KeyboardAvoidingView>
-          <View style={{ marginTop: 10, alignItems: "center" }}>
-            <TouchableOpacity
-              style={styles.submitBtn}
-              onPress={() => this.props.navigation.navigate("SignIn")}
-            >
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+          {loading ? (
+            <Text> Sending </Text>
+          ) : (
+            <View style={{ marginTop: 10, alignItems: "center" }}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => this.onSubmit()}
               >
-                Xác nhận
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Xác nhận
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <View
             style={{
               marginTop: 10,
