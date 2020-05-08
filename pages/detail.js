@@ -1,32 +1,3 @@
-// import React, { Component } from "react";
-// import {
-//   SafeAreaView,
-//   StyleSheet,
-//   ScrollView,
-//   View,
-//   Text,
-//   StatusBar,
-//   Image,
-//   TouchableOpacity,
-//   TextInput,
-//   KeyboardAvoidingView,
-// } from "react-native";
-
-// import styles from "./style";
-// export default class Header extends Component {
-//   constructor(props) {
-//     super(props);
-
-//     // this.state = {
-//     //   nameScreen: "",
-//     // };
-//   }
-
-//   render() {
-//     return <></>;
-//   }
-// }
-
 import React, { Component } from "react";
 import {
   SafeAreaView,
@@ -40,6 +11,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from "react-native";
+
 import ScrollableTabView, {
   DefaultTabBar,
 } from "react-native-scrollable-tab-view";
@@ -54,40 +26,7 @@ export default class Detail extends Component {
     super(props);
     this.handClickIcon = this.handClickIcon.bind(this);
 
-    this.state = {
-      listFavouriteDishs: [
-        {
-          id: 6,
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 1",
-          describeDish: "Miêu tả món ăn",
-          price: "100000",
-          promoPrice: "50000",
-          isLike: true,
-        },
-        {
-          id: 5,
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 2",
-          describeDish: "Miêu tả món ăn",
-          price: "100000",
-          promoPrice: "50000",
-          isLike: false,
-        },
-        {
-          id: 4,
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 3",
-          describeDish: "Món này không được giảm giá",
-          price: "100000",
-          promoPrice: null,
-          isLike: false,
-        },
-      ],
-    };
+    this.state = {};
   }
 
   handClickIcon(nameDish) {
@@ -101,26 +40,43 @@ export default class Detail extends Component {
   render() {
     return (
       <>
+        {/* {console.log(this.props.route.params.listDishs)} */}
         <View tabLabel="Trang chủ" style={styles.tabView}>
           <Header
             // onPressBack={navigation.navigate("MainBody")}
             title="Món yêu thích"
           ></Header>
-          {this.state.listFavouriteDishs.map((dish) => (
-            <SmartDishCard
-              key={dish.id}
-              linkImageDish={dish.linkImageDish}
-              nameDish={dish.nameDish}
-              describeDish={dish.describeDish}
-              price={dish.price}
-              promoPrice={dish.promoPrice}
-              // For icon
-              linkIconActive={require("../assets/icon/heart.png")}
-              linkIconInactive={require("../assets/icon/heart-unlike.png")}
-              handClickIcon={this.handClickIcon}
-              isActive={dish.isLike}
-            ></SmartDishCard>
-          ))}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {this.props.route.params.listDishs.map((dish) => (
+              //   {
+              //     "descreption": "Món này được giảm giá",
+              //     "discountRate": 10,
+              //     "errors": null,
+              //     "foodFoodGroupingMappings": null,
+              //     "foodFoodTypeMappings": null,
+              //     "id": 11,
+              //     "image": null,
+              //     "imageId": null,
+              //     "name": "Hải sản 3",
+              //     "priceEach": 10000,
+              //     "statusId": 0
+              // }
+              <SmartDishCard
+                key={dish.id}
+                linkImageDish={dish.image}
+                nameDish={dish.name}
+                describeDish={dish.descreption}
+                price={dish.priceEach}
+                // promoPrice={dish.discountRate * dish.priceEach}
+                promoPrice={dish.discountRate}
+                // For icon
+                linkIconActive={require("../assets/icon/heart.png")}
+                linkIconInactive={require("../assets/icon/heart-unlike.png")}
+                handClickIcon={this.handClickIcon}
+                isActive={false}
+              ></SmartDishCard>
+            ))}
+          </ScrollView>
         </View>
       </>
     );

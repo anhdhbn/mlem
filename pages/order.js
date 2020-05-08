@@ -10,47 +10,20 @@ import {
 
 import Header from "../components/header/header";
 import DatePicker from "../components/dateTimePicker/datePicker";
+import OrderItem from "../components/order/orderItem";
+import SelectTable from "../components/order/selectTable";
+import TableOff from "../components/order/tableOff";
 export default class order extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      availeble: 2,
+      available: 2,
       listDish: [
         {
           nameDish: "Món 1",
           price: "100000",
           promoPrice: "50000",
           quantity: 24,
-        },
-        {
-          nameDish: "Món 2",
-          price: "100000",
-          promoPrice: "50000",
-          quantity: 25,
-        },
-        {
-          nameDish: "Món 3",
-          price: "100000",
-          promoPrice: "50000",
-          quantity: 24,
-        },
-        {
-          nameDish: "Món 4",
-          price: "100000",
-          promoPrice: "50000",
-          quantity: 25,
-        },
-        {
-          nameDish: "Món 5",
-          price: "100000",
-          promoPrice: "50000",
-          quantity: 24,
-        },
-        {
-          nameDish: "Món 6",
-          price: "100000",
-          promoPrice: "50000",
-          quantity: 26,
         },
       ],
       numOfTable: 0,
@@ -60,16 +33,7 @@ export default class order extends Component {
     };
   }
   UNSAFE_componentWillMount = () => {
-    var tp = 0;
-    var tpp = 0;
-    this.state.listDish.map((dish) => {
-      tp += dish.quantity * dish.price;
-      tpp += dish.quantity * dish.promoPrice;
-    });
-    this.setState({
-      totalPrice: tp,
-      totalPromoPrice: tpp,
-    });
+    this.calculatePrice();
   };
 
   addTable = () => {
@@ -99,350 +63,202 @@ export default class order extends Component {
         ? { ...dish, quantity: dish.quantity + 1 }
         : dish
     );
-    var tp = 0;
-    var tpp = 0;
-    newListDish.map((dish) => {
-      tp += dish.quantity * dish.price;
-      tpp += dish.quantity * dish.promoPrice;
-    });
-    console.log(tp, tpp);
-    this.setState({
-      listDish: newListDish,
-      totalPrice: tp,
-      totalPromoPrice: tpp,
-    });
+    this.calculatePrice();
   };
+
   subNumOfDish = (nameDish) => {
     let newListDish = this.state.listDish.map((dish) =>
       dish.nameDish === nameDish
         ? { ...dish, quantity: dish.quantity - 1 }
         : dish
     );
+    this.setState({
+      listDish: newListDish,
+    });
+    this.calculatePrice();
+  };
+
+  calculatePrice = () => {
     var tp = 0;
     var tpp = 0;
-    newListDish.map((dish) => {
+    this.state.listDish.map((dish) => {
       tp += dish.quantity * dish.price;
       tpp += dish.quantity * dish.promoPrice;
     });
     console.log(tp, tpp);
     this.setState({
-      listDish: newListDish,
       totalPrice: tp,
       totalPromoPrice: tpp,
     });
   };
+
+  addOrderDish = (dish) => {
+    console.log("[INFO] Add Order Dish is called");
+    this.setState({
+      listDish: { ...this.state.listDish, dish },
+    });
+  };
+
   render() {
-    if (this.state.availeble > 0) {
-      return (
-        <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
-          <Header title="Đặt Bàn" hideButtonBack={true} />
-          <View
-            style={{
-              backgroundColor: "#fff",
-              height: 35,
-              marginTop: 15,
-              flexDirection: "row",
-              position: "relative",
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  padding: 8,
-                  color: "#76c963",
-                }}
-              >
-                Số bàn còn trống: {this.state.availeble}
-              </Text>
-            </View>
-            <View style={{ right: 20, position: "absolute", marginTop: 12 }}>
-              <Image
-                source={require("../assets/icon/online.png")}
-                style={{ width: 15, height: 15 }}
-              />
-            </View>
-          </View>
-
+    return (
+      <>
+        <Header title="Đặt Bàn" hideButtonBack={true} />
+        <View
+          style={{
+            backgroundColor: "#fff",
+            height: 35,
+            marginTop: 15,
+            flexDirection: "row",
+            position: "relative",
+          }}
+        >
           <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-              Số bàn và số lượng người đặt
-            </Text>
-          </View>
-
-          <View
-            style={{
-              backgroundColor: "#fff",
-              height: 40,
-              flexDirection: "row",
-              position: "relative",
-              paddingLeft: 8,
-            }}
-          >
-            <View style={{ flexDirection: "row", paddingTop: 8 }}>
-              <TouchableOpacity onPress={() => this.subTable()}>
-                <Image
-                  source={require("../assets/icon/-.png")}
-                  style={{ width: 25, height: 25 }}
-                />
-              </TouchableOpacity>
-              <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
-                {this.state.numOfTable}
-              </Text>
-              <TouchableOpacity onPress={() => this.addTable()}>
-                <Image
-                  source={require("../assets/icon/+.png")}
-                  style={{ width: 25, height: 25 }}
-                />
-              </TouchableOpacity>
-              <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
-                Bàn
-              </Text>
-            </View>
-            <View
+            <Text
               style={{
-                flexDirection: "row",
-                right: 10,
-                position: "absolute",
-                paddingTop: 8,
+                fontSize: 16,
+                fontWeight: "bold",
+                padding: 8,
+                color: "#76c963",
               }}
             >
-              <TouchableOpacity onPress={() => this.subPeople()}>
-                <Image
-                  source={require("../assets/icon/-.png")}
-                  style={{ width: 25, height: 25 }}
-                />
-              </TouchableOpacity>
-              <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
-                {" "}
-                {this.state.numOfPeople}{" "}
-              </Text>
-              <TouchableOpacity onPress={() => this.addPeople()}>
-                <Image
-                  source={require("../assets/icon/+.png")}
-                  style={{ width: 25, height: 25 }}
-                />
-              </TouchableOpacity>
-              <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
-                Người{" "}
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-              Thời gian
+              Số bàn còn trống: {this.state.available}
             </Text>
           </View>
-
-          <DatePicker />
-
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-              Chọn món
-            </Text>
-          </View>
-
-          {/* list of dish */}
-          {this.state.listDish.map((dish) => (
-            <View
-              style={{
-                // Card
-                height: 70,
-                borderRadius: 6,
-                elevation: 3,
-                backgroundColor: "#fff",
-                shadowOffset: { width: 1, height: 1 },
-                shadowColor: "#333",
-                shadowOpacity: 0.3,
-                shadowRadius: 2,
-                marginVertical: 6,
-                // Another
-                flexDirection: "row",
-              }}
-            >
-              <View
-                style={{ flex: 5, flexDirection: "column", marginLeft: 10 }}
-              >
-                <Text style={{ fontSize: 20 }}>{dish.nameDish}</Text>
-                <View>
-                  <Text
-                    style={{
-                      textDecorationLine: "line-through",
-                      color: "grey",
-                    }}
-                  >
-                    {dish.price} đ
-                  </Text>
-                  <Text>{dish.promoPrice} đ</Text>
-                </View>
-              </View>
-              <View style={{ right: 20, marginTop: 20 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity
-                    onPress={() => this.subNumOfDish(dish.nameDish)}
-                  >
-                    <Image
-                      source={require("../assets/icon/-.png")}
-                      style={{ width: 25, height: 25 }}
-                    />
-                  </TouchableOpacity>
-                  <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
-                    {dish.quantity}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => this.addNumOfDish(dish.nameDish)}
-                  >
-                    <Image
-                      source={require("../assets/icon/+.png")}
-                      style={{ width: 25, height: 25 }}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          ))}
-
-          <View
-            style={{
-              backgroundColor: "#e67777",
-              height: 45,
-              padding: 12,
-              borderRadius: 10,
-            }}
-          >
-            <TouchableOpacity>
-              <Text style={{ fontSize: 17, color: "#fff", fontWeight: "bold" }}>
-                + Thêm món
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              height: 40,
-              flexDirection: "row",
-              backgroundColor: "#fff",
-              marginTop: 8,
-            }}
-          >
+          <View style={{ right: 20, position: "absolute", marginTop: 12 }}>
             <Image
-              source={require("../assets/icon/note.png")}
-              style={{ width: 30, height: 30, marginTop: 6, marginLeft: 8 }}
-            />
-            <TextInput
-              style={{ width: 400, fontSize: 16 }}
-              placeholder="ghi chú ..."
+              source={require("../assets/icon/online.png")}
+              style={{ width: 15, height: 15 }}
             />
           </View>
+        </View>
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+            Thời gian
+          </Text>
+        </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              position: "relative",
-              backgroundColor: "#fff",
-              height: 80,
-              padding: 10,
-              marginBottom: 30,
-              marginTop: 10,
-            }}
-          >
-            <View style={{ marginTop: 8, paddingLeft: 10 }}>
-              <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                {" "}
-                {this.state.totalPromoPrice}đ
-              </Text>
-              <Text
-                style={{ textDecorationLine: "line-through", color: "grey" }}
-              >
-                {this.state.totalPrice}đ
+        <DatePicker />
+
+        {this.state.available > 0 ? (
+          <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+                Số bàn và số lượng người đặt
               </Text>
             </View>
-            <View style={{ position: "absolute", right: 20 }}>
+            <SelectTable
+              subTable={this.subTable}
+              addTable={this.addTable}
+              subPeople={this.subPeople}
+              addPeople={this.addPeople}
+              numOfTable={this.state.numOfTable}
+              numOfPeople={this.state.numOfPeople}
+            />
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+                Chọn món
+              </Text>
+            </View>
+
+            {/* list of dish */}
+            {this.state.listDish.map((dish) => (
+              <OrderItem
+                dish={dish}
+                addNumOfDish={this.addNumOfDish}
+                subNumOfDish={this.subNumOfDish}
+              />
+            ))}
+
+            <View
+              style={{
+                backgroundColor: "#e67777",
+                height: 45,
+                padding: 12,
+                borderRadius: 10,
+              }}
+            >
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#DC0000",
-                  borderRadius: 8,
-                  width: 70,
-                  height: 40,
-                  marginTop: 20,
+                onPress={() => {
+                  this.props.navigation.navigate("SelectDish", {
+                    addOrderDish: this.addOrderDish,
+                  });
                 }}
               >
                 <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    padding: 8,
-                    paddingLeft: 20,
-                    color: "#fff",
-                  }}
+                  style={{ fontSize: 17, color: "#fff", fontWeight: "bold" }}
                 >
-                  Đặt
+                  + Thêm món
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </ScrollView>
-      );
-    } else {
-      return (
-        <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
-          <Header title="Đặt Bàn" hideButtonBack={true}></Header>
-          <View
-            style={{
-              backgroundColor: "#fff",
-              height: 35,
-              marginTop: 15,
-              flexDirection: "row",
-              position: "relative",
-            }}
-          >
-            <View>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  padding: 8,
-                  color: "red",
-                }}
-              >
-                Số bàn còn trống: 0
-              </Text>
-            </View>
-            <View style={{ right: 20, position: "absolute", marginTop: 12 }}>
+            <View
+              style={{
+                height: 40,
+                flexDirection: "row",
+                backgroundColor: "#fff",
+                marginTop: 8,
+              }}
+            >
               <Image
-                source={require("../assets/icon/offline.png")}
-                style={{ width: 12, height: 12 }}
+                source={require("../assets/icon/note.png")}
+                style={{ width: 30, height: 30, marginTop: 6, marginLeft: 8 }}
+              />
+              <TextInput
+                style={{ width: 400, fontSize: 16 }}
+                placeholder="ghi chú ..."
               />
             </View>
-          </View>
-          <View style={{ alignItems: "center", marginTop: 30 }}>
-            <Text
+
+            <View
               style={{
-                color: "red",
-                fontSize: 23,
-                fontWeight: "bold",
-                marginTop: 6,
+                flexDirection: "row",
+                position: "relative",
+                backgroundColor: "#fff",
+                height: 80,
+                padding: 10,
+                marginBottom: 30,
+                marginTop: 10,
               }}
             >
-              Nhà hàng tạm thời hết bàn!
-            </Text>
-            <Text
-              style={{
-                color: "red",
-                fontSize: 23,
-                fontWeight: "bold",
-                marginTop: 6,
-              }}
-            >
-              Mong quý khách quay lại sau!
-            </Text>
-            <Image
-              source={require("../assets/icon/vector-cute-sorry-smiley-illustration.jpg")}
-              style={{ width: 350, height: 250, marginTop: 20 }}
-            />
-          </View>
-        </ScrollView>
-      );
-    }
+              <View style={{ marginTop: 8, paddingLeft: 10 }}>
+                <Text style={{ fontSize: 19, fontWeight: "bold" }}>
+                  {this.state.totalPromoPrice}đ
+                </Text>
+                <Text
+                  style={{ textDecorationLine: "line-through", color: "grey" }}
+                >
+                  {this.state.totalPrice}đ
+                </Text>
+              </View>
+              <View style={{ position: "absolute", right: 20 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#DC0000",
+                    borderRadius: 8,
+                    width: 70,
+                    height: 40,
+                    marginTop: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      padding: 8,
+                      paddingLeft: 20,
+                      color: "#fff",
+                    }}
+                  >
+                    Đặt
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        ) : (
+          <TableOff />
+        )}
+      </>
+    );
   }
 }

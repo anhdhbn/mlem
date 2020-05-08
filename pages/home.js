@@ -63,51 +63,75 @@ export default function (props) {
     //     setListFavourite(data);
     //     setIsLoadingFavourite(false);
     //   });
-    //   setIsLoadingFavourite(false);
+    //   // setIsLoadingFavourite(false);
     // } else if (isLoadingRecently === true) {
     //   getListFoods(-2).then((data) => {
     //     setListRecently(data);
     //     setIsLoadingRecently(false);
     //   });
-    //   setIsLoadingRecently(false);
+    //   // setIsLoadingRecently(false);
     // } else if (isLoadingTop === true) {
     //   getListFoods(-1).then((data) => {
     //     setListTop(data);
     //     setIsLoadingTop(false);
     //   });
-    //   setIsLoadingTop(false);
+    //   // setIsLoadingTop(false);
     // } else if (isLoadingLau === true) {
     //   getListFoods(1).then((data) => {
     //     setListLau(data);
     //     setIsLoadingLau(false);
     //   });
-    //   setIsLoadingLau(false);
+    //   //  setIsLoadingLau(false);
     // } else if (isLoadingHaisan === true) {
     //   getListFoods(2).then((data) => {
     //     setListHaisan(data);
     //     setIsLoadingHaisan(false);
     //   });
-    //   setIsLoadingHaisan(false);
+    //   // setIsLoadingHaisan(false);
     // } else if (isLoadingRaucu === true) {
     //   getListFoods(3).then((data) => {
     //     setListRaucu(data);
     //     setIsLoadingRaucu(false);
     //   });
-    //   setIsLoadingRaucu(false);
+    //   // setIsLoadingRaucu(false);
     // } else if (isLoadingThit === true) {
     //   getListFoods(4).then((data) => {
     //     setListThit(data);
     //     setIsLoadingThit(false);
     //   });
-    //   setIsLoadingThit(false);
+    //   // setIsLoadingThit(false);
     // } else if (isLoadingDouong === true) {
     //   getListFoods(5).then((data) => {
     //     setListDouong(data);
     //     setIsLoadingDouong(false);
     //   });
-    //   setIsLoadingDouong(false);
+    //   // setIsLoadingDouong(false);
+    // }
+
+    // console.log("[INFO] Loading dish", listDouong);
+
+    // // Test
+    // if (isLoadingDouong === true) {
+    //   getAllFoods().then((data) => {
+    //     setListDouong(data);
+    //     setListFavourite(data);
+    //     setListHaisan(data);
+    //     setListLau(data);
+    //     setListRaucu(data);
+    //     setListRecently(data);
+    //     setListThit(data);
+    //     setListTop(data);
+    //     setIsLoadingDouong(false);
+    //   });
     // }
   });
+
+  const getAllFoods = async () => {
+    let params = {};
+    let response = await homeServices.list(params);
+    console.log("[INFO] Response in getAllFoods: ", response);
+    return response;
+  };
 
   const getListFoods = async (code) => {
     if (code == -3) {
@@ -163,7 +187,7 @@ export default function (props) {
   };
 
   const onPressDetail = (cardData) => {
-    props.navigation.navigate("Detail", { data: cardData });
+    props.navigation.navigate("Detail", { listDishs: cardData });
   };
 
   // For modal
@@ -203,49 +227,49 @@ export default function (props) {
         <NavBar />
         <CardList
           cardData={listFavorite}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listFavorite)}
           title={"Yêu thích"}
           isLoading={isLoadingFavourite}
         />
         <CardList
           cardData={listRecently}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listRecently)}
           title={"Đặt gần đây"}
           isLoading={isLoadingRecently}
         />
         <CardList
           cardData={listTop}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listTop)}
           title={"Đặt nhiều nhất"}
           isLoading={isLoadingTop}
         />
         <CardList
           cardData={listLau}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listLau)}
           title={"Lẩu - Buffet"}
           isLoading={isLoadingLau}
         />
         <CardList
           cardData={listHaisan}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listHaisan)}
           title={"Hải sản"}
           isLoading={isLoadingHaisan}
         />
         <CardList
           cardData={listRaucu}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listRaucu)}
           title={"Rau củ"}
           isLoading={isLoadingRaucu}
         />
         <CardList
           cardData={listThit}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listThit)}
           title={"Thịt"}
           isLoading={isLoadingThit}
         />
         <CardList
           cardData={listDouong}
-          onPressDetail={() => onPressDetail()}
+          onPressDetail={() => onPressDetail(listDouong)}
           title={"Đồ uống"}
           isLoading={isLoadingDouong}
         />
