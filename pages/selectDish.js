@@ -14,6 +14,10 @@ import Header from "../components/header/header";
 import Icon from "react-native-vector-icons/FontAwesome";
 import SmartDishCard from "../components/smartDishCard/smartDishCard";
 import ModalSelectDish from "../components/order/modalSelectDish";
+import CaculatePrice from "../components/order/calculatePrice";
+
+import orderSevices from "../services/orderServices";
+
 export default class order extends Component {
   constructor(props) {
     super(props);
@@ -21,45 +25,37 @@ export default class order extends Component {
       showModal: false,
       listDish: [
         {
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 3",
-          describeDish: "Món này không được giảm giá",
-          price: 100000,
-          promoPrice: null,
-          isActive: false,
+          descreption: null,
+          discountRate: null,
+          errors: null,
+          id: 1,
+          image: null,
+          imageId: null,
+          name: "Ba chỉ rang cháy cạnh",
+          priceEach: 50000,
+          statusId: 1,
         },
         {
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 1",
-          describeDish: "Miêu tả món ăn",
-          price: 100000,
-          promoPrice: 50000,
-          isActive: false,
-        },
-        {
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 2",
-          describeDish: "Miêu tả món ăn",
-          price: 100000,
-          promoPrice: 50000,
-          isActive: false,
-        },
-        {
-          linkImageDish:
-            "https://reactnativecode.com/wp-content/uploads/2017/05/react_thumb_install.png",
-          nameDish: "Món 3",
-          describeDish: "Món này không được giảm giá",
-          price: 100000,
-          promoPrice: null,
-          isActive: false,
+          descreption: null,
+          discountRate: null,
+          errors: null,
+          id: 2,
+          image: null,
+          imageId: null,
+          name: "Gimbap chiên",
+          priceEach: 20000,
+          statusId: 1,
         },
       ],
+
       totalPrice: 0,
       totalPromoPrice: 0,
+      // B52
+      totalPrice: this.props.route.params.totalPrice,
+      totalPromoPrice: this.props.route.params.totalPromoPrice,
+
       modal: {
+        id: null,
         linkImageDish: null,
         nameDish: null,
         describeDish: null,
@@ -69,11 +65,26 @@ export default class order extends Component {
 
         quantity: 0,
         smallSize: false,
-        normalSize: false,
+        normalSize: true,
         bigSize: false,
       },
     };
   }
+
+  // B52
+  componentDidMount = () => {
+    this.getListFood().then((data) => {
+      let listFood = data;
+      this.setState({ listDish: listFood });
+    });
+  };
+
+  getListFood = async () => {
+    let params = {};
+    let response = await orderSevices.listFood(params);
+    console.log("[TEST] Get list food in selectDIsh: ", response);
+    return response;
+  };
 
   handClickIcon = (dish) => {
     // console.log("[INFO] CLick icon in favouriteDish.js");
@@ -89,7 +100,7 @@ export default class order extends Component {
     // console.log("[INFO] dish input: ", dish);
     this.setState({
       showModal: !this.state.showModal,
-      modal: dish,
+      modal: { ...dish, smallSize: false, normalSize: true, bigSize: false },
     });
     // console.log("[INFO] Modal dish: ", this.state.modal);
   };
@@ -99,7 +110,7 @@ export default class order extends Component {
   };
 
   subNumOfDish = (nameDish) => {
-    console.log("[INFO] Press sub num of dish.", nameDish);
+    // console.log("[INFO] Press sub num of dish.", nameDish);
     this.setState({
       modal: {
         ...this.state.modal,
@@ -109,16 +120,18 @@ export default class order extends Component {
             : this.state.modal.quantity - 1,
       },
     });
+    // this.addDish2Order();
   };
 
   addNumOfDish = (nameDish) => {
-    console.log("[INFO] Press add num of dish.", nameDish);
+    // console.log("[INFO] Press add num of dish.", nameDish);
     this.setState({
       modal: {
         ...this.state.modal,
         quantity: this.state.modal.quantity + 1,
       },
     });
+    // this.addDish2Order();
   };
 
   selectOrderSize = (selectSize) => {
@@ -131,6 +144,13 @@ export default class order extends Component {
         bigSize: selectSize.bigSize,
       },
     });
+    // this.addDish2Order();
+  };
+
+  addDish2Order = () => {
+    // B52
+    // console.log("Add dish to order: ", this.state.modal);
+    this.props.route.params.addDish2Order(this.state.modal);
   };
 
   render() {
@@ -154,6 +174,9 @@ export default class order extends Component {
             }}
           >
             <TouchableOpacity style={{}}>
+              <Text style={{ fontSize: 16 }}> Tất cả </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{}}>
               <Text style={{ fontSize: 16 }}> Top bán chạy </Text>
             </TouchableOpacity>
             <TouchableOpacity style={{}}>
@@ -167,24 +190,34 @@ export default class order extends Component {
           {/* <SafeAreaView style={{ height: 350 }}> */}
 
           <View>
-            {this.state.listDish.map((dish) => (
-              <SmartDishCard
-                linkImageDish={dish.linkImageDish}
-                nameDish={dish.nameDish}
-                describeDish={dish.describeDish}
-                price={dish.price}
-                promoPrice={dish.promoPrice}
-                // For icon
-                linkIconActive={require("../assets/icon/+.png")}
-                linkIconInactive={require("../assets/icon/+.png")}
-                handClickIcon={this.handClickIcon}
-                isActive={true}
-              />
-            ))}
+            {this.state.listDish ? (
+              this.state.listDish.map((dish) => (
+                <SmartDishCard
+                  id={dish.id}
+                  linkImageDish={dish.image}
+                  nameDish={dish.name}
+                  describeDish={dish.describe}
+                  price={dish.priceEach}
+                  promoPrice={
+                    dish.discountRate
+                      ? dish.priceEach * dish.discountRate
+                      : null
+                  }
+                  // For icon
+                  linkIconActive={require("../assets/icon/+.png")}
+                  linkIconInactive={require("../assets/icon/+.png")}
+                  handClickIcon={this.handClickIcon}
+                  isActive={true}
+                />
+              ))
+            ) : (
+              <Text>Loading</Text>
+            )}
           </View>
 
           <View>
             <ModalSelectDish
+              addDish2Order={this.addDish2Order}
               visible={this.state.showModal}
               hideModal={this.hideModal}
               modal={this.state.modal}
@@ -196,59 +229,12 @@ export default class order extends Component {
             />
           </View>
         </ScrollView>
-        <View
-          style={{
-            bottom: 0,
-            backgroundColor: "#fff",
-            borderRadius: 10,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              position: "relative",
-              height: 40,
-              padding: 10,
-              marginBottom: 30,
-              marginTop: 10,
-            }}
-          >
-            <View style={{ paddingLeft: 10 }}>
-              <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                {" "}
-                {this.state.totalPromoPrice}đ
-              </Text>
-              <Text
-                style={{ textDecorationLine: "line-through", color: "grey" }}
-              >
-                {this.state.totalPrice}đ
-              </Text>
-            </View>
-            <View style={{ position: "absolute", right: 20 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#DC0000",
-                  borderRadius: 8,
-                  width: 90,
-                  height: 40,
-                  marginTop: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    padding: 8,
-                    paddingLeft: 10,
-                    color: "#fff",
-                  }}
-                >
-                  Thêm vào
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+
+        <CaculatePrice
+          totalPromoPrice={this.state.totalPromoPrice}
+          totalPrice={this.state.totalPrice}
+          // addOrderDish={this.props.route.params.addOrderDish(this.state.modal)}
+        />
       </SafeAreaView>
     );
   }

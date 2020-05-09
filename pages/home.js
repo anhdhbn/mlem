@@ -58,55 +58,55 @@ export default function (props) {
       }
     }
 
-    // if (isLoadingFavourite === true) {
-    //   getListFoods(-3).then((data) => {
-    //     setListFavourite(data);
-    //     setIsLoadingFavourite(false);
-    //   });
-    //   // setIsLoadingFavourite(false);
-    // } else if (isLoadingRecently === true) {
-    //   getListFoods(-2).then((data) => {
-    //     setListRecently(data);
-    //     setIsLoadingRecently(false);
-    //   });
-    //   // setIsLoadingRecently(false);
-    // } else if (isLoadingTop === true) {
-    //   getListFoods(-1).then((data) => {
-    //     setListTop(data);
-    //     setIsLoadingTop(false);
-    //   });
-    //   // setIsLoadingTop(false);
-    // } else if (isLoadingLau === true) {
-    //   getListFoods(1).then((data) => {
-    //     setListLau(data);
-    //     setIsLoadingLau(false);
-    //   });
-    //   //  setIsLoadingLau(false);
-    // } else if (isLoadingHaisan === true) {
-    //   getListFoods(2).then((data) => {
-    //     setListHaisan(data);
-    //     setIsLoadingHaisan(false);
-    //   });
-    //   // setIsLoadingHaisan(false);
-    // } else if (isLoadingRaucu === true) {
-    //   getListFoods(3).then((data) => {
-    //     setListRaucu(data);
-    //     setIsLoadingRaucu(false);
-    //   });
-    //   // setIsLoadingRaucu(false);
-    // } else if (isLoadingThit === true) {
-    //   getListFoods(4).then((data) => {
-    //     setListThit(data);
-    //     setIsLoadingThit(false);
-    //   });
-    //   // setIsLoadingThit(false);
-    // } else if (isLoadingDouong === true) {
-    //   getListFoods(5).then((data) => {
-    //     setListDouong(data);
-    //     setIsLoadingDouong(false);
-    //   });
-    //   // setIsLoadingDouong(false);
-    // }
+    if (isLoadingFavourite === true) {
+      getListFoods(-3).then((data) => {
+        setListFavourite(data);
+        setIsLoadingFavourite(false);
+      });
+      // setIsLoadingFavourite(false);
+    } else if (isLoadingRecently === true) {
+      getListFoods(-2).then((data) => {
+        setListRecently(data);
+        setIsLoadingRecently(false);
+      });
+      // setIsLoadingRecently(false);
+    } else if (isLoadingTop === true) {
+      getListFoods(-1).then((data) => {
+        setListTop(data);
+        setIsLoadingTop(false);
+      });
+      // setIsLoadingTop(false);
+    } else if (isLoadingLau === true) {
+      getListFoods(1).then((data) => {
+        setListLau(data);
+        setIsLoadingLau(false);
+      });
+      //  setIsLoadingLau(false);
+    } else if (isLoadingHaisan === true) {
+      getListFoods(2).then((data) => {
+        setListHaisan(data);
+        setIsLoadingHaisan(false);
+      });
+      // setIsLoadingHaisan(false);
+    } else if (isLoadingRaucu === true) {
+      getListFoods(3).then((data) => {
+        setListRaucu(data);
+        setIsLoadingRaucu(false);
+      });
+      // setIsLoadingRaucu(false);
+    } else if (isLoadingThit === true) {
+      getListFoods(4).then((data) => {
+        setListThit(data);
+        setIsLoadingThit(false);
+      });
+      // setIsLoadingThit(false);
+    } else if (isLoadingDouong === true) {
+      getListFoods(5).then((data) => {
+        setListDouong(data);
+        setIsLoadingDouong(false);
+      });
+      // setIsLoadingDouong(false);
+    }
 
     // console.log("[INFO] Loading dish", listDouong);
 

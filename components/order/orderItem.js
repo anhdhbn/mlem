@@ -10,6 +10,17 @@ import {
 } from "react-native";
 
 export default function (props) {
+  nameSize = () => {
+    if (props.dish.bigSize) {
+      return "size Lớn";
+    }
+    if (props.dish.normalSize) {
+      return "size Vừa";
+    }
+    if (props.dish.smallSize) {
+      return "size Nhỏ";
+    }
+  };
   return (
     <View
       style={{
@@ -27,8 +38,11 @@ export default function (props) {
         flexDirection: "row",
       }}
     >
+      {/* {console.log("Props in orderItem: ", props.dish)} */}
       <View style={{ flex: 5, flexDirection: "column", marginLeft: 10 }}>
-        <Text style={{ fontSize: 20 }}>{props.dish.nameDish}</Text>
+        <Text style={{ fontSize: 20 }}>
+          {props.dish.nameDish + " " + nameSize()}
+        </Text>
         <View>
           <Text
             style={{

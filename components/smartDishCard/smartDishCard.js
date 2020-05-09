@@ -52,11 +52,14 @@ export default class SmartDishCard extends Component {
   handPressIcon = () => {
     // console.log("[INFO] Hand press icon in smartDishCard.js");
     let dish = {
+      id: this.props.id,
       linkImageDish: this.props.linkImageDish,
       nameDish: this.props.nameDish,
       describeDish: this.props.describeDish,
       price: this.props.price,
-      promoPrice: this.props.promoPrice,
+      promoPrice: this.props.promoPrice
+        ? this.props.promoPrice
+        : this.props.price,
       isActive: false,
 
       quantity: 0,

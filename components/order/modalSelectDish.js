@@ -25,7 +25,8 @@ export default function (props) {
         bottom: 0,
       }}
     >
-      {console.log("[INFO] Props in modelSelectDish: ", props.modal)}
+      {/* {console.log("[INFO] Props in modelSelectDish: ", props.modal)} */}
+      {props.modal.nameDish ? props.addDish2Order() : null}
       <View style={{ alignItems: "center" }}>
         <Text style={{ fontSize: 27, marginTop: 4, fontFamily: "regular" }}>
           Tuỳ chỉnh món
@@ -69,17 +70,23 @@ export default function (props) {
         <View style={{ flex: 5, flexDirection: "column", marginLeft: 10 }}>
           <Text style={{ fontSize: 20 }}>{props.modal.nameDish}</Text>
           <Text style={{ fontSize: 10 }}>{props.modal.describeDish}</Text>
-          <View>
-            <Text
-              style={{
-                textDecorationLine: "line-through",
-                color: "grey",
-              }}
-            >
-              {props.modal.price} đ
-            </Text>
-            <Text>{props.modal.promoPrice} đ</Text>
-          </View>
+          {props.modal.promoPrice ? (
+            <View>
+              <Text
+                style={{
+                  textDecorationLine: "line-through",
+                  color: "grey",
+                }}
+              >
+                {props.modal.price} đ
+              </Text>
+              <Text>{props.modal.promoPrice} đ</Text>
+            </View>
+          ) : (
+            <View>
+              <Text style={{}}>{props.modal.price} đ</Text>
+            </View>
+          )}
         </View>
         <View style={{ right: 20, marginTop: 50 }}>
           <View style={{ flexDirection: "row" }}>
@@ -230,7 +237,7 @@ export default function (props) {
                 style={{
                   backgroundColor: "#DC0000",
                   borderRadius: 8,
-                  width: 90,
+                  width: 100,
                   height: 40,
                   marginTop: 10,
                 }}
@@ -244,7 +251,7 @@ export default function (props) {
                     color: "#fff",
                   }}
                 >
-                  Thêm vào
+                  Thêm món
                 </Text>
               </TouchableOpacity>
             </View>
