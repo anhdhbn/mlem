@@ -16,7 +16,6 @@ export default class SmartDishCard extends Component {
   constructor(props) {
     super(props);
     this.displayPrice = this.displayPrice.bind(this);
-    this.handPressIcon = this.handPressIcon.bind(this);
     this.checkProps = this.checkProps.bind(this);
   }
 
@@ -50,13 +49,26 @@ export default class SmartDishCard extends Component {
     }
   }
 
-  handPressIcon() {
+  handPressIcon = () => {
     // console.log("[INFO] Hand press icon in smartDishCard.js");
-    this.props.handClickIcon(this.props.nameDish);
-  }
+    let dish = {
+      id: this.props.id,
+      linkImageDish: this.props.linkImageDish,
+      nameDish: this.props.nameDish,
+      describeDish: this.props.describeDish,
+      price: this.props.price,
+      promoPrice: this.props.promoPrice
+        ? this.props.promoPrice
+        : this.props.price,
+      isActive: false,
+
+      quantity: 0,
+    };
+    this.props.handClickIcon(dish);
+  };
 
   render() {
-    if (this.checkProps())
+    if (this.checkProps()) {
       return (
         <>
           <View
@@ -120,5 +132,12 @@ export default class SmartDishCard extends Component {
           </View>
         </>
       );
+    } else {
+      return (
+        <>
+          <Text>Invalid props</Text>
+        </>
+      );
+    }
   }
 }

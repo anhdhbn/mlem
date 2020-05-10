@@ -50,10 +50,10 @@ export default function (props) {
         isLoading={cardData ? false : true}
         // isLoading={isLoading}
         layout={[
-          { key: "1", width: 90, height: 90, margin: 10 },
-          { key: "2", width: 90, height: 90, margin: 10 },
-          { key: "3", width: 90, height: 90, margin: 10 },
-          { key: "4", width: 90, height: 90, margin: 10 },
+          { key: "1", width: 100, height: 100, margin: 10 },
+          { key: "2", width: 100, height: 100, margin: 10 },
+          { key: "3", width: 100, height: 100, margin: 10 },
+          { key: "4", width: 100, height: 100, margin: 10 },
         ]}
       >
         <FlatList
@@ -65,7 +65,7 @@ export default function (props) {
             return (
               <View
                 style={{
-                  paddingBottom: 2,
+                  padding: 10,
                 }}
               >
                 <TouchableOpacity
