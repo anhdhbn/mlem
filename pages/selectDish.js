@@ -23,30 +23,17 @@ export default class order extends Component {
     super(props);
     this.state = {
       showModal: false,
-      listDish: [
-        {
-          descreption: null,
-          discountRate: null,
-          errors: null,
-          id: 1,
-          image: null,
-          imageId: null,
-          name: "Ba chỉ rang cháy cạnh",
-          priceEach: 50000,
-          statusId: 1,
-        },
-        {
-          descreption: null,
-          discountRate: null,
-          errors: null,
-          id: 2,
-          image: null,
-          imageId: null,
-          name: "Gimbap chiên",
-          priceEach: 20000,
-          statusId: 1,
-        },
-      ],
+
+      listDishRender: [],
+      listAllDish: [],
+      listLau: [],
+      listHaisan: [],
+      listRaucu: [],
+      listThit: [],
+      listDouong: [],
+      listDishTopOrder: [],
+      listDishRecently: [],
+      listDishSortL2H: [],
 
       totalPrice: 0,
       totalPromoPrice: 0,
@@ -75,8 +62,93 @@ export default class order extends Component {
   componentDidMount = () => {
     this.getListFood().then((data) => {
       let listFood = data;
-      this.setState({ listDish: listFood });
+      this.setState({ listDishRender: listFood });
+      this.setState({ listAllDish: listFood });
     });
+    this.getListLau();
+    this.getListHaisan();
+    this.getListRaucu();
+    this.getListThit();
+    this.getListDouong();
+    this.getListTopOrder();
+    this.getListRecently();
+  };
+
+  getListLau = async () => {
+    let params = {
+      foodGroupingId: {
+        equal: 1,
+      },
+    };
+    let response = await orderSevices.listFood(params);
+    this.setState({ listLau: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListHaisan = async () => {
+    let params = {
+      foodGroupingId: {
+        equal: 2,
+      },
+    };
+    let response = await orderSevices.listFood(params);
+    this.setState({ listHaisan: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListRaucu = async () => {
+    let params = {
+      foodGroupingId: {
+        equal: 3,
+      },
+    };
+    let response = await orderSevices.listFood(params);
+    this.setState({ listRaucu: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListThit = async () => {
+    let params = {
+      foodGroupingId: {
+        equal: 4,
+      },
+    };
+    let response = await orderSevices.listFood(params);
+    this.setState({ listThit: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListDouong = async () => {
+    let params = {
+      foodGroupingId: {
+        equal: 5,
+      },
+    };
+    let response = await orderSevices.listFood(params);
+    this.setState({ listDouong: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListTopOrder = async () => {
+    let params = {};
+    let response = await orderSevices.listFoodTopOrder(params);
+    this.setState({ listDishTopOrder: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListRecently = async () => {
+    let params = {};
+    let response = await orderSevices.listFoodRecently(params);
+    this.setState({ listDishRecently: response });
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
+  };
+
+  getListL2H = async () => {
+    let params = {};
+    // let response = await orderSevices.TenAPI(params);
+    // this.setState({ listDishRecently: response });
+    console.log("Chưa có api in getListL2H in selectDish");
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
   getListFood = async () => {
@@ -87,11 +159,6 @@ export default class order extends Component {
   };
 
   handClickIcon = (dish) => {
-    // console.log("[INFO] CLick icon in favouriteDish.js");
-    // let newListFavouriteDishs = this.state.listDish.map((dish) =>
-    //   dish.nameDish === nameDish ? { ...dish, isLike: !dish.isLike } : dish
-    // );
-    // this.setState({ listDish: newListFavouriteDishs });
     this.toggleModal(dish);
     // this.props.route.params.addOrderDish(nameDish);
   };
@@ -153,6 +220,53 @@ export default class order extends Component {
     this.props.route.params.addDish2Order(this.state.modal);
   };
 
+  onPressAll = () => {
+    this.setListDishRender(0);
+  };
+
+  onPressLau = () => {
+    this.setListDishRender(1);
+  };
+
+  onPressHaisan = () => {
+    this.setListDishRender(2);
+  };
+
+  onPressRaucu = () => {
+    this.setListDishRender(3);
+  };
+
+  onPressThit = () => {
+    this.setListDishRender(4);
+  };
+
+  onPressDouong = () => {
+    this.setListDishRender(5);
+  };
+
+  setListDishRender = (code) => {
+    if (code == 0) {
+      this.setState({ listDishRender: this.state.listAllDish });
+    } else if (code == 1) {
+      this.setState({ listDishRender: this.state.listLau });
+    } else if (code == 2) {
+      this.setState({ listDishRender: this.state.listHaisan });
+    } else if (code == 3) {
+      this.setState({ listDishRender: this.state.listRaucu });
+    } else if (code == 4) {
+      this.setState({ listDishRender: this.state.listThit });
+    } else if (code == 5) {
+      this.setState({ listDishRender: this.state.listDouong });
+    } else if (code == 6) {
+      this.setState({ listDishRender: this.state.listDishTopOrder });
+    } else if (code == 7) {
+      this.setState({ listDishRender: this.state.listDishRecently });
+    } else if (code == 8) {
+      this.setState({ listDishRender: this.state.listDishSortL2H });
+    }
+    console.log("[INFO] New List Dish: ", this.state.listDishRender);
+  };
+
   render() {
     return (
       <SafeAreaView style={{ backgroundColor: "#F5F6F7", flex: 1 }}>
@@ -164,7 +278,15 @@ export default class order extends Component {
             </Text>
           </View>
 
-          <NavBar />
+          <NavBar
+            onPressAll={this.onPressAll}
+            onPressLau={this.onPressLau}
+            onPressHaisan={this.onPressHaisan}
+            onPressRaucu={this.onPressRaucu}
+            onPressThit={this.onPressThit}
+            onPressDouong={this.onPressDouong}
+          />
+
           <View
             style={{
               flexDirection: "row",
@@ -173,16 +295,36 @@ export default class order extends Component {
               padding: 10,
             }}
           >
-            <TouchableOpacity style={{}}>
+            <TouchableOpacity
+              style={{}}
+              onPress={() => {
+                this.setListDishRender(0);
+              }}
+            >
               <Text style={{ fontSize: 16 }}> Tất cả </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{}}>
+            <TouchableOpacity
+              style={{}}
+              onPress={() => {
+                this.setListDishRender(6);
+              }}
+            >
               <Text style={{ fontSize: 16 }}> Top bán chạy </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{}}>
+            <TouchableOpacity
+              style={{}}
+              onPress={() => {
+                this.setListDishRender(7);
+              }}
+            >
               <Text style={{ fontSize: 16 }}> Đặt gần đây </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{}}>
+            <TouchableOpacity
+              style={{}}
+              onPress={() => {
+                this.setListDishRender(8);
+              }}
+            >
               <Text style={{ fontSize: 16 }}> Giá thấp đến cao </Text>
             </TouchableOpacity>
           </View>
@@ -190,8 +332,8 @@ export default class order extends Component {
           {/* <SafeAreaView style={{ height: 350 }}> */}
 
           <View>
-            {this.state.listDish ? (
-              this.state.listDish.map((dish) => (
+            {this.state.listDishRender ? (
+              this.state.listDishRender.map((dish) => (
                 <SmartDishCard
                   id={dish.id}
                   linkImageDish={dish.image}

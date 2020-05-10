@@ -29,6 +29,7 @@ export default function (props) {
     douong: 5,
   });
 
+  const [isLoadingAllDish, setIsLoadingAllDish] = useState(true);
   const [isLoadingFavourite, setIsLoadingFavourite] = useState(true);
   const [isLoadingRecently, setIsLoadingRecently] = useState(true);
   const [isLoadingTop, setIsLoadingTop] = useState(true);
@@ -38,6 +39,7 @@ export default function (props) {
   const [isLoadingThit, setIsLoadingThit] = useState(true);
   const [isLoadingDouong, setIsLoadingDouong] = useState(true);
 
+  const [listAllDish, setListAllDish] = useState(undefined);
   const [listFavorite, setListFavourite] = useState(undefined);
   const [listRecently, setListRecently] = useState(undefined);
   const [listTop, setListTop] = useState(undefined);
@@ -106,6 +108,11 @@ export default function (props) {
         setIsLoadingDouong(false);
       });
       // setIsLoadingDouong(false);
+    } else if (isLoadingAllDish === true) {
+      getAllFoods().then((data) => {
+        setListAllDish(data);
+        setIsLoadingAllDish(false);
+      });
     }
 
     // console.log("[INFO] Loading dish", listDouong);
@@ -129,7 +136,7 @@ export default function (props) {
   const getAllFoods = async () => {
     let params = {};
     let response = await homeServices.list(params);
-    console.log("[INFO] Response in getAllFoods: ", response);
+    // console.log("[INFO] Response in getAllFoods: ", response);
     return response;
   };
 
@@ -224,7 +231,14 @@ export default function (props) {
       {/* {console.log("Start Rendering")} */}
       <ScrollView style={styles.home}>
         <HeaderImage />
-        <NavBar />
+        <NavBar
+          onPressAll={() => onPressDetail(listAllDish)}
+          onPressLau={() => onPressDetail(listFavorite)}
+          onPressHaisan={() => onPressDetail(listHaisan)}
+          onPressRaucu={() => onPressDetail(listRaucu)}
+          onPressThit={() => onPressDetail(listThit)}
+          onPressDouong={() => onPressDetail(listDouong)}
+        />
         <CardList
           cardData={listFavorite}
           onPressDetail={() => onPressDetail(listFavorite)}

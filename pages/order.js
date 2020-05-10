@@ -8,6 +8,8 @@ import {
   TextInput,
 } from "react-native";
 
+import orderServices from "../services/orderServices";
+
 import Header from "../components/header/header";
 import DatePicker from "../components/dateTimePicker/datePicker";
 import OrderItem from "../components/order/orderItem";
@@ -17,7 +19,9 @@ export default class order extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      available: 2,
+      tableAvailable: 2,
+      date: null,
+      time: null,
       listDish: [],
       // listDish: [
       //   {
@@ -30,6 +34,7 @@ export default class order extends Component {
       //],
       numOfTable: 0,
       numOfPeople: 0,
+      descreption: null,
       totalPrice: 0,
       totalPromoPrice: 0,
     };
@@ -103,16 +108,16 @@ export default class order extends Component {
   };
 
   addDish2Order = (dish) => {
-    console.log("-----------------------------------------------------");
-    console.log("=====");
+    // console.log("-----------------------------------------------------");
+    // console.log("=====");
     let newListDish = [];
-    console.log(
-      "[INFO] Add Order Dish is called. lishDish before added",
-      this.state.listDish
-    );
-    console.log("[INFO] Add Order Dish is called. Add dish: ", dish);
+    // console.log(
+    //   "[INFO] Add Order Dish is called. lishDish before added",
+    //   this.state.listDish
+    // );
+    // console.log("[INFO] Add Order Dish is called. Add dish: ", dish);
 
-    console.log("[TEST] Finding dish in lishDish");
+    // console.log("[TEST] Finding dish in lishDish");
 
     //so sanh bang key, size
     // let newListDish = this.state.listDish.map((dishOrdered) => {
@@ -140,23 +145,76 @@ export default class order extends Component {
         newListDish.push(dishOrdered);
       }
     }
-    console.log("[INFO] newListDish: ", newListDish);
-    console.log("[TEST] Found dish in lishDish");
+    // console.log("[INFO] newListDish: ", newListDish);
+    // console.log("[TEST] Found dish in lishDish");
     // Check neu chuwa duocjw them
 
     if (!added) {
       newListDish.push(dish);
     }
-    console.log("[INFO] newListDish: ", newListDish);
+    // console.log("[INFO] newListDish: ", newListDish);
 
     this.setState({ listDish: newListDish });
 
     this.calculatePrice();
-    console.log("=====");
-    console.log("-----------------------------------------------------");
+    // console.log("=====");
+    // console.log("-----------------------------------------------------");
     // this.setState({
     //   listDish: { ...this.state.listDish, dish },
     // });
+  };
+
+  getNumTableAvailable = async (date, time) => {
+    let params = {
+      date: {
+        equal: date,
+      },
+    };
+    let response = await orderServices.getNumTableAvailable(params);
+    console.log("[INFO] Reponse in getNumTableAvailble: ", response);
+  };
+
+  createOrder = async () => {
+    let orderContents = [];
+
+    let lengthListDish = this.state.listDish.length;
+    for (let index = 0; index < lengthListDish; index++) {
+      let dishOrdered = this.state.listDish[index];
+      orderContents.push({
+        foodFoodTypeMapping: {
+          foodId: dishOrdered.id,
+          foodTypeId: dishOrdered.smallSize
+            ? 1
+            : dishOrdered.normalSize
+            ? 2
+            : 3,
+        },
+        quantity: dishOrdered.quantity,
+      });
+    }
+
+    let params = {
+      orderDate: this.state.date,
+      numOfTable: this.state.numOfTable,
+      numOfPerson: this.state.numOfPeople,
+      descreption: this.state.descreption,
+      orderContents: orderContents,
+    };
+    console.log("[INFO] Params: ", params);
+    let response = await orderServices.createOrder(params);
+    console.log("[INFO] Reponse in createOrder: ", response);
+  };
+
+  setDate = (date) => {
+    console.log("[INFO] Date: ", date);
+    this.getNumTableAvailable(date, this.state.time);
+    this.setState({ date: date });
+  };
+
+  setTime = (time) => {
+    this.setState({ time: time });
+    this.getNumTableAvailable(this.state.date, time);
+    console.log("[INFO] Time: ", time);
   };
 
   render() {
@@ -181,7 +239,7 @@ export default class order extends Component {
                 color: "#76c963",
               }}
             >
-              Số bàn còn trống: {this.state.available}
+              Số bàn còn trống: {this.state.tableAvailable}
             </Text>
           </View>
           <View style={{ right: 20, position: "absolute", marginTop: 12 }}>
@@ -197,9 +255,9 @@ export default class order extends Component {
           </Text>
         </View>
 
-        <DatePicker />
+        <DatePicker setDate={this.setDate} setTime={this.setTime} />
 
-        {this.state.available > 0 ? (
+        {this.state.tableAvailable > 0 ? (
           <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
             <View>
               <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
@@ -317,6 +375,9 @@ export default class order extends Component {
                     width: 70,
                     height: 40,
                     marginTop: 20,
+                  }}
+                  onPress={() => {
+                    this.createOrder();
                   }}
                 >
                   <Text
