@@ -92,12 +92,20 @@ export default class order extends Component {
     var tp = 0;
     var tpp = 0;
     if (this.state.listDish) {
-      this.state.listDish.map((dish) => {
+      this.state.listDish.map((dishOrdered) => {
         // console.log("[INFO] Dish price: ", dish.price);
         // console.log("[INFO] Dish quantity: ", dish.quantity);
         // console.log("[INFO] Dish promo price: ", dish.promoPrice);
-        tp += dish.quantity * dish.price;
-        tpp += dish.quantity * dish.promoPrice;
+        tp += dishOrdered.smallSize
+          ? 1 * dishOrdered.quantity * dishOrdered.price
+          : dishOrdered.normalSize
+          ? 1.2 * dishOrdered.quantity * dishOrdered.price
+          : 1.5 * dishOrdered.quantity * dishOrdered.price;
+        tpp += dishOrdered.smallSize
+          ? 1 * dishOrdered.quantity * dishOrdered.promoPrice
+          : dishOrdered.normalSize
+          ? 1.2 * dishOrdered.quantity * dishOrdered.promoPrice
+          : 1.5 * dishOrdered.quantity * dishOrdered.promoPrice;
       });
       console.log(tp, tpp);
       this.setState({
@@ -190,6 +198,11 @@ export default class order extends Component {
             : 3,
         },
         quantity: dishOrdered.quantity,
+        amount: dishOrdered.smallSize
+          ? 1 * dishOrdered.quantity * dishOrdered.price
+          : dishOrdered.normalSize
+          ? 1.2 * dishOrdered.quantity * dishOrdered.price
+          : 1.5 * dishOrdered.quantity * dishOrdered.price,
       });
     }
 
@@ -199,8 +212,12 @@ export default class order extends Component {
       numOfPerson: this.state.numOfPeople,
       descreption: this.state.descreption,
       orderContents: orderContents,
+      total: this.state.totalPrice,
+      subTotal: this.state.totalPromoPrice,
     };
+
     console.log("[INFO] Params: ", params);
+
     let response = await orderServices.createOrder(params);
     console.log("[INFO] Reponse in createOrder: ", response);
   };

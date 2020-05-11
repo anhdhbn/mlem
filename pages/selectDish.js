@@ -342,7 +342,7 @@ export default class order extends Component {
                   price={dish.priceEach}
                   promoPrice={
                     dish.discountRate
-                      ? dish.priceEach * dish.discountRate
+                      ? (dish.priceEach * (100 - dish.discountRate)) / 100
                       : null
                   }
                   // For icon

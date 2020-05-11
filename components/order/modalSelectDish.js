@@ -132,7 +132,7 @@ export default function (props) {
         >
           <View>
             <Text>Size nhỏ</Text>
-            <Text>{props.modal.promoPrice * 0.5}</Text>
+            <Text>{props.modal.promoPrice}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -159,7 +159,7 @@ export default function (props) {
         >
           <View>
             <Text>Size Vừa</Text>
-            <Text>{props.modal.promoPrice * 0.8}</Text>
+            <Text>{props.modal.promoPrice * 1.2}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -185,7 +185,7 @@ export default function (props) {
         >
           <View>
             <Text>Size Lớn</Text>
-            <Text>{props.modal.promoPrice}</Text>
+            <Text>{props.modal.promoPrice * 1.5}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
