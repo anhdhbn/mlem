@@ -65,6 +65,7 @@
 
 import * as React from "react";
 import { Button, Text, TextInput, View } from "react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -89,6 +90,14 @@ function SplashScreen() {
   return (
     <View>
       <Text>Loading...</Text>
+    </View>
+  );
+}
+
+function NoInternetScreen() {
+  return (
+    <View>
+      <Text>NoInternet</Text>
     </View>
   );
 }
@@ -189,6 +198,12 @@ export default function App({ navigation }) {
     bootstrapAsync();
   }, []);
 
+  const checkNoInternet = () => {
+    const netInfo = useNetInfo();
+    console.log("[INFO] Use netinfo: ", netInfo.isConnected);
+    return !netInfo.isConnected;
+  };
+
   const authContext = React.useMemo(
     () => ({
       signIn: async (data) => {
@@ -217,7 +232,9 @@ export default function App({ navigation }) {
             headerShown: false,
           }}
         >
-          {state.isLoading ? (
+          {checkNoInternet() ? (
+            <Stack.Screen name="NoInternet" component={NoInternetScreen} />
+          ) : state.isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
           ) : state.userToken == null ? (
