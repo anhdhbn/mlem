@@ -16,6 +16,7 @@ import styles from "../../styles/authScreen/signUpStyle";
 import authServices from "../../services/authServices";
 import CTA from "../../components/CTA";
 import { Header, ErrorText } from "../../components/shared";
+import SnackBar from "../../components/common/snackbarUpdating";
 
 export default class SignUp extends Component {
   constructor(props) {
@@ -23,11 +24,13 @@ export default class SignUp extends Component {
 
     this.state = {
       navigation: this.props,
+      visibleAlert: false,
       error: null,
       loading: false,
-      email: null,
-      phoneNumber: null,
-      password: null,
+      email: "test@testInternet,com",
+      phoneNumber: "123456784",
+      password: "123456789",
+      confirmPassword: "123456789",
     };
 
     this.handleEmail = this.handleEmail.bind(this);
@@ -48,8 +51,12 @@ export default class SignUp extends Component {
   }
 
   handlePassword(text) {
-    this.setState({ password: text, confirmPassword: text });
+    this.setState({ password: text });
   }
+
+  handleConfirmPassword = (text) => {
+    this.setState({ confirmPassword: text });
+  };
 
   setLoading(state) {
     this.setState({ loading: state });
@@ -70,25 +77,25 @@ export default class SignUp extends Component {
       let data = this.getSignUpData();
       // console.log(data);
 
-      let response = await authServices.createUser(data);
+      let response = await authServices.createUser(data).catch((reason) => {
+        // console.log("==========================================");
+        const message = reason.response.data;
+        console.log("[INFO] message in signUp: ", message);
+        this.setAlert(true);
+      });
+
       this.setLoading(false);
-      Alert.alert(
-        "Registration Successful",
-        response.message,
-        [
-          {
-            text: "OK",
-            onPress: () => this.props.navigation.navigate("SignIn"),
-          },
-        ],
-        { cancelable: false }
-      );
+
       // } catch (error) {
       //   setError(error.message);
       //   this.setLoading(false);
       // }
     }
   }
+
+  setAlert = (visible) => {
+    this.setState({ visibleAlert: visible });
+  };
 
   checkData() {
     if (this.state.email === null) {
@@ -123,9 +130,20 @@ export default class SignUp extends Component {
   //     });
   // }
 
+  _onDismissSnackBar = () => {
+    this.setState({ visibleAlert: false });
+  };
+
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
+        <SnackBar
+          visible={this.state.visibleAlert}
+          _onDismissSnackBar={this._onDismissSnackBar}
+          actionText="Hide"
+          duration={5000}
+          text={"Thông tin đăng ký bị trùng"}
+        />
         <View style={{ alignItems: "center" }}>
           <Text style={{ color: "white", fontWeight: "bold" }}>ĐĂNG KÝ</Text>
         </View>
@@ -192,6 +210,19 @@ export default class SignUp extends Component {
                 placeholderTextColor="#c2bbba"
                 secureTextEntry={true}
                 onChangeText={this.handlePassword}
+              />
+            </View>
+            <View style={styles.viewInput}>
+              <Image
+                source={require("../../assets/icon/key.png")}
+                style={styles.image}
+              />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Xác nhận mật khẩu"
+                placeholderTextColor="#c2bbba"
+                secureTextEntry={true}
+                onChangeText={this.handleConfirmPassword}
               />
             </View>
           </View>

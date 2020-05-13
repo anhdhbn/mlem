@@ -39,15 +39,15 @@ export default function (props) {
   const [isLoadingThit, setIsLoadingThit] = useState(true);
   const [isLoadingDouong, setIsLoadingDouong] = useState(true);
 
-  const [listAllDish, setListAllDish] = useState(undefined);
-  const [listFavorite, setListFavourite] = useState(undefined);
-  const [listRecently, setListRecently] = useState(undefined);
-  const [listTop, setListTop] = useState(undefined);
-  const [listLau, setListLau] = useState(undefined);
-  const [listHaisan, setListHaisan] = useState(undefined);
-  const [listRaucu, setListRaucu] = useState(undefined);
-  const [listThit, setListThit] = useState(undefined);
-  const [listDouong, setListDouong] = useState(undefined);
+  const [listAllDish, setListAllDish] = useState(null);
+  const [listFavorite, setListFavourite] = useState(null);
+  const [listRecently, setListRecently] = useState(null);
+  const [listTop, setListTop] = useState(null);
+  const [listLau, setListLau] = useState(null);
+  const [listHaisan, setListHaisan] = useState(null);
+  const [listRaucu, setListRaucu] = useState(null);
+  const [listThit, setListThit] = useState(null);
+  const [listDouong, setListDouong] = useState(null);
 
   const [visible, setVisible] = useState(false);
   const [checkProfile, setCheckProfile] = useState(false);
@@ -60,60 +60,60 @@ export default function (props) {
       }
     }
 
-    // if (isLoadingFavourite === true) {
-    //   getListFoods(-3).then((data) => {
-    //     setListFavourite(data);
-    //     setIsLoadingFavourite(false);
-    //   });
-    //   // setIsLoadingFavourite(false);
-    // } else if (isLoadingRecently === true) {
-    //   getListFoods(-2).then((data) => {
-    //     setListRecently(data);
-    //     setIsLoadingRecently(false);
-    //   });
-    //   // setIsLoadingRecently(false);
-    // } else if (isLoadingTop === true) {
-    //   getListFoods(-1).then((data) => {
-    //     setListTop(data);
-    //     setIsLoadingTop(false);
-    //   });
-    //   // setIsLoadingTop(false);
-    // } else if (isLoadingLau === true) {
-    //   getListFoods(1).then((data) => {
-    //     setListLau(data);
-    //     setIsLoadingLau(false);
-    //   });
-    //   //  setIsLoadingLau(false);
-    // } else if (isLoadingHaisan === true) {
-    //   getListFoods(2).then((data) => {
-    //     setListHaisan(data);
-    //     setIsLoadingHaisan(false);
-    //   });
-    //   // setIsLoadingHaisan(false);
-    // } else if (isLoadingRaucu === true) {
-    //   getListFoods(3).then((data) => {
-    //     setListRaucu(data);
-    //     setIsLoadingRaucu(false);
-    //   });
-    //   // setIsLoadingRaucu(false);
-    // } else if (isLoadingThit === true) {
-    //   getListFoods(4).then((data) => {
-    //     setListThit(data);
-    //     setIsLoadingThit(false);
-    //   });
-    //   // setIsLoadingThit(false);
-    // } else if (isLoadingDouong === true) {
-    //   getListFoods(5).then((data) => {
-    //     setListDouong(data);
-    //     setIsLoadingDouong(false);
-    //   });
-    //   // setIsLoadingDouong(false);
-    // } else if (isLoadingAllDish === true) {
-    //   getAllFoods().then((data) => {
-    //     setListAllDish(data);
-    //     setIsLoadingAllDish(false);
-    //   });
-    // }
+    if (isLoadingFavourite === true) {
+      getListFoods(-3).then((data) => {
+        setListFavourite(data);
+        setIsLoadingFavourite(false);
+      });
+      // setIsLoadingFavourite(false);
+    } else if (isLoadingRecently === true) {
+      getListFoods(-2).then((data) => {
+        setListRecently(data);
+        setIsLoadingRecently(false);
+      });
+      // setIsLoadingRecently(false);
+    } else if (isLoadingTop === true) {
+      getListFoods(-1).then((data) => {
+        setListTop(data);
+        setIsLoadingTop(false);
+      });
+      // setIsLoadingTop(false);
+    } else if (isLoadingLau === true) {
+      getListFoods(1).then((data) => {
+        setListLau(data);
+        setIsLoadingLau(false);
+      });
+      //  setIsLoadingLau(false);
+    } else if (isLoadingHaisan === true) {
+      getListFoods(2).then((data) => {
+        setListHaisan(data);
+        setIsLoadingHaisan(false);
+      });
+      // setIsLoadingHaisan(false);
+    } else if (isLoadingRaucu === true) {
+      getListFoods(3).then((data) => {
+        setListRaucu(data);
+        setIsLoadingRaucu(false);
+      });
+      // setIsLoadingRaucu(false);
+    } else if (isLoadingThit === true) {
+      getListFoods(4).then((data) => {
+        setListThit(data);
+        setIsLoadingThit(false);
+      });
+      // setIsLoadingThit(false);
+    } else if (isLoadingDouong === true) {
+      getListFoods(5).then((data) => {
+        setListDouong(data);
+        setIsLoadingDouong(false);
+      });
+      // setIsLoadingDouong(false);
+    } else if (isLoadingAllDish === true) {
+      getAllFoods().then((data) => {
+        setListAllDish(data);
+        setIsLoadingAllDish(false);
+      });
+    }
 
     // console.log("[INFO] Loading dish", listDouong);
 
@@ -194,7 +194,9 @@ export default function (props) {
   };
 
   const onPressDetail = (cardData) => {
-    props.navigation.navigate("Detail", { listDishs: cardData });
+    cardData
+      ? props.navigation.navigate("Detail", { listDishs: cardData })
+      : null;
   };
 
   // For modal

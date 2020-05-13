@@ -24,6 +24,7 @@ export default class History extends Component {
 
     this.state = {
       history: [],
+      isLoading: true,
       // history: [
       //   {
       //     orderTime: "15h15",
@@ -64,15 +65,26 @@ export default class History extends Component {
     };
   }
 
+  setIsLoading = (value) => {
+    this.setState({ isLoading: value });
+  };
+
   componentDidMount = () => {
     this.getListOrder();
+    this.setIsLoading(false);
   };
 
   getListOrder = async () => {
     let params = {};
-    console.log("[INFO] Params in getListOrder(): ", params);
+    this.setIsLoading(true);
+    // console.log("[INFO] Params in getListOrder(): ", params);
     let response = await historyServices.list(params);
+    let length = response.length;
+    for (let index = 0; index < length; index++) {
+      console.log("[INFO] Response in history: ", response[index].total);
+    }
 
+    this.setIsLoading(false);
     this.setState({ history: response });
   };
 
@@ -84,18 +96,28 @@ export default class History extends Component {
         <TouchableOpacity onPress={this.getListOrder}>
           <Text>Get getListOrder</Text>
         </TouchableOpacity>
-        {this.state.history.map((item) => {
-          return (
-            <ItemHistoryCard
-              key={item.code}
-              id={item.code}
-              orderTime={item.orderDate}
-              dmy={item.orderDate}
-              price={item.totalCost}
-              status={item.statusId}
-            />
-          );
-        })}
+        {this.state.isLoading ? (
+          <View>
+            <Text>Đang cập nhật ...</Text>
+          </View>
+        ) : (
+          <ScrollView style={{ marginBottom: 150 }}>
+            {this.state.history.map((item) => {
+              return (
+                <ItemHistoryCard
+                  key={item.code}
+                  id={item.code}
+                  orderTime={item.orderDate}
+                  dmy={item.orderDate}
+                  price={item.total}
+                  // // Gia goc
+                  // subPrice={item.subTotal}
+                  status={item.statusId}
+                />
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
     );
   }

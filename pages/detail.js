@@ -44,7 +44,7 @@ export default class Detail extends Component {
         <View tabLabel="Trang chủ" style={styles.tabView}>
           <Header
             // onPressBack={navigation.navigate("MainBody")}
-            title="Món yêu thích"
+            title="Tất cả"
           ></Header>
           <ScrollView showsVerticalScrollIndicator={false}>
             {this.props.route.params.listDishs.map((dish) => (

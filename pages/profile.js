@@ -208,6 +208,7 @@ export default class Profile extends Component {
         <SnackbarUpdating
           visible={this.state.isLoading}
           _onDismissSnackBar={this._onDismissSnackBar}
+          text={"Đang cập nhật"}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Test Snackbar */}

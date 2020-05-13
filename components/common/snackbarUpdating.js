@@ -7,6 +7,19 @@ export default function SnackbarUpdating(props) {
     <Snackbar
       visible={props.visible}
       onDismiss={props._onDismissSnackBar}
+      duration={props.duration ? props.duration : 7000}
+      action={
+        props.actionText
+          ? {
+              label: props.actionText,
+              onPress: () => {
+                props._actionFunction
+                  ? props._actionFunction
+                  : props._onDismissSnackBar;
+              },
+            }
+          : null
+      }
       // action={{
       //   label: "Undo",
       //   onPress: () => {
@@ -14,7 +27,7 @@ export default function SnackbarUpdating(props) {
       //   },
       // }}
     >
-      Đang cập nhật
+      {props.text}
     </Snackbar>
   );
 }

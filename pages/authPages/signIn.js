@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/signInStyle";
+import SnackBar from "../../components/common/snackbarUpdating";
 
 // For sign up
 import authServices from "../../services/authServices";
@@ -19,6 +20,7 @@ class SignIn extends Component {
     super(props);
     this.state = {
       navigation: this.props,
+      isWrong: false,
       error: null,
       loading: false,
       response: null,
@@ -36,12 +38,19 @@ class SignIn extends Component {
     this.checkData = this.checkData.bind(this);
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   // You don't have to do this check first, but it can help prevent an unneeded render
+  //   if (nextProps.route.params.isWrong !== this.state.startTime) {
+  //     this.setState({ startTime: nextProps.startTime });
+  //   }
+  // }
+
   handleEmail(text) {
     this.setState({ email: text });
   }
 
   handlePassword(text) {
-    this.setState({ password: text, confirmPassword: text });
+    this.setState({ password: text });
   }
 
   setLoading(state) {
@@ -72,13 +81,22 @@ class SignIn extends Component {
   //   }
   // }
 
-  onSubmit() {
+  setIsWrong = (value) => {
+    this.setState({ isWrong: value });
+  };
+
+  async onSubmit() {
     if (this.checkData()) {
       this.setLoading(true);
       let data = this.getSignInData();
 
       // console.log("[INFO] Props in signIn: ", this.props.navigation);
-      this.props.signIn(data);
+      console.log("[INFO] Sign in data: ", data);
+
+      let isWrong = await this.props.signIn(data);
+
+      // console.log("[INFO] Return isWrong: ", isWrong);
+      this.setIsWrong(isWrong);
 
       this.setLoading(false);
     }
@@ -96,9 +114,20 @@ class SignIn extends Component {
     return true;
   }
 
+  _onDismissSnackBar = () => {
+    console.log("Called on dissmis");
+    this.setIsWrong(false);
+  };
+
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
+        {/* <SnackBar
+          visible={this.state.isWrong}
+          _onDismissSnackBar={this._onDismissSnackBar}
+          duration={5000}
+          text={"Tên đăng nhập hoặc mật khẩu sai"}
+        /> */}
         <View style={{ alignItems: "center", marginTop: 10 }}>
           <Text style={{ color: "white", fontWeight: "bold" }}>ĐĂNG NHẬP</Text>
         </View>
@@ -134,6 +163,11 @@ class SignIn extends Component {
             <View style={styles.line}></View>
           </View>
         </View>
+        {this.state.isWrong ? (
+          <View>
+            <Text> Tên đăng nhập hoặc mật khẩu sai</Text>
+          </View>
+        ) : null}
         <KeyboardAvoidingView behavior="padding">
           <View style={{ alignItems: "center" }}>
             <View style={styles.viewInput}>
@@ -142,9 +176,13 @@ class SignIn extends Component {
                 style={styles.image}
               />
               <TextInput
-                style={styles.textInput}
+                style={
+                  this.state.isWrong ? styles.textInputWrong : styles.textInput
+                }
                 placeholder="Email / số điện thoại"
                 placeholderTextColor="#c2bbba"
+                // defaultValue={this.state.email}
+                onChangeText={this.handleEmail}
               />
             </View>
 
@@ -154,10 +192,14 @@ class SignIn extends Component {
                 style={styles.image}
               />
               <TextInput
-                style={styles.textInput}
+                style={
+                  this.state.isWrong ? styles.textInputWrong : styles.textInput
+                }
                 placeholder="Mật khẩu"
                 placeholderTextColor="#c2bbba"
                 secureTextEntry={true}
+                // defaultValue={this.state.password}
+                onChangeText={this.handlePassword}
               />
             </View>
             <View style={{ marginLeft: 120, marginTop: 3 }}>

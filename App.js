@@ -136,7 +136,6 @@ function ProviderHomeScreen(props) {
 
 function SignInScreen(props) {
   const { signIn } = React.useContext(AuthContext);
-
   return <SignIn signIn={signIn} navigation={props.navigation} />;
 }
 
@@ -200,7 +199,7 @@ export default function App({ navigation }) {
 
   const checkNoInternet = () => {
     const netInfo = useNetInfo();
-    console.log("[INFO] Use netinfo: ", netInfo.isConnected);
+    // console.log("[INFO] Use netinfo: ", netInfo.isConnected);
     return !netInfo.isConnected;
   };
 
@@ -211,12 +210,20 @@ export default function App({ navigation }) {
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
-        let response = await authServices.login(data);
+        let response = await authServices.login(data).catch((reason) => {
+          // console.log("==========================================");
+          const message = reason.response.data;
+          console.log(message);
+
+          return false;
+        });
+
         dispatch({
           type: "SIGN_IN",
           token: response.token,
           response: response,
         });
+        return true;
       },
       signOut: () => dispatch({ type: "SIGN_OUT" }),
     }),
@@ -250,6 +257,10 @@ export default function App({ navigation }) {
                   // When logging out, a pop animation feels intuitive
                   animationTypeForReplace: state.isSignout ? "pop" : "push",
                 }}
+                // initialParams={{
+                //   isWrong: state.isWrong,
+                //   setIsWrong: setIsWrong,
+                // }}
               />
               <Stack.Screen name="VerifyCode" component={VerifyCode} />
               <Stack.Screen
