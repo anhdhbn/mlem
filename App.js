@@ -19,6 +19,7 @@ import authServices from "./customerServices/authServices";
 import MainBody from "./customerPages/mainBody";
 
 import MainProvider from "./providers/MainProvider";
+import SlideBar from "./providerPages/sideBar";
 
 const AuthContext = React.createContext();
 
@@ -50,7 +51,7 @@ function UserHomeScreen(props) {
 
 function ProviderHomeScreen(props) {
   const { signOut } = React.useContext(AuthContext);
-  return <MainProvider />;
+  return <SlideBar />;
 }
 
 function SignInScreen(props) {
@@ -191,7 +192,7 @@ export default function App({ navigation }) {
                 component={RecoveryPassStep2}
               />
             </>
-          ) : state.response.roleId === 2 ? (
+          ) : state.response.roleId != 2 ? (
             // User is signed in
             <Stack.Screen
               name="UserHome"

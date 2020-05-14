@@ -3,9 +3,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 
-import Order from "./Order/Order";
-import Menu from "./Menu/Menu";
-import Table from "./Tables/Table";
+import Order from "./order";
+import DetailOrder from "./detailOrder";
+
+import Menu from "./menu";
+
+import Table from "./table";
+
 import { NavigationContainer } from "@react-navigation/native";
 const OrderStack = createStackNavigator();
 const MenuStack = createStackNavigator();
@@ -25,6 +29,23 @@ const OrderStackScreen = ({ navigation }) => (
       component={Order}
       options={{
         title: "Đơn Đặt Hàng",
+        headerLeft: () => (
+          <Icon.Button
+            name="ios-menu"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.openDrawer();
+            }}
+          ></Icon.Button>
+        ),
+      }}
+    />
+    <OrderStack.Screen
+      name="OrderedDetail"
+      component={DetailOrder}
+      options={{
+        title: "Chi tiết đơn hàng",
         headerLeft: () => (
           <Icon.Button
             name="ios-menu"
