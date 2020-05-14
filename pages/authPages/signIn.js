@@ -8,10 +8,13 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
+
+import { Button } from "react-native-elements";
+
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/signInStyle";
 import SnackBar from "../../components/common/snackbarUpdating";
-
+import CheckData from "./checkData";
 // For sign up
 import authServices from "../../services/authServices";
 
@@ -21,7 +24,8 @@ class SignIn extends Component {
     this.state = {
       navigation: this.props,
       isWrong: false,
-      error: null,
+      emailError: null,
+      passwordError: null,
       loading: false,
       response: null,
       // email: null,
@@ -35,7 +39,6 @@ class SignIn extends Component {
     this.setLoading = this.setLoading.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getSignInData = this.getSignInData.bind(this);
-    this.checkData = this.checkData.bind(this);
   }
 
   // componentWillReceiveProps(nextProps) {
@@ -86,33 +89,60 @@ class SignIn extends Component {
   };
 
   async onSubmit() {
-    if (this.checkData()) {
-      this.setLoading(true);
-      let data = this.getSignInData();
+    let checkData = new CheckData();
+    if (checkData.checkEmail(this.state.email)) {
+      this.cleanEmailError();
+      if (checkData.checkPassword(this.state.password)) {
+        this.cleanPasswordError();
+        this.setLoading(true);
+        let data = this.getSignInData();
 
-      // console.log("[INFO] Props in signIn: ", this.props.navigation);
-      console.log("[INFO] Sign in data: ", data);
+        // console.log("[INFO] Props in signIn: ", this.props.navigation);
+        console.log("[INFO] Sign in data: ", data);
 
-      let isWrong = await this.props.signIn(data);
+        let isWrong = await this.props.signIn(data);
 
-      // console.log("[INFO] Return isWrong: ", isWrong);
-      this.setIsWrong(isWrong);
+        // console.log("[INFO] Return isWrong: ", isWrong);
+        this.setIsWrong(isWrong);
 
-      this.setLoading(false);
+        this.setLoading(false);
+      } else {
+        // Thong bao Pass khong hop le
+        this.setPasswordError();
+      }
+    } else {
+      // Thong bao email khong hop le
+      this.setEmailError();
     }
   }
 
-  checkData() {
-    if (this.state.email === null) {
-      Alert.alert("Email error");
-      return false;
-    }
-    if (this.state.password === null) {
-      Alert.alert("Password error");
-      return false;
-    }
-    return true;
-  }
+  setEmailError = () => {
+    this.setState({ emailError: "Email không được để trống" });
+  };
+
+  cleanEmailError = () => {
+    this.setState({ emailError: null });
+  };
+
+  setPasswordError = () => {
+    this.setState({ passwordError: "Mật khẩu phải bao gồm tối thiểu 8 ký tự" });
+  };
+
+  cleanPasswordError = () => {
+    this.setState({ passwordError: null });
+  };
+
+  // checkData() {
+  //   if (this.state.email === null) {
+  //     Alert.alert("Email error");
+  //     return false;
+  //   }
+  //   if (this.state.password === null) {
+  //     Alert.alert("Password error");
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   _onDismissSnackBar = () => {
     console.log("Called on dissmis");
@@ -170,6 +200,11 @@ class SignIn extends Component {
         ) : null}
         <KeyboardAvoidingView behavior="padding">
           <View style={{ alignItems: "center" }}>
+            {this.state.emailError ? (
+              <View>
+                <Text> Tên đăng nhập không hợp lệ</Text>
+              </View>
+            ) : null}
             <View style={styles.viewInput}>
               <Image
                 source={require("../../assets/icon/email.png")}
@@ -185,7 +220,11 @@ class SignIn extends Component {
                 onChangeText={this.handleEmail}
               />
             </View>
-
+            {this.state.passwordError ? (
+              <View>
+                <Text> Mật khẩu phải bao gồm tối thiểu 8 ký tự</Text>
+              </View>
+            ) : null}
             <View style={styles.viewInput}>
               <Image
                 source={require("../../assets/icon/key.png")}
@@ -216,7 +255,11 @@ class SignIn extends Component {
           </View>
         </KeyboardAvoidingView>
         {this.state.loading ? (
-          <Text>Loading</Text>
+          <View style={{ marginTop: 20, alignItems: "center" }}>
+            <TouchableOpacity style={styles.submitBtn}>
+              <Button type="clear" loading={true} />
+            </TouchableOpacity>
+          </View>
         ) : (
           <View style={{ marginTop: 20, alignItems: "center" }}>
             <TouchableOpacity
