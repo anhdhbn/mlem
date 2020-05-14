@@ -16,7 +16,7 @@ import Header from "../components/header/header";
 import FilterBar from "../components/history/filterBar";
 import ItemHistoryCard from "../components/history/itemHistoryCard";
 
-import historyServices from "../services/historyServices";
+import historyServices from "../customerServices/historyServices";
 
 export default class History extends Component {
   constructor(props) {

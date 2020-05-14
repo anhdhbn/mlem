@@ -12,40 +12,34 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import styles from "../../styles/authScreen/recoveryPassStep2Style";
-import authServices from "../../services/authServices";
-import CheckData from "./checkData";
+import styles from "../../styles/authScreen/recoveryPassStep1Style";
+import authServices from "../../customerServices/authServices";
+
 import { Button } from "react-native-elements";
-export default class recoveryPassStep2 extends Component {
+import CheckData from "./checkData";
+import SnackBar from "../../components/common/snackbarUpdating";
+
+export default class recoveryPassStep1 extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       navigation: this.props,
-
-      passwordError: null,
-      confirmPasswordError: null,
-
       visibleAlert: false,
-
+      emailError: null,
       loading: false,
-      password: null,
-      confirmPassword: null,
+      response: null,
+      // email: null,
+      email: null,
     };
 
-    this.handlePassword = this.handlePassword.bind(this);
-    this.handleConfirmPassword = this.handleConfirmPassword(this);
+    this.handleEmail = this.handleEmail.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getData = this.getData.bind(this);
   }
 
-  handlePassword(text) {
-    this.setState({ password: text });
-  }
-
-  handleConfirmPassword(text) {
-    this.setState({ confirmPassword: text });
+  handleEmail(text) {
+    this.setState({ email: text });
   }
 
   setLoading(state) {
@@ -54,77 +48,45 @@ export default class recoveryPassStep2 extends Component {
 
   getData() {
     return {
-      id: this.props.id,
-      password: this.state.password.toString(),
-      confirmPassword: this.state.password.toString(),
+      email: this.state.email.toString(),
     };
   }
 
   async onSubmit() {
     let checkData = new CheckData();
-    if (checkData.checkPassword(this.state.password)) {
-      this.cleanPasswordError();
-      if (checkData.checkPassword(this.state.confirmPassword)) {
-        this.cleanConfirmPasswordError();
-        if (
-          checkData.comparePassword(
-            this.state.password,
-            this.state.confirmPassword
-          )
-        ) {
-          this.cleanComparePasswoedError();
-          this.setLoading(true);
-          let data = this.getData();
-          console.log(data);
+    if (checkData.checkEmail(this.state.email)) {
+      this.cleanEmailError();
+      let isWrongEmail = false;
+      this.setLoading(true);
+      let data = this.getData();
+      console.log(data);
 
-          let response = await authServices
-            .recoveryPass(data)
-            .catch((reason) => {
-              // console.log("==========================================");
-              const message = reason.response.data;
-              // console.log("[INFO] message in signUp: ", message);
-              this.setAlert(true);
-            });
-          this.setLoading(false);
-          this.props.navigation.navigate("SignIn");
-        } else {
-          // Mat khau xac nhan khong khop
-          this.setComparePasswordError();
-        }
-      } else {
-        // Mat khau xac nhan khoon hop le
-        this.setConfirmPasswordError();
+      let response = await authServices.forgotPassword(data).catch((reason) => {
+        // console.log("==========================================");
+        const message = reason.response.data;
+        // console.log("[INFO] message in signUp: ", message);
+        this.setAlert(true);
+        isWrongEmail = true;
+      });
+      this.setLoading(false);
+      // TODO: Handle mail incorrect
+      // console.log("{INFO] Response in recoveryPassStep1: ", response);
+      if (!isWrongEmail) {
+        this.props.navigation.navigate("VerifyCode", {
+          response: response,
+        });
       }
     } else {
-      // Mat khau khong hop le
-      this.setPasswordError();
+      this.setEmailError();
     }
   }
 
-  setPasswordError = () => {
-    this.setState({ passwordError: "Mật khẩu không hợp lệ" });
+  setEmailError = () => {
+    this.setState({ emailError: "Email không hợp lệ" });
   };
 
-  cleanPasswordError = () => {
-    this.setState({ passwordError: null });
-  };
-
-  setConfirmPasswordError = () => {
-    this.setState({ confirmPasswordError: "Mật khẩu xác nhận không hợp lệ" });
-  };
-
-  cleanConfirmPasswordError = () => {
-    this.setState({ confirmPasswordError: null });
-  };
-
-  setComparePasswordError = () => {
-    this.setState({
-      comparePasswordError: "Mật khẩu xác nhận không trùng khớp",
-    });
-  };
-
-  cleanComparePasswoedError = () => {
-    this.setState({ comparePasswordError: null });
+  cleanEmailError = () => {
+    this.setState({ emailError: null });
   };
 
   setAlert = (visible) => {
@@ -144,7 +106,7 @@ export default class recoveryPassStep2 extends Component {
             _onDismissSnackBar={this._onDismissSnackBar}
             actionText="Hide"
             duration={5000}
-            text={"Khôi phục mật khẩu thành công"}
+            text={"Email không trùng khớp với bất cứ tài khoản nào"}
           />
           <View
             style={{
@@ -179,60 +141,42 @@ export default class recoveryPassStep2 extends Component {
                   fontSize: 16,
                 }}
               >
-                Thay đổi mật khẩu
+                Quên mật khẩu
               </Text>
             </View>
           </View>
-          <View style={{ alignItems: "center", marginTop: 80 }}>
+          <View style={{ alignItems: "center", marginTop: 40 }}>
             <Text style={styles.mlem}>Mlem Mlem</Text>
           </View>
 
           <KeyboardAvoidingView behavior="padding">
             <View style={{ alignItems: "center" }}>
-              {this.state.passwordError ? (
+              {this.state.emailError ? (
                 <View>
-                  <Text>{this.state.passwordError}</Text>
+                  <Text>{this.state.emailError}</Text>
                 </View>
               ) : null}
               <View style={styles.viewInput}>
                 <Image
-                  source={require("../../assets/icon/key.png")}
-                  style={styles.image}
+                  source={require("../../assets/icon/email.png")}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    padding: 12,
+                    margin: 10,
+                    marginLeft: 45,
+                  }}
                 />
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Mật khẩu"
+                  onChangeText={this.handleEmail}
+                  placeholder="email"
                   placeholderTextColor="#c2bbba"
-                  secureTextEntry={true}
-                  onChangeText={this.handlePassword}
-                />
-              </View>
-              <View style={styles.viewInput}>
-                {this.state.confirmPasswordError ? (
-                  <View>
-                    <Text>{this.state.confirmPasswordError}</Text>
-                  </View>
-                ) : null}
-                {this.state.comparePasswordError ? (
-                  <View>
-                    <Text>{this.state.comparePasswordError}</Text>
-                  </View>
-                ) : null}
-                <Image
-                  source={require("../../assets/icon/key.png")}
-                  style={styles.image}
-                />
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Xác nhận mật khẩu"
-                  placeholderTextColor="#c2bbba"
-                  secureTextEntry={true}
-                  onChangeText={this.handleConfirmPassword}
                 />
               </View>
             </View>
           </KeyboardAvoidingView>
-          {loading ? (
+          {this.state.loading ? (
             <View style={{ marginTop: 20, alignItems: "center" }}>
               <TouchableOpacity style={styles.submitBtn}>
                 <Button type="clear" loading={true} />
@@ -247,7 +191,7 @@ export default class recoveryPassStep2 extends Component {
                 <Text
                   style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
                 >
-                  Xác nhận
+                  Gửi
                 </Text>
               </TouchableOpacity>
             </View>

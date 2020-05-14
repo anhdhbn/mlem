@@ -16,7 +16,7 @@ import SmartDishCard from "../components/smartDishCard/smartDishCard";
 import ModalSelectDish from "../components/order/modalSelectDish";
 import CaculatePrice from "../components/order/calculatePrice";
 
-import orderSevices from "../services/orderServices";
+import orderSevices from "../customerServices/orderServices";
 
 export default class order extends Component {
   constructor(props) {

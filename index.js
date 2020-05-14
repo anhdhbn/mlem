@@ -8,4 +8,5 @@ import { name as appName } from "./app.json";
 import SideBar from "./providers/MainProvider";
 // import order from './pages/order'
 // import DatePicker from './components/dateTimePicker/datePicker'
-AppRegistry.registerComponent(appName, () => App);
+import MainProvider from "./providers/MainProvider";
+AppRegistry.registerComponent(appName, () => MainProvider);

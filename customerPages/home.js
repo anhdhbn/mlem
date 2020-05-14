@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, YellowBox, Text } from "react-native";
 import { Button, Overlay } from "react-native-elements";
 
-import homeServices from "../services/homeServices";
+import homeServices from "../customerServices/homeServices";
 
 import HeaderImage from "../components/cardList/headerCardList";
 import CardList from "../components/cardList/cardList";

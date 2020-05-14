@@ -17,7 +17,7 @@ import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/signUpStyle";
 
 // For sign up
-import authServices from "../../services/authServices";
+import authServices from "../../customerServices/authServices";
 import CTA from "../../components/CTA";
 import { Header, ErrorText } from "../../components/shared";
 import SnackBar from "../../components/common/snackbarUpdating";

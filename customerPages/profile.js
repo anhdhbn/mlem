@@ -26,7 +26,7 @@ import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
 import SettingProfile from "../components/profile/settingProfile";
 
-import profileService from "../services/profileService";
+import profileService from "../customerServices/profileService";
 
 import SnackbarUpdating from "../components/common/snackbarUpdating";
 import { Snackbar } from "react-native-paper";

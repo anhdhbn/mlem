@@ -14,7 +14,7 @@ import {
 import LinearGradient from "react-native-linear-gradient";
 import CodeInput from "react-native-confirmation-code-input";
 import styles from "../../styles/authScreen/verifyCodeStyle";
-import authServices from "../../services/authServices";
+import authServices from "../../customerServices/authServices";
 
 import { Button } from "react-native-elements";
 import CheckData from "./checkData";

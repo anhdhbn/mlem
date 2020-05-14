@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 
-import orderServices from "../services/orderServices";
+import orderServices from "../customerServices/orderServices";
 
 import Header from "../components/header/header";
 import DatePicker from "../components/dateTimePicker/datePicker";

@@ -16,7 +16,7 @@ import styles from "../../styles/authScreen/signInStyle";
 import SnackBar from "../../components/common/snackbarUpdating";
 import CheckData from "./checkData";
 // For sign up
-import authServices from "../../services/authServices";
+import authServices from "../../customerServices/authServices";
 
 class SignIn extends Component {
   constructor(props) {
