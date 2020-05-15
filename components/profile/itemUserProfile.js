@@ -36,8 +36,8 @@ export default class ItemUserProfile extends Component {
           style={{ flex: 2 }}
           source={this.props.icon}
           style={{
-            height: 26,
-            width: 26,
+            height: 18,
+            width: 18,
             marginHorizontal: 10,
           }}
         ></Image>
