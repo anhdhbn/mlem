@@ -192,7 +192,7 @@ export default function App({ navigation }) {
                 component={RecoveryPassStep2}
               />
             </>
-          ) : state.response.roleId != 2 ? (
+          ) : state.response.roleId === 2 ? (
             // User is signed in
             <Stack.Screen
               name="UserHome"

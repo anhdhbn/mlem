@@ -50,6 +50,7 @@ export default function (props) {
   const [listDouong, setListDouong] = useState(null);
 
   const [visible, setVisible] = useState(false);
+  const [visibleLoading, setVisibleLoading] = useState(true);
   const [checkProfile, setCheckProfile] = useState(false);
 
   useEffect(() => {
@@ -66,49 +67,57 @@ export default function (props) {
         setIsLoadingFavourite(false);
       });
       // setIsLoadingFavourite(false);
-    } else if (isLoadingRecently === true) {
+    }
+    if (isLoadingRecently === true) {
       getListFoods(-2).then((data) => {
         setListRecently(data);
         setIsLoadingRecently(false);
       });
       // setIsLoadingRecently(false);
-    } else if (isLoadingTop === true) {
+    }
+    if (isLoadingTop === true) {
       getListFoods(-1).then((data) => {
         setListTop(data);
         setIsLoadingTop(false);
       });
       // setIsLoadingTop(false);
-    } else if (isLoadingLau === true) {
+    }
+    if (isLoadingLau === true) {
       getListFoods(1).then((data) => {
         setListLau(data);
         setIsLoadingLau(false);
       });
       //  setIsLoadingLau(false);
-    } else if (isLoadingHaisan === true) {
+    }
+    if (isLoadingHaisan === true) {
       getListFoods(2).then((data) => {
         setListHaisan(data);
         setIsLoadingHaisan(false);
       });
       // setIsLoadingHaisan(false);
-    } else if (isLoadingRaucu === true) {
+    }
+    if (isLoadingRaucu === true) {
       getListFoods(3).then((data) => {
         setListRaucu(data);
         setIsLoadingRaucu(false);
       });
       // setIsLoadingRaucu(false);
-    } else if (isLoadingThit === true) {
+    }
+    if (isLoadingThit === true) {
       getListFoods(4).then((data) => {
         setListThit(data);
         setIsLoadingThit(false);
       });
       // setIsLoadingThit(false);
-    } else if (isLoadingDouong === true) {
+    }
+    if (isLoadingDouong === true) {
       getListFoods(5).then((data) => {
         setListDouong(data);
         setIsLoadingDouong(false);
       });
       // setIsLoadingDouong(false);
-    } else if (isLoadingAllDish === true) {
+    }
+    if (isLoadingAllDish === true) {
       getAllFoods().then((data) => {
         setListAllDish(data);
         setIsLoadingAllDish(false);
@@ -131,7 +140,7 @@ export default function (props) {
     //     setIsLoadingDouong(false);
     //   });
     // }
-  });
+  }, []);
 
   const getAllFoods = async () => {
     let params = {};
@@ -213,8 +222,24 @@ export default function (props) {
 
   return (
     <>
+      {/* Loading */}
+      <Overlay
+        fullScreen={true}
+        visible={
+          !listAllDish &&
+          !listDouong &&
+          !listFavorite &&
+          !listHaisan &&
+          !listLau &&
+          !listRaucu &&
+          !listRecently &&
+          !listThit &&
+          !listTop
+        }
+      >
+        <Text>Loading ...</Text>
+      </Overlay>
       {/* Check is the first login then update profile */}
-
       <Overlay
         isVisible={visible}
         // onBackdropPress={_hideModal}
@@ -245,7 +270,7 @@ export default function (props) {
           cardData={listFavorite}
           onPressDetail={() => onPressDetail(listFavorite)}
           title={"Yêu thích"}
-          isLoading={isLoadingFavourite}
+          isLoading={!listFavorite}
         />
         <CardList
           cardData={listRecently}
