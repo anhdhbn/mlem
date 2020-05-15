@@ -123,7 +123,7 @@ export default class recoveryPassStep1 extends Component {
             >
               <Image
                 source={require("../../assets/icon/back.png")}
-                style={{ width: 30, height: 30 }}
+                style={{ width: 8, height: 8 }}
               />
             </TouchableOpacity>
             <View
@@ -159,13 +159,7 @@ export default class recoveryPassStep1 extends Component {
               <View style={styles.viewInput}>
                 <Image
                   source={require("../../assets/icon/email.png")}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    padding: 12,
-                    margin: 10,
-                    marginLeft: 45,
-                  }}
+                  style={styles.image}
                 />
                 <TextInput
                   style={styles.textInput}
