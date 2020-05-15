@@ -115,6 +115,29 @@ export default class order extends Component {
     }
   };
 
+  removeDish2Order = (dish) => {
+    console.log("Called remove dish");
+    let newListDish = [];
+
+    let lengthListDish = this.state.listDish.length;
+    for (let index = 0; index < lengthListDish; index++) {
+      let dishOrdered = this.state.listDish[index];
+      if (
+        dish.id === dishOrdered.id &&
+        dish.bigSize === dishOrdered.bigSize &&
+        dish.normalSize === dishOrdered.normalSize &&
+        dish.smallSize === dishOrdered.smallSize
+      ) {
+        continue;
+      } else {
+        newListDish.push(dishOrdered);
+      }
+    }
+
+    this.setState({ listDish: newListDish });
+    this.calculatePrice();
+  };
+
   addDish2Order = (dish) => {
     // console.log("-----------------------------------------------------");
     // console.log("=====");
@@ -324,6 +347,7 @@ export default class order extends Component {
                 onPress={() => {
                   this.props.navigation.navigate("SelectDish", {
                     addDish2Order: this.addDish2Order,
+                    removeDish2Order: this.removeDish2Order,
                     totalPrice: this.state.totalPrice,
                     totalPromoPrice: this.state.totalPromoPrice,
                   });

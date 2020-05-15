@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
+import { LoginButton, AccessToken } from "react-native-fbsdk";
 
 import { Button } from "react-native-elements";
 
@@ -165,7 +166,7 @@ class SignIn extends Component {
           <Text style={styles.mlem}>Mlem Mlem</Text>
         </View>
         <View style={{ alignItems: "center", marginTop: 50 }}>
-          <TouchableOpacity style={styles.fbWay}>
+          {/* <TouchableOpacity style={styles.fbWay}>
             <Image
               source={require("../../assets/icon/fb.png")}
               style={styles.imgFBGG}
@@ -173,7 +174,23 @@ class SignIn extends Component {
             <Text style={{ paddingRight: 30, color: "white" }}>
               tiếp tục với Facebook
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View>
+            <LoginButton
+              onLoginFinished={(error, result) => {
+                if (error) {
+                  console.log("login has error: " + result.error);
+                } else if (result.isCancelled) {
+                  console.log("login is cancelled.");
+                } else {
+                  AccessToken.getCurrentAccessToken().then((data) => {
+                    console.log(data.accessToken.toString());
+                  });
+                }
+              }}
+              onLogoutFinished={() => console.log("logout.")}
+            />
+          </View>
         </View>
         <View style={{ alignItems: "center", marginTop: 10 }}>
           <TouchableOpacity style={styles.ggWay}>

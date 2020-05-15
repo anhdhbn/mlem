@@ -174,9 +174,10 @@ export default class order extends Component {
 
   hideModal = () => {
     this.setState({ showModal: false });
+    this.removeDish2Order();
   };
 
-  subNumOfDish = (nameDish) => {
+  subNumOfDish = () => {
     // console.log("[INFO] Press sub num of dish.", nameDish);
     this.setState({
       modal: {
@@ -190,7 +191,7 @@ export default class order extends Component {
     // this.addDish2Order();
   };
 
-  addNumOfDish = (nameDish) => {
+  addNumOfDish = () => {
     // console.log("[INFO] Press add num of dish.", nameDish);
     this.setState({
       modal: {
@@ -218,6 +219,10 @@ export default class order extends Component {
     // B52
     // console.log("Add dish to order: ", this.state.modal);
     this.props.route.params.addDish2Order(this.state.modal);
+  };
+
+  removeDish2Order = () => {
+    this.props.route.params.removeDish2Order(this.state.modal);
   };
 
   onPressAll = () => {
@@ -360,6 +365,7 @@ export default class order extends Component {
           <View>
             <ModalSelectDish
               addDish2Order={this.addDish2Order}
+              removeDish2Order={this.removeDish2Order}
               visible={this.state.showModal}
               hideModal={this.hideModal}
               modal={this.state.modal}
