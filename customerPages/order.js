@@ -8,6 +8,8 @@ import {
   TextInput,
 } from "react-native";
 
+import moment from "moment";
+
 import orderServices from "../customerServices/orderServices";
 
 import Header from "../components/header/header";
@@ -15,11 +17,16 @@ import DatePicker from "../components/dateTimePicker/datePicker";
 import OrderItem from "../components/order/orderItem";
 import SelectTable from "../components/order/selectTable";
 import TableOff from "../components/order/tableOff";
+
+import Snackbar from "../components/common/snackbarUpdating";
 export default class order extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tableAvailable: 2,
+      visibleAlert: false,
+      textAlert: null,
+
+      tableAvailable: null,
       date: null,
       time: null,
       listDish: [],
@@ -40,6 +47,17 @@ export default class order extends Component {
     };
   }
 
+  componentDidMount = () => {
+    let date = moment();
+    let time = moment().format("HH:mm");
+    this.setDate(date);
+    this.setTime(time);
+  };
+
+  setTableAvailable = (value) => {
+    this.setState({ tableAvailable: value });
+  };
+
   getTotalPrice = () => {
     return this.state.totalPrice;
   };
@@ -54,11 +72,17 @@ export default class order extends Component {
 
   addTable = () => {
     var newData = this.state.numOfTable;
+    if (newData === this.state.tableAvailable) {
+      return;
+    }
     newData++;
     this.setState({ numOfTable: newData });
   };
   subTable = () => {
     var newData = this.state.numOfTable;
+    if (newData === 0) {
+      return;
+    }
     newData--;
     this.setState({ numOfTable: newData });
   };
@@ -69,6 +93,9 @@ export default class order extends Component {
   };
   subPeople = () => {
     var newData = this.state.numOfPeople;
+    if (newData === 0) {
+      return;
+    }
     newData++;
     this.setState({ numOfPeople: newData });
   };
@@ -116,7 +143,7 @@ export default class order extends Component {
           ? 1.2 * dishOrdered.quantity * dishOrdered.promoPrice
           : 1.5 * dishOrdered.quantity * dishOrdered.promoPrice;
       });
-      console.log(tp, tpp);
+      // console.log(tp, tpp);
       this.setState({
         totalPrice: tp,
         totalPromoPrice: tpp,
@@ -156,22 +183,6 @@ export default class order extends Component {
     let newListDish = [];
     // console.log(
     //   "[INFO] Add Order Dish is called. lishDish before added",
-    //   this.state.listDish
-    // );
-    // console.log("[INFO] Add Order Dish is called. Add dish: ", dish);
-
-    // console.log("[TEST] Finding dish in lishDish");
-
-    //so sanh bang key, size
-    // let newListDish = this.state.listDish.map((dishOrdered) => {
-    //   dish.id === dishOrdered.id &&
-    //   dish.bigSize === dishOrdered.bigSize &&
-    //   dish.normalSize === dishOrdered.normalSize &&
-    //   dish.smallSize === dishOrdered.smallSize
-    //     ? dish
-    //     : dishOrdered;
-    // });
-
     let added = false;
     let lengthListDish = this.state.listDish.length;
     for (let index = 0; index < lengthListDish; index++) {
@@ -215,7 +226,8 @@ export default class order extends Component {
       },
     };
     let response = await orderServices.getNumTableAvailable(params);
-    console.log("[INFO] Reponse in getNumTableAvailble: ", response);
+    // console.log("[INFO] Reponse in getNumTableAvailble: ", response);
+    this.setTableAvailable(response);
   };
 
   createOrder = async () => {
@@ -242,6 +254,25 @@ export default class order extends Component {
       });
     }
 
+    // Check numOfTable
+    if (this.state.numOfTable === 0) {
+      this.createAlert("Vui lòng chọn số bàn cần đặt");
+      return;
+    }
+
+    // Check numOfPerson
+    if (this.state.numOfPeople === 0) {
+      this.createAlert("Vui lòng chọn số người cần đặt");
+      return;
+    }
+
+    // Check Ordered Dish
+    lengthListDish = this.state.listDish.length;
+    if (lengthListDish === 0) {
+      this.createAlert("Vui lòng chọn món cần đặt");
+      return;
+    }
+
     let params = {
       orderDate: this.state.date,
       numOfTable: this.state.numOfTable,
@@ -252,14 +283,21 @@ export default class order extends Component {
       subTotal: this.state.totalPromoPrice,
     };
 
-    console.log("[INFO] Params: ", params);
+    // console.log("[INFO] Params: ", params);
 
     let response = await orderServices.createOrder(params);
-    console.log("[INFO] Reponse in createOrder: ", response);
+    // console.log("[INFO] Reponse in createOrder: ", response);
+  };
+
+  createAlert = (textAlert) => {
+    console.log("Create alert");
+    this.setState({ textAlert: textAlert }, () => {
+      this.setAlert(true);
+    });
   };
 
   setDate = (date) => {
-    console.log("[INFO] Date: ", date);
+    // console.log("[INFO] Date: ", date);
     this.getNumTableAvailable(date, this.state.time);
     this.setState({ date: date });
   };
@@ -267,50 +305,78 @@ export default class order extends Component {
   setTime = (time) => {
     this.setState({ time: time });
     this.getNumTableAvailable(this.state.date, time);
-    console.log("[INFO] Time: ", time);
+    // console.log("[INFO] Time: ", time);
+  };
+
+  setAlert = (visible) => {
+    this.setState({ visibleAlert: visible });
+  };
+
+  _onDismissSnackBar = () => {
+    this.setState({ visibleAlert: false });
   };
 
   render() {
     return (
       <>
+        <Snackbar
+          visible={this.state.visibleAlert}
+          _onDismissSnackBar={this._onDismissSnackBar}
+          actionText="Hide"
+          duration={5000}
+          text={this.state.textAlert}
+        />
         <Header title="Đặt Bàn" hideButtonBack={true} />
-        <View
-          style={{
-            backgroundColor: "#fff",
-            height: 35,
-            marginTop: 15,
-            flexDirection: "row",
-            position: "relative",
-          }}
-        >
-          <View>
-            <Text
+        {this.state.tableAvailable !== null ? (
+          <>
+            <View
               style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#76c963",
+                backgroundColor: "#fff",
+                height: 35,
+                marginTop: 15,
+                flexDirection: "row",
+                position: "relative",
               }}
             >
-              Số bàn còn trống: {this.state.tableAvailable}
-            </Text>
-          </View>
-          <View style={{ right: 20, position: "absolute", marginTop: 12 }}>
-            <Image
-              source={require("../assets/icon/online.png")}
-              style={{ width: 15, height: 15 }}
+              <View>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    padding: 8,
+                    color: "#76c963",
+                  }}
+                >
+                  Số bàn còn trống: {this.state.tableAvailable}
+                </Text>
+              </View>
+              <View style={{ right: 20, position: "absolute", marginTop: 12 }}>
+                <Image
+                  source={require("../assets/icon/online.png")}
+                  style={{ width: 15, height: 15 }}
+                />
+              </View>
+            </View>
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+                Thời gian
+              </Text>
+            </View>
+
+            <DatePicker
+              setDate={this.setDate}
+              setTime={this.setTime}
+              date={this.state.date}
+              time={this.state.time}
             />
+          </>
+        ) : (
+          <View>
+            <Text>Loading</Text>
           </View>
-        </View>
-        <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-            Thời gian
-          </Text>
-        </View>
+        )}
 
-        <DatePicker setDate={this.setDate} setTime={this.setTime} />
-
-        {this.state.tableAvailable > 0 ? (
+        {this.state.tableAvailable === 0 ? (
           <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
             <View>
               <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
@@ -318,6 +384,7 @@ export default class order extends Component {
               </Text>
             </View>
             <SelectTable
+              tableAvailable={this.state.tableAvailable}
               subTable={this.subTable}
               addTable={this.addTable}
               subPeople={this.subPeople}
@@ -332,10 +399,10 @@ export default class order extends Component {
             </View>
 
             {/* list of dish */}
-            {console.log(
+            {/* {console.log(
               "[INFO] list dish before render OderItem",
               this.state.listDish
-            )}
+            )} */}
             {this.state.listDish.length > 0 ? (
               this.state.listDish.map((dish) => (
                 <OrderItem
@@ -449,9 +516,9 @@ export default class order extends Component {
               </View>
             </View>
           </ScrollView>
-        ) : (
+        ) : this.state.tableAvailable === 0 ? (
           <TableOff />
-        )}
+        ) : null}
       </>
     );
   }

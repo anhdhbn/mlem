@@ -408,6 +408,7 @@ export default class order extends Component {
         <CaculatePrice
           totalPromoPrice={this.state.totalPromoPrice}
           totalPrice={this.state.totalPrice}
+          navigation={this.props.navigation}
           // addOrderDish={this.props.route.params.addOrderDish(this.state.modal)}
         />
       </SafeAreaView>

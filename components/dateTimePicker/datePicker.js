@@ -15,8 +15,8 @@ const datePicker = (props) => {
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
-  const [dateShow, setDateShow] = useState("17/1/2020");
-  const [timeShow, setTimeShow] = useState("20:30");
+  const [dateShow, setDateShow] = useState(props.date.format("DD/MM/YYYY"));
+  const [timeShow, setTimeShow] = useState(props.date.format("HH:mm"));
 
   const onChange = (event, selectedDate) => {
     setShow(false);
