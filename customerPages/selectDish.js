@@ -18,6 +18,8 @@ import CaculatePrice from "../components/order/calculatePrice";
 
 import orderSevices from "../customerServices/orderServices";
 
+import Order from "./order";
+
 export default class order extends Component {
   constructor(props) {
     super(props);
@@ -72,6 +74,11 @@ export default class order extends Component {
     this.getListDouong();
     this.getListTopOrder();
     this.getListRecently();
+  };
+
+  componentDidUpdate = () => {
+    let totalPromoPrice = this.props.route.params.getTotalPromoPrice();
+    console.log(totalPromoPrice);
   };
 
   getListLau = async () => {
@@ -174,44 +181,59 @@ export default class order extends Component {
 
   hideModal = () => {
     this.setState({ showModal: false });
-    this.removeDish2Order();
   };
 
   subNumOfDish = () => {
     // console.log("[INFO] Press sub num of dish.", nameDish);
-    this.setState({
-      modal: {
-        ...this.state.modal,
-        quantity:
-          this.state.modal.quantity === 0
-            ? this.state.modal.quantity
-            : this.state.modal.quantity - 1,
+    this.setState(
+      {
+        modal: {
+          ...this.state.modal,
+          quantity:
+            this.state.modal.quantity === 0
+              ? this.state.modal.quantity
+              : this.state.modal.quantity - 1,
+        },
       },
-    });
+      () => {
+        this.addDish2Order();
+      }
+    );
     // this.addDish2Order();
   };
 
   addNumOfDish = () => {
     // console.log("[INFO] Press add num of dish.", nameDish);
-    this.setState({
-      modal: {
-        ...this.state.modal,
-        quantity: this.state.modal.quantity + 1,
+    this.setState(
+      {
+        modal: {
+          ...this.state.modal,
+          quantity: this.state.modal.quantity + 1,
+        },
       },
-    });
+      () => {
+        this.addDish2Order();
+      }
+    );
     // this.addDish2Order();
   };
 
   selectOrderSize = (selectSize) => {
     // console.log("[INFO] Select size: ", selectSize);
-    this.setState({
-      modal: {
-        ...this.state.modal,
-        smallSize: selectSize.smallSize,
-        normalSize: selectSize.normalSize,
-        bigSize: selectSize.bigSize,
+    this.removeDish2Order();
+    this.setState(
+      {
+        modal: {
+          ...this.state.modal,
+          smallSize: selectSize.smallSize,
+          normalSize: selectSize.normalSize,
+          bigSize: selectSize.bigSize,
+        },
       },
-    });
+      () => {
+        this.addDish2Order();
+      }
+    );
     // this.addDish2Order();
   };
 
@@ -372,15 +394,15 @@ export default class order extends Component {
               subNumOfDish={this.subNumOfDish}
               addNumOfDish={this.addNumOfDish}
               selectOrderSize={this.selectOrderSize}
-              totalPromoPrice={this.state.totalPromoPrice}
-              totalPrice={this.state.totalPrice}
+              totalPromoPrice={this.props.route.params.getTotalPromoPrice()}
+              totalPrice={this.props.route.params.getTotalPrice()}
             />
           </View>
         </ScrollView>
-
+        {console.log(this.props.route.params.getTotalPrice())}
         <CaculatePrice
-          totalPromoPrice={this.state.totalPromoPrice}
-          totalPrice={this.state.totalPrice}
+          totalPromoPrice={this.props.route.params.getTotalPromoPrice()}
+          totalPrice={this.props.route.params.getTotalPrice()}
           // addOrderDish={this.props.route.params.addOrderDish(this.state.modal)}
         />
       </SafeAreaView>

@@ -39,6 +39,15 @@ export default class order extends Component {
       totalPromoPrice: 0,
     };
   }
+
+  getTotalPrice = () => {
+    return this.state.totalPrice;
+  };
+
+  getTotalPromoPrice = () => {
+    return this.state.totalPromoPrice;
+  };
+
   UNSAFE_componentWillMount = () => {
     this.calculatePrice();
   };
@@ -116,7 +125,7 @@ export default class order extends Component {
   };
 
   removeDish2Order = (dish) => {
-    console.log("Called remove dish");
+    console.log("Called remove dish: ", dish);
     let newListDish = [];
 
     let lengthListDish = this.state.listDish.length;
@@ -128,14 +137,17 @@ export default class order extends Component {
         dish.normalSize === dishOrdered.normalSize &&
         dish.smallSize === dishOrdered.smallSize
       ) {
+        console.log("Remove -----------------------------");
         continue;
       } else {
         newListDish.push(dishOrdered);
       }
     }
 
-    this.setState({ listDish: newListDish });
-    this.calculatePrice();
+    this.setState({ listDish: newListDish }, () => {
+      this.calculatePrice();
+    });
+    // this.calculatePrice();
   };
 
   addDish2Order = (dish) => {
@@ -185,9 +197,10 @@ export default class order extends Component {
     }
     // console.log("[INFO] newListDish: ", newListDish);
 
-    this.setState({ listDish: newListDish });
+    this.setState({ listDish: newListDish }, () => {
+      this.calculatePrice();
+    });
 
-    this.calculatePrice();
     // console.log("=====");
     // console.log("-----------------------------------------------------");
     // this.setState({
@@ -348,8 +361,8 @@ export default class order extends Component {
                   this.props.navigation.navigate("SelectDish", {
                     addDish2Order: this.addDish2Order,
                     removeDish2Order: this.removeDish2Order,
-                    totalPrice: this.state.totalPrice,
-                    totalPromoPrice: this.state.totalPromoPrice,
+                    getTotalPrice: this.getTotalPrice,
+                    getTotalPromoPrice: this.getTotalPromoPrice,
                   });
                 }}
               >

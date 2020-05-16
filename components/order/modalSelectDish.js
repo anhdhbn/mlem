@@ -15,7 +15,10 @@ export default function (props) {
   return (
     <Overlay
       visible={props.visible}
-      onBackdropPress={props.hideModal}
+      onBackdropPress={() => {
+        props.hideModal();
+        props.removeDish2Order();
+      }}
       overlayStyle={{
         width: "100%",
         backgroundColor: "#FFFFFF",
@@ -93,7 +96,6 @@ export default function (props) {
             <TouchableOpacity
               onPress={() => {
                 props.subNumOfDish();
-                props.addDish2Order();
               }}
             >
               <Image
@@ -107,7 +109,6 @@ export default function (props) {
             <TouchableOpacity
               onPress={() => {
                 props.addNumOfDish();
-                props.addDish2Order();
               }}
             >
               <Image
@@ -150,9 +151,9 @@ export default function (props) {
                   normalSize: false,
                   bigSize: false,
                 };
-                props.removeDish2Order();
+
                 props.selectOrderSize(selectSize);
-                props.addDish2Order();
+
                 // console.log("[INFO] smail type: ", props.modal.smallSize);
               }}
             />
@@ -179,9 +180,8 @@ export default function (props) {
                   normalSize: true,
                   bigSize: false,
                 };
-                props.removeDish2Order();
+
                 props.selectOrderSize(selectSize);
-                props.addDish2Order();
               }}
             />
           </View>
@@ -207,9 +207,7 @@ export default function (props) {
                   normalSize: false,
                   bigSize: true,
                 };
-                props.removeDish2Order();
                 props.selectOrderSize(selectSize);
-                props.addDish2Order();
               }}
             />
           </View>
