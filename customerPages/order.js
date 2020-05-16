@@ -100,27 +100,60 @@ export default class order extends Component {
     this.setState({ numOfPeople: newData });
   };
 
-  addNumOfDish = (nameDish) => {
-    // let newListDish = this.state.listDish.map((dish) =>
-    //   dish.nameDish === nameDish
-    //     ? { ...dish, quantity: dish.quantity + 1 }
-    //     : dish
-    // );
-    // this.setState({
-    //   listDish: newListDish,
-    // });
+  addNumOfDish = (dish) => {
+    let newListDish = [];
+
+    let lengthListDish = this.state.listDish.length;
+    for (let index = 0; index < lengthListDish; index++) {
+      let dishOrdered = this.state.listDish[index];
+      if (
+        dish.id === dishOrdered.id &&
+        dish.bigSize === dishOrdered.bigSize &&
+        dish.normalSize === dishOrdered.normalSize &&
+        dish.smallSize === dishOrdered.smallSize
+      ) {
+        // console.log("Remove -----------------------------");
+        dishOrdered.quantity = dishOrdered.quantity + 1;
+        newListDish.push(dishOrdered);
+      } else {
+        newListDish.push(dishOrdered);
+      }
+    }
+
+    this.setState({ listDish: newListDish }, () => {
+      this.calculatePrice();
+    });
     this.calculatePrice();
   };
 
-  subNumOfDish = (nameDish) => {
-    // let newListDish = this.state.listDish.map((dish) =>
-    //   dish.nameDish === nameDish
-    //     ? { ...dish, quantity: dish.quantity - 1 }
-    //     : dish
-    // );
-    // this.setState({
-    //   listDish: newListDish,
-    // });
+  subNumOfDish = (dish) => {
+    let newListDish = [];
+
+    let lengthListDish = this.state.listDish.length;
+    for (let index = 0; index < lengthListDish; index++) {
+      let dishOrdered = this.state.listDish[index];
+      if (
+        dish.id === dishOrdered.id &&
+        dish.bigSize === dishOrdered.bigSize &&
+        dish.normalSize === dishOrdered.normalSize &&
+        dish.smallSize === dishOrdered.smallSize
+      ) {
+        // console.log("Remove -----------------------------");
+        if (dishOrdered.quantity === 1) {
+          this.removeDish2Order(dish);
+          return;
+        }
+        dishOrdered.quantity = dishOrdered.quantity - 1;
+        newListDish.push(dishOrdered);
+      } else {
+        newListDish.push(dishOrdered);
+      }
+    }
+
+    this.setState({ listDish: newListDish }, () => {
+      this.calculatePrice();
+    });
+    this.calculatePrice();
     this.calculatePrice();
   };
 
@@ -152,7 +185,7 @@ export default class order extends Component {
   };
 
   removeDish2Order = (dish) => {
-    console.log("Called remove dish: ", dish);
+    // console.log("Called remove dish: ", dish);
     let newListDish = [];
 
     let lengthListDish = this.state.listDish.length;
@@ -164,7 +197,7 @@ export default class order extends Component {
         dish.normalSize === dishOrdered.normalSize &&
         dish.smallSize === dishOrdered.smallSize
       ) {
-        console.log("Remove -----------------------------");
+        // console.log("Remove -----------------------------");
         continue;
       } else {
         newListDish.push(dishOrdered);

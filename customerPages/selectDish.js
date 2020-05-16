@@ -153,7 +153,7 @@ export default class order extends Component {
   getListFood = async () => {
     let params = {};
     let response = await orderSevices.listFood(params);
-    console.log("[TEST] Get list food in selectDIsh: ", response);
+    // console.log("[TEST] Get list food in selectDIsh: ", response);
     return response;
   };
 
@@ -248,8 +248,11 @@ export default class order extends Component {
     this.props.route.params.addDish2Order(this.state.modal);
   };
 
-  removeDish2Order = () => {
-    this.props.route.params.removeDish2Order(this.state.modal);
+  removeDish2Order = async () => {
+    await this.props.route.params.removeDish2Order(this.state.modal);
+    let totalPrice = this.props.route.params.getTotalPrice();
+    let totalPromoPrice = this.props.route.params.getTotalPromoPrice();
+    this.setPrice(totalPrice, totalPromoPrice);
   };
 
   onPressAll = () => {
@@ -296,7 +299,7 @@ export default class order extends Component {
     } else if (code == 8) {
       this.setState({ listDishRender: this.state.listDishSortL2H });
     }
-    console.log("[INFO] New List Dish: ", this.state.listDishRender);
+    // console.log("[INFO] New List Dish: ", this.state.listDishRender);
   };
 
   render() {
