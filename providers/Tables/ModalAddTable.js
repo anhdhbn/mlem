@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Overlay } from 'react-native-elements'
+
 export default function (props) {
   const [modalVisible, setModalVisible] = useState(true);
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
-      <Modal
-        animationType="slide"
-        transparent={true}
+      <Overlay
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+        overlayStyle={{
+          width: "100%",
+          height: 100,
+          position: "absolute",
+          bottom: 0,
         }}
-        style={{ width: 50 }}
       >
         <View style={styles.container}>
           <View style={styles.content}>
@@ -36,7 +38,7 @@ export default function (props) {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Overlay>
     </View>
   )
 }
@@ -44,10 +46,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     shadowRadius: 10,
-    marginTop: 22
   },
   content: {
-    top: '90%',
     margin: 3,
     borderBottomColor:'#C3C3C3',
     borderRadius: 15,

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, Image, TextInput } from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { Overlay } from 'react-native-elements'
 
 import search from "../../assets/icon/search.png";
-import dropDownIcon from '../../assets/icon/drop down.png';
+import dropDownIcon from '../../assets/icon/drop_down.png';
 import TickIcon from '../../assets/icon/tick.png'
 
 export default function (props) {
@@ -17,12 +18,13 @@ export default function (props) {
 
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
-      <Modal
-        animationType="slide"
-        transparent={true}
+      <Overlay
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+        overlayStyle={{
+          width: "100%",
+          height: 350,
+          position: "absolute",
+          bottom: 0,
         }}
       >
         <View style={styles.container}>
@@ -74,17 +76,15 @@ export default function (props) {
             <Text style={{ top: 10, color: '#ffffff' }}>Thêm</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Overlay>
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: '80%',
     shadowRadius: 10,
     backgroundColor: '#707070',
-    elevation: 5
   },
   titleView: {
     padding: 5,

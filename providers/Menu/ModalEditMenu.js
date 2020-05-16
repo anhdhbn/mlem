@@ -1,47 +1,43 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, StyleSheet} from 'react-native';
-import { TouchableOpacity} from 'react-native-gesture-handler';
+import { View, Text, Modal, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Overlay } from 'react-native-elements'
 export default function (props) {
   const [modalVisible, setModalVisible] = useState(true);
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
-      <Modal
-        animationType="slide"
-        transparent={true}
+      <Overlay
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+        overlayStyle={{
+          width: "100%",
+          height: 150,
+          position: "absolute",
+          bottom: 0,
         }}
-        style={{ width: 50 }}
       >
         <View style={styles.container}>
-          <View style={styles.content}>
-            <TouchableOpacity  style={styles.btnView}>
-              <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Tuỳ chỉnh</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btnView}>
-              <Text style={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}>Xoá</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btnView}>
-              <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Quay lại</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={{...styles.btnView,borderBottomWidth:1}}>
+            <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Tuỳ chỉnh</Text>
+          </TouchableOpacity>
+          <TouchableOpacity  style={{...styles.btnView,borderBottomWidth:1}}>
+            <Text style={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}>Xoá</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnView}>
+            <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Quay lại</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
+      </Overlay>
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    shadowRadius: 10, 
-    marginTop: 22
+    shadowRadius: 10,
   },
   content: {
-    top: '85%',
-    margin:3,
     backgroundColor: "#AFAFAF",
-    borderRadius: 15,
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -52,6 +48,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   btnView: {
+    padding:5,
     marginBottom: 2,
     backgroundColor: 'white',
     alignItems: 'center',

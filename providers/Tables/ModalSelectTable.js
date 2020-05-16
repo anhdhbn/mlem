@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, Image, TextInput } from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { Overlay } from 'react-native-elements'
 
 import search from "../../assets/icon/search.png";
 import dropDownIcon from '../../assets/icon/drop_down.png';
@@ -17,12 +18,13 @@ export default function (props) {
 
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
-      <Modal
-        animationType="slide"
-        transparent={true}
+     <Overlay
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+        overlayStyle={{
+          width: "100%",
+          height: 370,
+          position: "absolute",
+          bottom: 0,
         }}
       >
         <View style={styles.container}>
@@ -68,21 +70,23 @@ export default function (props) {
           </View>
         </View>
         <View style={styles.btnView}>
-          <TouchableOpacity style={{ width: 146, height: 48, backgroundColor: '#C7c7c7', alignItems: 'center' }}>
+          <TouchableOpacity 
+          style={{ width: 146, height: 48, backgroundColor: '#C7c7c7', alignItems: 'center' }}
+          onPress={()=>{setModalVisible(false)}}
+          >
             <Text style={{ top: 10 }}>Huỷ</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ width: 146, height: 48, backgroundColor: '#DC0000', alignItems: 'center' }}>
             <Text style={{ top: 10, color: '#ffffff' }}>Thêm</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Overlay>
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: '80%',
     shadowRadius: 10,
     backgroundColor: '#707070'
   },
@@ -128,6 +132,9 @@ const styles = StyleSheet.create({
     padding:10
   },
   btnView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
     marginBottom: 2,
     backgroundColor: 'white',
     alignItems: 'center',
