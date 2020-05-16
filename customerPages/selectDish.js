@@ -39,9 +39,6 @@ export default class order extends Component {
 
       totalPrice: 0,
       totalPromoPrice: 0,
-      // B52
-      totalPrice: this.props.route.params.totalPrice,
-      totalPromoPrice: this.props.route.params.totalPromoPrice,
 
       modal: {
         id: null,
@@ -74,11 +71,6 @@ export default class order extends Component {
     this.getListDouong();
     this.getListTopOrder();
     this.getListRecently();
-  };
-
-  componentDidUpdate = () => {
-    let totalPromoPrice = this.props.route.params.getTotalPromoPrice();
-    console.log(totalPromoPrice);
   };
 
   getListLau = async () => {
@@ -195,8 +187,11 @@ export default class order extends Component {
               : this.state.modal.quantity - 1,
         },
       },
-      () => {
-        this.addDish2Order();
+      async () => {
+        await this.addDish2Order();
+        let totalPrice = this.props.route.params.getTotalPrice();
+        let totalPromoPrice = this.props.route.params.getTotalPromoPrice();
+        this.setPrice(totalPrice, totalPromoPrice);
       }
     );
     // this.addDish2Order();
@@ -211,11 +206,18 @@ export default class order extends Component {
           quantity: this.state.modal.quantity + 1,
         },
       },
-      () => {
-        this.addDish2Order();
+      async () => {
+        await this.addDish2Order();
+        let totalPrice = this.props.route.params.getTotalPrice();
+        let totalPromoPrice = this.props.route.params.getTotalPromoPrice();
+        this.setPrice(totalPrice, totalPromoPrice);
       }
     );
     // this.addDish2Order();
+  };
+
+  setPrice = (totalPrice, totalPromoPrice) => {
+    this.setState({ totalPrice: totalPrice, totalPromoPrice: totalPromoPrice });
   };
 
   selectOrderSize = (selectSize) => {
@@ -230,8 +232,11 @@ export default class order extends Component {
           bigSize: selectSize.bigSize,
         },
       },
-      () => {
-        this.addDish2Order();
+      async () => {
+        await this.addDish2Order();
+        let totalPrice = this.props.route.params.getTotalPrice();
+        let totalPromoPrice = this.props.route.params.getTotalPromoPrice();
+        this.setPrice(totalPrice, totalPromoPrice);
       }
     );
     // this.addDish2Order();
@@ -394,15 +399,15 @@ export default class order extends Component {
               subNumOfDish={this.subNumOfDish}
               addNumOfDish={this.addNumOfDish}
               selectOrderSize={this.selectOrderSize}
-              totalPromoPrice={this.props.route.params.getTotalPromoPrice()}
-              totalPrice={this.props.route.params.getTotalPrice()}
+              totalPromoPrice={this.state.totalPromoPrice}
+              totalPrice={this.state.totalPrice}
             />
           </View>
         </ScrollView>
-        {console.log(this.props.route.params.getTotalPrice())}
+
         <CaculatePrice
-          totalPromoPrice={this.props.route.params.getTotalPromoPrice()}
-          totalPrice={this.props.route.params.getTotalPrice()}
+          totalPromoPrice={this.state.totalPromoPrice}
+          totalPrice={this.state.totalPrice}
           // addOrderDish={this.props.route.params.addOrderDish(this.state.modal)}
         />
       </SafeAreaView>
