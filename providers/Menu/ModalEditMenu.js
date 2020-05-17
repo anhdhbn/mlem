@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Overlay } from 'react-native-elements'
+import { View,StyleSheet } from 'react-native';
+import { Overlay,Button} from 'react-native-elements'
 export default function (props) {
   const [modalVisible, setModalVisible] = useState(true);
   return (
@@ -16,15 +15,21 @@ export default function (props) {
         }}
       >
         <View style={styles.container}>
-          <TouchableOpacity style={{...styles.btnView,borderBottomWidth:1}}>
-            <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Tuỳ chỉnh</Text>
-          </TouchableOpacity>
-          <TouchableOpacity  style={{...styles.btnView,borderBottomWidth:1}}>
-            <Text style={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}>Xoá</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnView}>
-            <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Quay lại</Text>
-          </TouchableOpacity>
+          <Button
+            buttonStyle={{ ...styles.btnView }}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: 'black' }}
+            title='Tuỳ chỉnh'
+          />
+          <Button
+            buttonStyle={{ ...styles.btnView }}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}
+            title='Xoá'
+          />
+          <Button
+            buttonStyle={{ ...styles.btnView }}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: 'black' }}
+            title='Quay lại'
+          />
         </View>
       </Overlay>
     </View>
@@ -48,7 +53,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   btnView: {
-    padding:5,
+    padding: 5,
     marginBottom: 2,
     backgroundColor: 'white',
     alignItems: 'center',

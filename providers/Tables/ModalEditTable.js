@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Overlay } from 'react-native-elements'
+import { View, StyleSheet } from 'react-native';
+import { Overlay,Button } from 'react-native-elements'
+
 export default function (props) {
-  const [modalVisible, setModalVisible] = useState(true);
-  const toggleOverlay =()=>{
-    setModalVisible(!modalVisible)
-  }
+  const {modalEditVisible,toggleModalEdit} = props.visible;
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
-        visible={modalVisible}
+        visible={modalEditVisible}
         overlayStyle={{
           width: "100%",
           height: 100,
@@ -19,17 +16,17 @@ export default function (props) {
         }}
       >
         <View style={styles.container}>
-          <TouchableOpacity 
-          style={styles.btnView}>
-            <Text style={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}>Xoá</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnView}
-           onPress={()=>{toggleOverlay}}>
-            <Text 
-            style={{ fontFamily: 'Regular', fontSize: 20 }}
-            >Quay lại</Text>
-          </TouchableOpacity>
-
+          <Button
+            buttonStyle={{...styles.btnView}}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000'}}
+            title='Xoá'
+          />
+          <Button
+            onPress={toggleModalEdit()}
+            buttonStyle={{...styles.btnView}}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color:'black'}}
+            title='Quay lại'
+          />
         </View>
       </Overlay>
     </View>
@@ -39,13 +36,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     shadowRadius: 10,
-    marginBottom: 20
+  },
+  content: {
+    backgroundColor: "#AFAFAF",
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   },
   btnView: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-    bottom: 4,
+    padding: 5,
+    marginBottom: 2,
     backgroundColor: 'white',
     alignItems: 'center',
   }
