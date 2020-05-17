@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { Overlay,Button } from 'react-native-elements'
 
 import search from "../../assets/icon/search.png";
 import dropDownIcon from '../../assets/icon/drop_down.png';
@@ -17,12 +18,13 @@ export default function (props) {
 
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
-      <Modal
-        animationType="slide"
-        transparent={true}
+     <Overlay
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+        overlayStyle={{
+          width: "100%",
+          height: 350,
+          position: "absolute",
+          bottom: 0,
         }}
       >
         <View style={styles.container}>
@@ -68,21 +70,24 @@ export default function (props) {
           </View>
         </View>
         <View style={styles.btnView}>
-          <TouchableOpacity style={{ width: 146, height: 48, backgroundColor: '#C7c7c7', alignItems: 'center' }}>
-            <Text style={{ top: 10 }}>Huỷ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{ width: 146, height: 48, backgroundColor: '#DC0000', alignItems: 'center' }}>
-            <Text style={{ top: 10, color: '#ffffff' }}>Thêm</Text>
-          </TouchableOpacity>
+        <Button 
+          buttonStyle={{ width: 146, height: 48, backgroundColor: '#C7c7c7', alignItems: 'center' }}
+          title='Huỷ'
+          onPress={()=>{setModalVisible(false)}}
+          />
+          
+          <Button 
+           buttonStyle={{ width: 146, height: 48, backgroundColor: '#DC0000', alignItems: 'center' }}
+           title='Xác nhận'   
+          />
         </View>
-      </Modal>
+      </Overlay>
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: '80%',
     shadowRadius: 10,
     backgroundColor: '#707070'
   },
@@ -124,10 +129,7 @@ const styles = StyleSheet.create({
   btnView: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-   
-    padding:10
-  },
-  btnView: {
+    padding: 10,
     marginBottom: 2,
     backgroundColor: 'white',
     alignItems: 'center',

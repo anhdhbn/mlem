@@ -1,45 +1,45 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, StyleSheet} from 'react-native';
-import { TouchableOpacity} from 'react-native-gesture-handler';
+import { View, StyleSheet } from 'react-native';
+import { Overlay,Button } from 'react-native-elements'
+
 export default function (props) {
-  const [modalVisible, setModalVisible] = useState(true);
+  const {modalEditVisible,toggleModalEdit} = props.visible;
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+      <Overlay
+        visible={modalEditVisible}
+        overlayStyle={{
+          width: "100%",
+          height: 100,
+          position: "absolute",
+          bottom: 0,
         }}
-        style={{ width: 50 }}
       >
         <View style={styles.container}>
-          <View style={styles.content}>
-            
-            <TouchableOpacity style={styles.btnView}>
-              <Text style={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}>Xoá</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btnView}>
-              <Text style={{ fontFamily: 'Regular', fontSize: 20 }}>Quay lại</Text>
-            </TouchableOpacity>
-          </View>
+          <Button
+            buttonStyle={{...styles.btnView}}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000'}}
+            title='Xoá'
+          />
+          <Button
+            onPress={toggleModalEdit()}
+            buttonStyle={{...styles.btnView}}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color:'black'}}
+            title='Quay lại'
+          />
         </View>
-      </Modal>
+      </Overlay>
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    shadowRadius: 10, 
-    marginTop: 22
+    shadowRadius: 10,
   },
   content: {
-    top: '90%',
-    margin:3,
     backgroundColor: "#AFAFAF",
-    borderRadius: 15,
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -50,9 +50,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   btnView: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
+    padding: 5,
     marginBottom: 2,
     backgroundColor: 'white',
     alignItems: 'center',
