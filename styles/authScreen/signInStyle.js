@@ -40,14 +40,14 @@ export default StyleSheet.create({
     fontSize: 13,
     paddingTop: 3,
     paddingBottom: 3,
-    width: 200,
+    width: 160,
     color: "white",
   },
   textInputWrong: {
     fontSize: 13,
     paddingTop: 3,
     paddingBottom: 3,
-    width: 200,
+    width: 160,
     color: "red",
   },
   viewInput: {
@@ -66,7 +66,6 @@ export default StyleSheet.create({
     height: 8,
     padding: 8,
     margin: 10,
-    marginLeft: 45,
   },
   submitBtn: {
     justifyContent: "center",

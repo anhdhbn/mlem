@@ -21,21 +21,41 @@ export default function (props) {
       }}
     >
       <View style={{ flexDirection: "row", paddingTop: 8 }}>
-        <TouchableOpacity onPress={() => props.subTable()}>
-          <Image
-            source={require("../../assets/icon/-.png")}
-            style={{ width: 25, height: 25 }}
-          />
-        </TouchableOpacity>
+        {props.numOfTable === 0 ? (
+          <TouchableOpacity>
+            <Image
+              source={require("../../assets/icon/circle.png")}
+              style={{ width: 24, height: 24 }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => props.subTable()}>
+            <Image
+              source={require("../../assets/icon/-.png")}
+              style={{ width: 25, height: 25 }}
+            />
+          </TouchableOpacity>
+        )}
+
         <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
           {props.numOfTable}
         </Text>
-        <TouchableOpacity onPress={() => props.addTable()}>
-          <Image
-            source={require("../../assets/icon/+.png")}
-            style={{ width: 25, height: 25 }}
-          />
-        </TouchableOpacity>
+        {props.numOfTable < props.tableAvailable ? (
+          <TouchableOpacity onPress={() => props.addTable()}>
+            <Image
+              source={require("../../assets/icon/+.png")}
+              style={{ width: 25, height: 25 }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity>
+            <Image
+              source={require("../../assets/icon/circle.png")}
+              style={{ width: 24, height: 24 }}
+            />
+          </TouchableOpacity>
+        )}
+
         <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>Bàn</Text>
       </View>
       <View
@@ -46,12 +66,22 @@ export default function (props) {
           paddingTop: 8,
         }}
       >
-        <TouchableOpacity onPress={() => props.subPeople()}>
-          <Image
-            source={require("../../assets/icon/-.png")}
-            style={{ width: 25, height: 25 }}
-          />
-        </TouchableOpacity>
+        {props.numOfPeople ? (
+          <TouchableOpacity onPress={() => props.subPeople()}>
+            <Image
+              source={require("../../assets/icon/-.png")}
+              style={{ width: 25, height: 25 }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity>
+            <Image
+              source={require("../../assets/icon/circle.png")}
+              style={{ width: 24, height: 24 }}
+            />
+          </TouchableOpacity>
+        )}
+
         <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
           {props.numOfPeople}
         </Text>

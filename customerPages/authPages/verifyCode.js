@@ -14,11 +14,18 @@ import {
 import LinearGradient from "react-native-linear-gradient";
 import CodeInput from "react-native-confirmation-code-input";
 import styles from "../../styles/authScreen/verifyCodeStyle";
+import authServices from "../../customerServices/authServices";
+
+import { Button } from "react-native-elements";
+import CheckData from "./checkData";
+import SnackBar from "../../components/common/snackbarUpdating";
+
 class verifyCode extends Component {
   constructor(props) {
     super(props);
     this.state = {
       navigation: this.props,
+      visibleAlert: false,
       error: null,
       loading: false,
       resending: false,
@@ -40,19 +47,37 @@ class verifyCode extends Component {
   }
 
   async onSubmit(code) {
+    let isWrongCode = false;
     this.setLoading(true);
     let data = {
       id: this.props.response,
       passwordRecoveryCode: code.toString(),
     };
-    let response = await authServices.verifyCode(data);
+
+    let response = await authServices.verifyCode(data).catch((reason) => {
+      // console.log("==========================================");
+      const message = reason.response.data;
+      // console.log("[INFO] message in signUp: ", message);
+      this.setAlert(true);
+      isWrongCode = true;
+    });
     this.setLoading(false);
     // TODO: Handle code incorrect
 
-    this.props.navigation.navigate("RecoveryPassStep2VerifyCode", {
-      id: response,
-    });
+    if (!isWrongCode) {
+      this.props.navigation.navigate("RecoveryPassStep2VerifyCode", {
+        id: response,
+      });
+    }
   }
+
+  setAlert = (visible) => {
+    this.setState({ visibleAlert: visible });
+  };
+
+  _onDismissSnackBar = () => {
+    this.setState({ visibleAlert: false });
+  };
 
   resendVerifyCode() {
     this.setResending(true);
@@ -64,7 +89,7 @@ class verifyCode extends Component {
     // TODO: call API to check code here
     // If code does not match, clear input with: this.refs.codeInputRef1.clear()
     this.onSubmit(code);
-    this.refs.codeInputRef1.clear();
+    this.refs.codeInputRef2.clear();
   }
 
   // _onFinishCheckingCode(isValid, code) {
@@ -85,6 +110,13 @@ class verifyCode extends Component {
     return (
       <>
         <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
+          <SnackBar
+            visible={this.state.visibleAlert}
+            _onDismissSnackBar={this._onDismissSnackBar}
+            actionText="Hide"
+            duration={5000}
+            text={"Mã xách thực không khớp"}
+          />
           <View
             style={{
               marginTop: 10,

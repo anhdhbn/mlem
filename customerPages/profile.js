@@ -26,7 +26,7 @@ import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
 import SettingProfile from "../components/profile/settingProfile";
 
-import profileService from "../services/profileService";
+import profileService from "../customerServices/profileService";
 
 import SnackbarUpdating from "../components/common/snackbarUpdating";
 import { Snackbar } from "react-native-paper";
@@ -97,7 +97,7 @@ export default class Profile extends Component {
   async update() {
     // response.avatar has 99999 line
     let params = this.createParams();
-    // console.log("[INFO] Params in profile: ", params);
+    console.log("[INFO] Params in profile: ", params);
     let response = await profileService.update(params);
     // response.avatar has 99999 line
     // console.log("[INFO] Response in profile after UPDATE", response);
@@ -227,7 +227,11 @@ export default class Profile extends Component {
           <UserProfile
             email={this.state.data.email}
             phoneNumber={this.state.data.phone}
-            dateOfBirth={this.state.data.dob.toString().substr(0, 10)}
+            dateOfBirth={
+              this.state.data.dob
+                ? this.state.data.dob.toString().substr(0, 10)
+                : null
+            }
             address={this.state.data.address}
             onPress={this._showModal}
           />

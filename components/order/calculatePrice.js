@@ -40,12 +40,12 @@ export default function (props) {
         <View style={{ position: "absolute", right: 20 }}>
           <TouchableOpacity
             onPress={() => {
-              console.log("[INFO] Press calculate price");
+              props.navigation.navigate("Order");
             }}
             style={{
               backgroundColor: "#DC0000",
               borderRadius: 8,
-              width: 90,
+              width: 60,
               height: 40,
               marginTop: 10,
             }}
@@ -59,7 +59,7 @@ export default function (props) {
                 color: "#fff",
               }}
             >
-              Đặt ngay
+              Xong
             </Text>
           </TouchableOpacity>
         </View>

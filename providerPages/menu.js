@@ -2,9 +2,9 @@ import React from "react";
 import { Text, View, StyleSheet, Image, TextInput } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 
-import search from "../../assets/icon/search.png";
-import viewMoreIcon from "../../assets/icon/view-more.png";
-import dropDownIcon from "../../assets/icon/drop_down.png";
+import search from "../assets/icon/search.png";
+import viewMoreIcon from "../assets/icon/view-more.png";
+import dropDownIcon from "../assets/icon/drop_down.png";
 
 export default function (props) {
   const data = [

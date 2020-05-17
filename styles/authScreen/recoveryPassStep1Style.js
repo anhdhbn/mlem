@@ -14,7 +14,7 @@ export default StyleSheet.create({
     fontSize: 13,
     paddingTop: 3,
     paddingBottom: 3,
-    width: 200,
+    width: 160,
     color: "white",
   },
   viewInput: {
@@ -27,6 +27,12 @@ export default StyleSheet.create({
     backgroundColor: "#461321",
     flexDirection: "row",
     overflow: "hidden",
+  },
+  image: {
+    width: 8,
+    height: 8,
+    padding: 8,
+    margin: 10,
   },
   submitBtn: {
     justifyContent: "center",
