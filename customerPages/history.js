@@ -25,43 +25,6 @@ export default class History extends Component {
     this.state = {
       history: [],
       isLoading: true,
-      // history: [
-      //   {
-      //     orderTime: "15h15",
-      //     dmy: "20-11-2020",
-      //     id: "5072308A",
-      //     price: "100,000 đ",
-      //     status: "Đang giao hàng",
-      //   },
-      //   {
-      //     orderTime: "15h15",
-      //     dmy: "20-11-2020",
-      //     id: "5072308B",
-      //     price: "100,000 đ",
-      //     status: "Đã thanh toán",
-      //   },
-      //   {
-      //     orderTime: "15h15",
-      //     dmy: "20-11-2020",
-      //     id: "5072308C",
-      //     price: "100,000 đ",
-      //     status: "Đã thanh toán",
-      //   },
-      //   {
-      //     orderTime: "15h15",
-      //     dmy: "20-11-2020",
-      //     id: "5072308D",
-      //     price: "100,000 đ",
-      //     status: "Đã hủy",
-      //   },
-      //   {
-      //     orderTime: "15h15",
-      //     dmy: "20-11-2020",
-      //     id: "5072308E",
-      //     price: "100,000 đ",
-      //     status: "Đã thanh toán",
-      //   },
-      // ],
     };
   }
 

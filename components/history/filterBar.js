@@ -13,6 +13,8 @@ import {
   Modal,
 } from "react-native";
 
+import { Picker } from "native-base";
+
 // import ModalDropdown from "react-native-modal-dropdown";
 
 // const filterTimeOption = ["Tất cả", "Theo ngày", "7 ngày gần đây"];
@@ -24,8 +26,32 @@ export default class FilterBar extends Component {
     this.state = {
       filterTime: "Tất cả",
       filterStatus: "Trạng thái",
+      valueFilterTime: "0",
+      valueFilterStatus: "0",
     };
   }
+
+  onValueFilterStatusChange = (value) => {
+    this.setState({
+      valueFilterTime: value,
+    });
+    switch (value) {
+      case 0:
+        break;
+      case 1:
+        break;
+      case 3:
+        break;
+      case 4:
+        break;
+    }
+  };
+
+  onValueFilterTimeChange = (value) => {
+    this.setState({
+      valueFilterStatus: value,
+    });
+  };
 
   render() {
     return (
@@ -44,7 +70,7 @@ export default class FilterBar extends Component {
         }}
       >
         <View style={{ flex: 1 }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.5}
             style={{ alignItems: "center", flexDirection: "row" }}
           >
@@ -62,10 +88,24 @@ export default class FilterBar extends Component {
               source={require("../../assets/icon/drop_down.png")}
               style={{ width: 20, height: 20 }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <Picker
+            note
+            mode="dropdown"
+            style={{ width: 120 }}
+            selectedValue={this.state.valueFilterTime}
+            onValueChange={this.onValueFilterTimeChange}
+          >
+            <Picker.Item label="Tất cả" value="0" />
+            <Picker.Item label="7 ngày gần đây" value="1" />
+            <Picker.Item label="30 ngày gần đây" value="2" />
+            <Picker.Item label="Chọn ngày" value="3" />
+          </Picker>
         </View>
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity
+        <View
+          style={{ flex: 1, justifyContent: "flex-end", flexDirection: "row" }}
+        >
+          {/* <TouchableOpacity
             activeOpacity={0.5}
             style={{
               alignItems: "center",
@@ -86,7 +126,27 @@ export default class FilterBar extends Component {
               source={require("../../assets/icon/drop_down.png")}
               style={{ width: 20, height: 20 }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View
+          // style={{
+          //   alignItems: "center",
+          //   flexDirection: "row",
+          //   justifyContent: "flex-end",
+          // }}
+          >
+            <Picker
+              note
+              mode="dropdown"
+              style={{ width: 140 }}
+              selectedValue={this.state.valueFilterStatus}
+              onValueChange={this.onValueFilterStatusChange}
+            >
+              <Picker.Item label="Trạng thái" value="0" />
+              <Picker.Item label="Thành công" value="1" />
+              <Picker.Item label="Đã xác nhận" value="2" />
+              <Picker.Item label="Đã hủy" value="3" />
+            </Picker>
+          </View>
         </View>
       </View>
     );
