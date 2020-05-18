@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import BackICon from '../../assets/icon/provider app/back.png'
 import TickIcon from '../../assets/icon/tick.png'
-import ViewMore from '../../assets/icon/view more.png'
+import ViewMore from '../../assets/icon/view_more.png'
 import addIcon from '../../assets/icon/+.png'
 import subIcon from '../../assets/icon/-.png'
 import { NavigationContainer } from "@react-navigation/native";
@@ -57,7 +57,7 @@ function EditFood(props) {
       <View >
         <Text style={styles.title}>các tuỳ chọn</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 14 }}>
-          <View style={{ flexDirection: 'row'  }}>
+          <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity>
               <Image source={TickIcon} style={styles.iconstyle} />
             </TouchableOpacity>
@@ -80,26 +80,31 @@ function EditFood(props) {
 
       <View>
         <Text style={styles.title}>Nhóm món ăn</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 14 }}>
+        <TouchableOpacity
+          style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 14 }}
+          onPress={()=>{
+            
+          }}
+        >
           <Text>Bấm chọn</Text>
           <TouchableOpacity>
             <Image source={ViewMore} style={{ height: 13, width: 13 }} />
           </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
       <View>
         <View style={{
-          flexDirection: 'row', 
-          justifyContent: 'space-between', 
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           paddingLeft: 10,
-          paddingRight:10,
+          paddingRight: 10,
           color: '#8A8F9C',
           backgroundColor: '#DEDEDE'
         }}>
           <Text >Đơn Giá (size nhỏ)</Text>
           <Text> Khuyến mãi</Text>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around',padding: 14 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 14 }}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity>
               <Image source={subIcon} style={styles.iconstyle} />
@@ -126,7 +131,7 @@ function EditFood(props) {
       <View>
         <Text style={styles.title}>Trạng thái</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-          <View style={{ flexDirection: 'row',padding: 14 }}>
+          <View style={{ flexDirection: 'row', padding: 14 }}>
             <TouchableOpacity>
               <Image source={TickIcon} style={styles.iconstyle} />
             </TouchableOpacity>
@@ -143,7 +148,7 @@ function EditFood(props) {
 
       <View>
         <Text style={styles.title}>Mô tả</Text>
-        <Text style={{left:10}}>Mô tả ...</Text>
+        <Text style={{ left: 10 }}>Mô tả ...</Text>
       </View>
 
       <View style={styles.btnView}>
