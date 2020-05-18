@@ -3,11 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import { Overlay,Button } from 'react-native-elements'
 
 export default function (props) {
-  const {modalEditVisible,toggleModalEdit} = props.visible;
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
-        visible={modalEditVisible}
+        isVisible={true}
         overlayStyle={{
           width: "100%",
           height: 100,
@@ -22,7 +21,7 @@ export default function (props) {
             title='Xoá'
           />
           <Button
-            onPress={toggleModalEdit()}
+            onPress={()=>{}}
             buttonStyle={{...styles.btnView}}
             titleStyle={{ fontFamily: 'Regular', fontSize: 20, color:'black'}}
             title='Quay lại'

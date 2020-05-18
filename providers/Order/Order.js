@@ -1,9 +1,38 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
-import viewMoreIcon from '../../assets/icon/view more.png';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { createStackNavigator } from '@react-navigation/stack';
+
+import viewMoreIcon from '../../assets/icon/view_more.png';
 import dropDownIcon from '../../assets/icon/drop_down.png';
-export default function (props) {
+
+const OrderStack = createStackNavigator();
+/*OrderStackScreen  */
+export default ({ navigation }) => (
+  <OrderStack.Navigator screenOptions={{
+    headerStyle: {
+      backgroundColor: '#D20000',
+    },
+    headerTitleAlign: 'center',
+    headerTintColor: '#fff'
+
+  }}>
+    <OrderStack.Screen
+      name="Home"
+      component={Order}
+      options={{
+        title: 'Đơn Đặt Hàng',
+        headerLeft: () => (
+          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
+        ),
+        
+      }}
+    />
+  </OrderStack.Navigator>
+)
+const Order= (props)=> {
   
   const data = [
     { id: '1', customerName: 'Đinh Tiến Đạt', status: 'active', phoneNumber: '0000000', price: '500000vnd' },
