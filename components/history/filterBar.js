@@ -15,7 +15,8 @@ import {
 
 import { Picker } from "native-base";
 
-// import ModalDropdown from "react-native-modal-dropdown";
+import moment from "moment";
+import DatePicker from "./datePicker";
 
 // const filterTimeOption = ["Tất cả", "Theo ngày", "7 ngày gần đây"];
 
@@ -28,29 +29,42 @@ export default class FilterBar extends Component {
       filterStatus: "Trạng thái",
       valueFilterTime: "0",
       valueFilterStatus: "0",
+      date: moment(),
     };
   }
 
   onValueFilterStatusChange = (value) => {
     this.setState({
-      valueFilterTime: value,
+      valueFilterStatus: value,
     });
-    switch (value) {
-      case 0:
-        break;
-      case 1:
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-    }
+    // switch (value) {
+    //   case 0:
+    //     renderAllOrdered()
+    //     break;
+    //   case 1:
+    //     break;
+    //   case 3:
+    //     break;
+    //   case 4:
+    //     break;
+    // }
+    this.props.renderOrdered(this.state.valueFilterTime, value);
   };
 
   onValueFilterTimeChange = (value) => {
     this.setState({
-      valueFilterStatus: value,
+      valueFilterTime: value,
     });
+    this.props.renderOrdered(value, this.state.valueFilterStatus);
+  };
+
+  setDate = (pickedDate) => {
+    // console.log("[INFO] Picked date: ", pickedDate);
+    this.props.renderOrdered(
+      this.state.valueFilterTime,
+      this.state.valueFilterStatus,
+      pickedDate
+    );
   };
 
   render() {
@@ -102,6 +116,21 @@ export default class FilterBar extends Component {
             <Picker.Item label="Chọn ngày" value="3" />
           </Picker>
         </View>
+
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            flexDirection: "row",
+            alignContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {this.state.valueFilterTime === "3" ? (
+            <DatePicker setDate={this.setDate} date={this.state.date} />
+          ) : null}
+        </View>
+
         <View
           style={{ flex: 1, justifyContent: "flex-end", flexDirection: "row" }}
         >

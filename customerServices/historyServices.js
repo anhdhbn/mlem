@@ -2,7 +2,7 @@ import { requestServices } from "./index";
 
 const list = (params) =>
   requestServices.customAxios
-    .post(`api/order/list`, params)
+    .post(`api/order/list-history`, params)
     .then((res) => res.data);
 // const listFavorite = (params) =>
 //   requestServices.customAxios
