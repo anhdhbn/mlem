@@ -1,40 +1,12 @@
-import React from 'react';
-import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
-import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import { createStackNavigator } from '@react-navigation/stack';
-import search from "../../assets/icon/search.png";
-import viewMoreIcon from '../../assets/icon/view_more.png';
-import dropDownIcon from '../../assets/icon/drop_down.png';
+import React from "react";
+import { Text, View, StyleSheet, Image, TextInput } from "react-native";
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 
-const MenuStack = createStackNavigator();
-/* MenuStackScreen */
-export default ({ navigation }) => (
-  <MenuStack.Navigator screenOptions={{
-    headerStyle: {
-      backgroundColor: '#D20000',
-    },
-    headerTitleAlign: 'center',
-    headerTintColor: '#fff'
-  }}>
-    <MenuStack.Screen
-      name="Menu"
-      component={Menu}
-      options={{
-        title: 'Thực Đơn',
-        headerLeft: () => (
-          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
-        ),
-        headerRight: () => (
-          <AntDesign.Button name='plus' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></AntDesign.Button>
-        ),
-      }}
-    />
-  </MenuStack.Navigator>
-)
+import search from "../assets/icon/search.png";
+import viewMoreIcon from "../assets/icon/view-more.png";
+import dropDownIcon from "../assets/icon/drop_down.png";
 
-const Menu = (props)=> {
+export default function (props) {
   const data = [
     {
       id: "1",

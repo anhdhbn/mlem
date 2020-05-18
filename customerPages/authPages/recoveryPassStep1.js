@@ -13,25 +13,29 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/recoveryPassStep1Style";
-import authServices from "../../services/authServices";
+import authServices from "../../customerServices/authServices";
+
+import { Button } from "react-native-elements";
+import CheckData from "./checkData";
+import SnackBar from "../../components/common/snackbarUpdating";
 
 export default class recoveryPassStep1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       navigation: this.props,
-      error: null,
+      visibleAlert: false,
+      emailError: null,
       loading: false,
       response: null,
       // email: null,
-      email: "vietlinh15@coldmail.com",
+      email: null,
     };
 
     this.handleEmail = this.handleEmail.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getData = this.getData.bind(this);
-    this.checkData = this.checkData.bind(this);
   }
 
   handleEmail(text) {
@@ -49,36 +53,61 @@ export default class recoveryPassStep1 extends Component {
   }
 
   async onSubmit() {
-    if (this.checkData()) {
+    let checkData = new CheckData();
+    if (checkData.checkEmail(this.state.email)) {
+      this.cleanEmailError();
+      let isWrongEmail = false;
       this.setLoading(true);
       let data = this.getData();
       console.log(data);
 
-      let response = await authServices.forgotPassword(data);
+      let response = await authServices.forgotPassword(data).catch((reason) => {
+        // console.log("==========================================");
+        const message = reason.response.data;
+        // console.log("[INFO] message in signUp: ", message);
+        this.setAlert(true);
+        isWrongEmail = true;
+      });
       this.setLoading(false);
       // TODO: Handle mail incorrect
-      this.props.navigation.navigate("VerifyCode", {
-        response: response,
-        onSubmit: this.onSubmit,
-      });
+      // console.log("{INFO] Response in recoveryPassStep1: ", response);
+      if (!isWrongEmail) {
+        this.props.navigation.navigate("VerifyCode", {
+          response: response,
+        });
+      }
+    } else {
+      this.setEmailError();
     }
   }
 
-  checkData() {
-    if (this.state.email === null) {
-      Alert.alert("Email error");
-      return false;
-    }
-    if (this.state.password === null) {
-      Alert.alert("Password error");
-      return false;
-    }
-    return true;
-  }
+  setEmailError = () => {
+    this.setState({ emailError: "Email không hợp lệ" });
+  };
+
+  cleanEmailError = () => {
+    this.setState({ emailError: null });
+  };
+
+  setAlert = (visible) => {
+    this.setState({ visibleAlert: visible });
+  };
+
+  _onDismissSnackBar = () => {
+    this.setState({ visibleAlert: false });
+  };
+
   render() {
     return (
       <>
         <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
+          <SnackBar
+            visible={this.state.visibleAlert}
+            _onDismissSnackBar={this._onDismissSnackBar}
+            actionText="Hide"
+            duration={5000}
+            text={"Email không trùng khớp với bất cứ tài khoản nào"}
+          />
           <View
             style={{
               marginTop: 10,
@@ -94,7 +123,7 @@ export default class recoveryPassStep1 extends Component {
             >
               <Image
                 source={require("../../assets/icon/back.png")}
-                style={{ width: 30, height: 30 }}
+                style={{ width: 8, height: 8 }}
               />
             </TouchableOpacity>
             <View
@@ -122,27 +151,31 @@ export default class recoveryPassStep1 extends Component {
 
           <KeyboardAvoidingView behavior="padding">
             <View style={{ alignItems: "center" }}>
+              {this.state.emailError ? (
+                <View>
+                  <Text>{this.state.emailError}</Text>
+                </View>
+              ) : null}
               <View style={styles.viewInput}>
                 <Image
                   source={require("../../assets/icon/email.png")}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    padding: 12,
-                    margin: 10,
-                    marginLeft: 45,
-                  }}
+                  style={styles.image}
                 />
                 <TextInput
                   style={styles.textInput}
-                  placeholder="email / số điện thoại"
+                  onChangeText={this.handleEmail}
+                  placeholder="email"
                   placeholderTextColor="#c2bbba"
                 />
               </View>
             </View>
           </KeyboardAvoidingView>
           {this.state.loading ? (
-            <Text>loading</Text>
+            <View style={{ marginTop: 20, alignItems: "center" }}>
+              <TouchableOpacity style={styles.submitBtn}>
+                <Button type="clear" loading={true} />
+              </TouchableOpacity>
+            </View>
           ) : (
             <View style={{ marginTop: 10, alignItems: "center" }}>
               <TouchableOpacity

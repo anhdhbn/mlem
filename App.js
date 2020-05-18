@@ -1,68 +1,3 @@
-// import React, { Component } from "react";
-// import {
-//   StyleSheet,
-//   Platform,
-//   Text,
-//   View,
-//   ScrollView,
-//   StatusBar,
-//   Image,
-//   Button,
-//   Dimensions,
-//   TouchableWithoutFeedback,
-// } from "react-native";
-// import { Provider as PaperProvider } from "react-native-paper";
-
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createStackNavigator } from "@react-navigation/stack";
-
-// import RecoveryPassStep1 from "./pages/authPages/recoveryPassStep1";
-// import RecoveryPassStep2 from "./pages/authPages/recoveryPassStep2";
-// import SignIn from "./pages/authPages/signIn";
-// import SignUp from "./pages/authPages/signUp";
-// import VerifyCode from "./pages/authPages/verifyCode";
-
-// import MainBody from "./pages/mainBody";
-// import Detail from "./pages/detail";
-
-// const Stack = createStackNavigator();
-
-// class TopStack extends Component {
-//   render() {
-//     return (
-//       <Stack.Navigator
-//         screenOptions={{
-//           headerShown: false,
-//         }}
-//       >
-//         <Stack.Screen name="SignIn" component={SignIn} />
-//         <Stack.Screen name="SignUp" component={SignUp} />
-//         <Stack.Screen name="VerifyCode" component={VerifyCode} />
-//         <Stack.Screen name="RecoveryPassStep1" component={RecoveryPassStep1} />
-//         <Stack.Screen name="RecoveryPassStep2" component={RecoveryPassStep2} />
-//         <Stack.Screen name="MainBody" component={MainBody} />
-//         <Stack.Screen name="Detail" component={Detail} />
-//       </Stack.Navigator>
-//     );
-//   }
-// }
-
-// export default class App extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   render() {
-//     return (
-//       <PaperProvider>
-//         <NavigationContainer>
-//           <TopStack />
-//         </NavigationContainer>
-//       </PaperProvider>
-//     );
-//   }
-// }
-
 import * as React from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -73,16 +8,18 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import { Provider as PaperProvider } from "react-native-paper";
 
-import RecoveryPassStep1 from "./pages/authPages/recoveryPassStep1";
-import RecoveryPassStep2 from "./pages/authPages/recoveryPassStep2";
-import SignIn from "./pages/authPages/signIn";
-import SignUp from "./pages/authPages/signUp";
-import VerifyCode from "./pages/authPages/verifyCode";
+import RecoveryPassStep1 from "./customerPages/authPages/recoveryPassStep1";
+import RecoveryPassStep2 from "./customerPages/authPages/recoveryPassStep2";
+import SignIn from "./customerPages/authPages/signIn";
+import SignUp from "./customerPages/authPages/signUp";
+import VerifyCode from "./customerPages/authPages/verifyCode";
 
-import authServices from "./services/authServices";
+import authServices from "./customerServices/authServices";
 
-import MainBody from "./pages/mainBody";
-import Detail from "./pages/detail";
+import MainBody from "./customerPages/mainBody";
+
+import MainProvider from "./providers/MainProvider";
+import SlideBar from "./providerPages/sideBar";
 
 const AuthContext = React.createContext();
 
@@ -110,28 +47,11 @@ function UserHomeScreen(props) {
       <MainBody response={props.route.params.response} _signOut={signOut} />
     </PaperProvider>
   );
-  // return (
-  //   <>
-  //     {console.log(
-  //       "[INFO] Response in UserHomeScreen: ",
-  //       props.route.params.response
-  //     )}
-  //     <Text>Home</Text>
-  //   </>
-  // );
 }
 
 function ProviderHomeScreen(props) {
   const { signOut } = React.useContext(AuthContext);
-  return (
-    <>
-      {console.log(
-        "[INFO] Response in ProviderHomeScreen: ",
-        props.route.params.response.roleId
-      )}
-      <Text>Provider Home</Text>
-    </>
-  );
+  return <SlideBar />;
 }
 
 function SignInScreen(props) {
