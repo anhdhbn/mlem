@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, YellowBox, Text } from "react-native";
-import { Button, Overlay } from "react-native-elements";
+import { Button as ButtonE, Overlay } from "react-native-elements";
 
 import homeServices from "../customerServices/homeServices";
 
@@ -8,6 +8,8 @@ import HeaderImage from "../components/cardList/headerCardList";
 import CardList from "../components/cardList/cardList";
 import NavBar from "../components/cardList/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
+
+import { Fab, Icon, Button } from "native-base";
 
 export default function (props) {
   //   Id	Name
@@ -51,6 +53,8 @@ export default function (props) {
 
   const [visible, setVisible] = useState(false);
   const [checkProfile, setCheckProfile] = useState(false);
+
+  const [activeFab, setActiveFab] = useState(false);
 
   useEffect(() => {
     if (!checkProfile) {
@@ -215,6 +219,26 @@ export default function (props) {
     <>
       {/* Check is the first login then update profile */}
 
+      <Fab
+        active={activeFab}
+        direction="up"
+        containerStyle={{}}
+        style={{ backgroundColor: "#5067FF" }}
+        position="bottomRight"
+        onPress={() => setActiveFab(!activeFab)}
+      >
+        <Icon name="share" />
+        <Button style={{ backgroundColor: "#34A34F" }}>
+          <Icon name="logo-whatsapp" />
+        </Button>
+        <Button style={{ backgroundColor: "#3B5998" }}>
+          <Icon name="logo-facebook" />
+        </Button>
+        <Button disabled style={{ backgroundColor: "#DD5144" }}>
+          <Icon name="mail" />
+        </Button>
+      </Fab>
+
       <Overlay
         isVisible={visible}
         // onBackdropPress={_hideModal}
@@ -227,7 +251,7 @@ export default function (props) {
           Chào mừng bạn đến với ứng dụng Mlem Mlem, vui lòng cập nhật thông tin
           cá nhân để chúng tôi có thể phục vụ bạn tốt hơn.
         </Text>
-        <Button title="Cập nhật thông tin ngay" onPress={_onsubmitModal} />
+        <ButtonE title="Cập nhật thông tin ngay" onPress={_onsubmitModal} />
       </Overlay>
 
       {/* {console.log("Start Rendering")} */}
