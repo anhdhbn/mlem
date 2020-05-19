@@ -167,7 +167,7 @@ export default class History extends Component {
             <Text>Đang cập nhật ...</Text>
           </View>
         ) : (
-          <ScrollView style={{ marginBottom: 120 }}>
+          <ScrollView style={{ marginBottom: 140 }}>
             {this.state.history.map((item) => {
               return (
                 <ItemHistoryCard
