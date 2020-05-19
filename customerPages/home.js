@@ -8,6 +8,7 @@ import HeaderImage from "../components/cardList/headerCardList";
 import CardList from "../components/cardList/cardList";
 import NavBar from "../components/cardList/NavBar";
 import { ScrollView } from "react-native-gesture-handler";
+import Spinner from "../components/Spinner/Spinner";
 
 import { Fab, Icon, Button } from "native-base";
 
@@ -52,6 +53,7 @@ export default function (props) {
   const [listDouong, setListDouong] = useState(null);
 
   const [visible, setVisible] = useState(false);
+  const [visibleLoading, setVisibleLoading] = useState(true);
   const [checkProfile, setCheckProfile] = useState(false);
 
   const [activeFab, setActiveFab] = useState(false);
@@ -64,60 +66,68 @@ export default function (props) {
       }
     }
 
-    // if (isLoadingFavourite === true) {
-    //   getListFoods(-3).then((data) => {
-    //     setListFavourite(data);
-    //     setIsLoadingFavourite(false);
-    //   });
-    //   // setIsLoadingFavourite(false);
-    // } else if (isLoadingRecently === true) {
-    //   getListFoods(-2).then((data) => {
-    //     setListRecently(data);
-    //     setIsLoadingRecently(false);
-    //   });
-    //   // setIsLoadingRecently(false);
-    // } else if (isLoadingTop === true) {
-    //   getListFoods(-1).then((data) => {
-    //     setListTop(data);
-    //     setIsLoadingTop(false);
-    //   });
-    //   // setIsLoadingTop(false);
-    // } else if (isLoadingLau === true) {
-    //   getListFoods(1).then((data) => {
-    //     setListLau(data);
-    //     setIsLoadingLau(false);
-    //   });
-    //   //  setIsLoadingLau(false);
-    // } else if (isLoadingHaisan === true) {
-    //   getListFoods(2).then((data) => {
-    //     setListHaisan(data);
-    //     setIsLoadingHaisan(false);
-    //   });
-    //   // setIsLoadingHaisan(false);
-    // } else if (isLoadingRaucu === true) {
-    //   getListFoods(3).then((data) => {
-    //     setListRaucu(data);
-    //     setIsLoadingRaucu(false);
-    //   });
-    //   // setIsLoadingRaucu(false);
-    // } else if (isLoadingThit === true) {
-    //   getListFoods(4).then((data) => {
-    //     setListThit(data);
-    //     setIsLoadingThit(false);
-    //   });
-    //   // setIsLoadingThit(false);
-    // } else if (isLoadingDouong === true) {
-    //   getListFoods(5).then((data) => {
-    //     setListDouong(data);
-    //     setIsLoadingDouong(false);
-    //   });
-    //   // setIsLoadingDouong(false);
-    // } else if (isLoadingAllDish === true) {
-    //   getAllFoods().then((data) => {
-    //     setListAllDish(data);
-    //     setIsLoadingAllDish(false);
-    //   });
-    // }
+    if (isLoadingFavourite === true) {
+      getListFoods(-3).then((data) => {
+        setListFavourite(data);
+        setIsLoadingFavourite(false);
+      });
+      // setIsLoadingFavourite(false);
+    }
+    if (isLoadingRecently === true) {
+      getListFoods(-2).then((data) => {
+        setListRecently(data);
+        setIsLoadingRecently(false);
+      });
+      // setIsLoadingRecently(false);
+    }
+    if (isLoadingTop === true) {
+      getListFoods(-1).then((data) => {
+        setListTop(data);
+        setIsLoadingTop(false);
+      });
+      // setIsLoadingTop(false);
+    }
+    if (isLoadingLau === true) {
+      getListFoods(1).then((data) => {
+        setListLau(data);
+        setIsLoadingLau(false);
+      });
+      //  setIsLoadingLau(false);
+    }
+    if (isLoadingHaisan === true) {
+      getListFoods(2).then((data) => {
+        setListHaisan(data);
+        setIsLoadingHaisan(false);
+      });
+      // setIsLoadingHaisan(false);
+    }
+    if (isLoadingRaucu === true) {
+      getListFoods(3).then((data) => {
+        setListRaucu(data);
+        setIsLoadingRaucu(false);
+      });
+      // setIsLoadingRaucu(false);
+    }
+    if (isLoadingThit === true) {
+      getListFoods(4).then((data) => {
+        setListThit(data);
+        setIsLoadingThit(false);
+      });
+      // setIsLoadingThit(false);
+    }
+    if (isLoadingDouong === true) {
+      getListFoods(5).then((data) => {
+        setListDouong(data);
+        setIsLoadingDouong(false);
+      });
+      // setIsLoadingDouong(false);
+    }
+    if (isLoadingAllDish === true) {
+      getAllFoods().then((data) => {
+        setListAllDish(data);
+        setIsLoadingAllDish(false);
+      });
+    }
 
     // console.log("[INFO] Loading dish", listDouong);
 
@@ -135,7 +145,7 @@ export default function (props) {
     //     setIsLoadingDouong(false);
     //   });
     // }
-  });
+  }, []);
 
   const getAllFoods = async () => {
     let params = {};
@@ -217,6 +227,23 @@ export default function (props) {
 
   return (
     <>
+      {/* Loading */}
+      <Overlay
+        fullScreen={true}
+        visible={
+          !listAllDish &&
+          !listDouong &&
+          !listFavorite &&
+          !listHaisan &&
+          !listLau &&
+          !listRaucu &&
+          !listRecently &&
+          !listThit &&
+          !listTop
+        }
+      >
+        <Spinner />
+      </Overlay>
       {/* Check is the first login then update profile */}
 
       <Fab
@@ -269,7 +296,7 @@ export default function (props) {
           cardData={listFavorite}
           onPressDetail={() => onPressDetail(listFavorite)}
           title={"Yêu thích"}
-          isLoading={isLoadingFavourite}
+          isLoading={!listFavorite}
         />
         <CardList
           cardData={listRecently}
