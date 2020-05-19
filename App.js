@@ -20,13 +20,14 @@ import MainBody from "./customerPages/mainBody";
 
 import MainProvider from "./providers/MainProvider";
 import SlideBar from "./providers/SideBar";
+import Spinner from "./components/Spinner/Spinner";
 
 const AuthContext = React.createContext();
 
 function SplashScreen() {
   return (
     <View>
-      <Text>Loading...</Text>
+      <Spinner />
     </View>
   );
 }

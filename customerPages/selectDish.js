@@ -18,6 +18,8 @@ import CaculatePrice from "../components/order/calculatePrice";
 
 import orderSevices from "../customerServices/orderServices";
 
+import Spinner from "../components/Spinner/Spinner";
+
 import Order from "./order";
 
 export default class order extends Component {
@@ -388,7 +390,10 @@ export default class order extends Component {
                 />
               ))
             ) : (
-              <Text>Loading</Text>
+              <View>
+                {" "}
+                <Spinner />{" "}
+              </View>
             )}
           </View>
 

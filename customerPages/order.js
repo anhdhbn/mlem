@@ -19,6 +19,7 @@ import SelectTable from "../components/order/selectTable";
 import TableOff from "../components/order/tableOff";
 
 import Snackbar from "../components/common/snackbarUpdating";
+import Spinner from "../components/Spinner/Spinner";
 export default class order extends Component {
   constructor(props) {
     super(props);
@@ -405,7 +406,7 @@ export default class order extends Component {
           </>
         ) : (
           <View>
-            <Text>Loading</Text>
+            <Spinner />
           </View>
         )}
 

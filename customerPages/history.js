@@ -21,6 +21,8 @@ import moment from "moment";
 
 import * as signalR from "@aspnet/signalr";
 
+import Spinner from "../components/Spinner/Spinner";
+
 export default class History extends Component {
   constructor(props) {
     super(props);
@@ -91,7 +93,7 @@ export default class History extends Component {
         greater: dateStart,
         less: dateEnd,
       },
-      statusId: { equal: codeStatus ? codeStatus : "1, 2, 3, 4, 5" },
+      statusId: { equal: codeStatus != 0 ? codeStatus : null },
     };
 
     let newListRender = await historyServices.list(params);
@@ -110,7 +112,7 @@ export default class History extends Component {
         greater: dateStart,
         less: dateEnd,
       },
-      statusId: { equal: codeStatus ? codeStatus : "1, 2, 3, 4, 5" },
+      statusId: { equal: codeStatus != 0 ? codeStatus : null },
     };
 
     let newListRender = await historyServices.list(params);
@@ -127,7 +129,7 @@ export default class History extends Component {
       createdAt: {
         equal: pickedDate,
       },
-      statusId: { equal: codeStatus ? codeStatus : "1, 2, 3, 4, 5" },
+      statusId: { equal: codeStatus != 0 ? codeStatus : null },
     };
 
     let newListRender = await historyServices.list(params);
@@ -164,7 +166,7 @@ export default class History extends Component {
 
         {this.state.isLoading ? (
           <View>
-            <Text>Đang cập nhật ...</Text>
+            <Spinner />
           </View>
         ) : (
           <ScrollView style={{ marginBottom: 140 }}>
