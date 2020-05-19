@@ -19,6 +19,8 @@ import ItemHistoryCard from "../components/history/itemHistoryCard";
 import historyServices from "../customerServices/historyServices";
 import moment from "moment";
 
+import * as signalR from "@aspnet/signalr";
+
 export default class History extends Component {
   constructor(props) {
     super(props);
@@ -89,7 +91,7 @@ export default class History extends Component {
         greater: dateStart,
         less: dateEnd,
       },
-      statusId: { equal: codeStatus },
+      statusId: { equal: codeStatus ? codeStatus : "1, 2, 3, 4, 5" },
     };
 
     let newListRender = await historyServices.list(params);
@@ -98,12 +100,56 @@ export default class History extends Component {
     this.setIsLoading(false);
   };
 
-  renderOrderedInMonth = (codeStatus) => {
-    console.log("[INFO] List rendered in month: ", codeStatus);
+  renderOrderedInMonth = async (codeStatus) => {
+    this.setIsLoading(true);
+    let dateEnd = moment().add(1, "days"); //"2020-05-18T03:14:35.294Z"
+    let dateStart = moment().add(-30, "days"); //"2020-05-11T03:14:35.294Z"
+    console.log("[INFO] Range render ordered Date: ", dateStart, dateEnd);
+    let params = {
+      createdAt: {
+        greater: dateStart,
+        less: dateEnd,
+      },
+      statusId: { equal: codeStatus ? codeStatus : "1, 2, 3, 4, 5" },
+    };
+
+    let newListRender = await historyServices.list(params);
+    console.log("[INFO] List rendered in month: ", params);
+    this.setHistory(newListRender);
+    this.setIsLoading(false);
   };
 
-  renderOrderedInDay = (codeStatus, pickedDate) => {
+  renderOrderedInDay = async (codeStatus, pickedDate) => {
     console.log("[INFO] List rendered in day: ", codeStatus, pickedDate);
+    this.setIsLoading(true);
+
+    let params = {
+      createdAt: {
+        equal: pickedDate,
+      },
+      statusId: { equal: codeStatus ? codeStatus : "1, 2, 3, 4, 5" },
+    };
+
+    let newListRender = await historyServices.list(params);
+    console.log("[INFO] List rendered in week: ", params);
+    this.setHistory(newListRender);
+    this.setIsLoading(false);
+  };
+
+  testSignalIR = () => {
+    try {
+      let connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://e96278dd.ngrok.io/signalr")
+        .build();
+
+      connection.on("send", (data) => {
+        console.log("[INFO] call back data in signalR: ", data);
+      });
+
+      connection.start().then(() => connection.send("abc", "Hello"));
+    } catch (error) {
+      console.log("[INFO] Error in signalR");
+    }
   };
 
   render() {
@@ -111,6 +157,10 @@ export default class History extends Component {
       <View>
         <Header title="Lịch sử" />
         <FilterBar renderOrdered={this.renderOrdered} />
+
+        <TouchableOpacity onPress={this.testSignalIR}>
+          <Text>SignalIR</Text>
+        </TouchableOpacity>
 
         {this.state.isLoading ? (
           <View>
