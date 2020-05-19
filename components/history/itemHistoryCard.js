@@ -69,7 +69,15 @@ export default class ItemHistoryCard extends Component {
               textAlign: "right",
             }}
           >
-            {this.props.status}
+            {this.props.status === 1
+              ? "Tạo mới"
+              : this.props.status === 2
+              ? "Đã gửi"
+              : this.props.status === 3
+              ? "Đã xác nhận"
+              : this.props.status === 4
+              ? "Đã từ chối"
+              : "Đã Thanh Toán"}
           </Text>
           <Text
             style={{
