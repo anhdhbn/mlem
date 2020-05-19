@@ -16,7 +16,6 @@ const datePicker = (props) => {
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
   const [dateShow, setDateShow] = useState(props.date.format("DD/MM/YYYY"));
-  const [timeShow, setTimeShow] = useState(props.date.format("HH:mm"));
 
   const onChange = (event, selectedDate) => {
     setShow(false);
@@ -25,10 +24,6 @@ const datePicker = (props) => {
     if (mode === "date") {
       setDateShow(moment(currentDate).format("DD/MM/YYYY"));
       props.setDate(moment(currentDate));
-    }
-    if (mode === "time") {
-      setTimeShow(moment(currentDate).format("HH:mm"));
-      props.setTime(moment(currentDate).format("HH:mm"));
     }
   };
 
@@ -41,10 +36,6 @@ const datePicker = (props) => {
     showMode("date");
   };
 
-  const showTimepicker = () => {
-    showMode("time");
-  };
-
   return (
     <View>
       {/* <View>
@@ -55,46 +46,34 @@ const datePicker = (props) => {
       </View> */}
 
       <View
-        style={{
-          backgroundColor: "white",
-          height: 50,
-          flexDirection: "row",
-          justifyContent: "space-around",
-          borderRadius: 6,
-          elevation: 3,
-          backgroundColor: "#fff",
-          shadowOffset: { width: 1, height: 1 },
-          shadowColor: "#333",
-          shadowOpacity: 0.3,
-          shadowRadius: 2,
-        }}
+        style={
+          {
+            // backgroundColor: "white",
+            // height: 40,
+            // flexDirection: "row",
+            // justifyContent: "space-around",
+            // borderRadius: 6,
+            // elevation: 3,
+            // backgroundColor: "#fff",
+            // shadowOffset: { width: 1, height: 1 },
+            // shadowColor: "#333",
+            // shadowOpacity: 0.3,
+            // shadowRadius: 2,
+          }
+        }
       >
         <TouchableOpacity
           onPress={showDatepicker}
-          style={{ flexDirection: "row", marginTop: 5 }}
+          style={{ flexDirection: "row" }}
         >
           <Icon
             name="date"
-            size={30}
+            size={20}
             color="#bf2315"
             style={{ marginTop: 4 }}
           />
-          <Text style={{ fontSize: 20, marginTop: 8, marginLeft: 4 }}>
+          <Text style={{ fontSize: 17, marginLeft: 4, marginTop: 3 }}>
             {dateShow}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={showTimepicker}
-          style={{ flexDirection: "row", marginTop: 5 }}
-        >
-          <Icon
-            name="stopwatch"
-            size={30}
-            color="#bf2315"
-            style={{ marginTop: 4 }}
-          />
-          <Text style={{ fontSize: 20, marginTop: 8, marginLeft: 4 }}>
-            {timeShow}
           </Text>
         </TouchableOpacity>
       </View>

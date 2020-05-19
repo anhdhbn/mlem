@@ -25,6 +25,11 @@ const createUser = (params) =>
     .post(`api/account/register`, params)
     .then((res) => res.data);
 
+const postTokenFB = (params) =>
+  requestServices.customAxios
+    .post(`api/account/facebook/auth`, params)
+    .then((res) => res.data);
+
 export default {
   login,
   forgotPassword,
@@ -34,4 +39,5 @@ export default {
   // updateUserInfoByUsername,
   // logout,
   createUser,
+  postTokenFB,
 };

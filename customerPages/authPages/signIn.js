@@ -176,6 +176,25 @@ class SignIn extends Component {
             </Text>
           </TouchableOpacity> */}
           <View>
+            {/* <LoginButton
+              publishPermissions={["email"]}
+              onLoginFinished={(error, result) => {
+                console.log("[INFO] fb ", code, result);
+                if (error) {
+                  console.log("login has error: " + result.error);
+                } else if (result.isCancelled) {
+                  console.log("login is cancelled.");
+                } else {
+                  AccessToken.getCurrentAccessToken().then((data) => {
+                    console.log(data.accessToken.toString());
+                    authServices.postTokenFB({
+                      token: data.accessToken.toString(),
+                    });
+                  });
+                }
+              }}
+              onLogoutFinished={() => console.log("logout.")}
+            /> */}
             <LoginButton
               onLoginFinished={(error, result) => {
                 if (error) {
@@ -185,6 +204,9 @@ class SignIn extends Component {
                 } else {
                   AccessToken.getCurrentAccessToken().then((data) => {
                     console.log(data.accessToken.toString());
+                    authServices.postTokenFB({
+                      token: data.accessToken.toString(),
+                    });
                   });
                 }
               }}
