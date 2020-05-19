@@ -12,7 +12,12 @@ import ModalEditTable from './ModalEditTable'
 
 const TableStack = createStackNavigator();
 /* TableStackScreen */
-export default TableStackScreen = ({ navigation }) => (
+export default TableStackScreen = ({ navigation }) => {
+  const [editTableVisible, setEditTableVisible] = useState(false);
+  const toggleEditTable = () => {
+    setEditTableVisible(!editTableVisible);
+  }
+  return(
   <TableStack.Navigator screenOptions={{
     headerStyle: {
       backgroundColor: '#D20000',
@@ -35,9 +40,12 @@ export default TableStackScreen = ({ navigation }) => (
     />
   </TableStack.Navigator>
 
-)
+)}
 const Table = (props) => {
-
+  const [editTableVisible, setEditTableVisible] = useState(false);
+  const toggleEditTable = () => {
+    setEditTableVisible(!editTableVisible);
+  }
   const data = {
     total: 50,
     emptyTable: 50,
@@ -76,9 +84,7 @@ const Table = (props) => {
           return (
             <TouchableOpacity
               style={styles.cardView}
-              onLongPress={() => {
-                  
-              }}
+              onLongPress={toggleEditTable}
             >
               <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#8A8F9C' }}>{item.tableNum}</Text>
               <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#00B80C' }}>{item.status}</Text>
@@ -86,7 +92,7 @@ const Table = (props) => {
           )
         }}
       />
-      <ModalEditTable />
+      <ModalEditTable visible={{editTableVisible,toggleEditTable}} />
     </View>
   </View>)
 }

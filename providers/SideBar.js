@@ -11,7 +11,7 @@ import NotificationStackScreen from './Notification/Notification';
 export default function () {
   const drawer = createDrawerNavigator();
   return (
-    <drawer.Navigator initialRouteName="Home">
+    <drawer.Navigator initialRouteName="Menu">
       <drawer.Screen
         name="Home"
         component={OrderStackScreen}

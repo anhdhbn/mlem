@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { createStackNavigator } from '@react-navigation/stack';
+
 import search from "../../assets/icon/search.png";
 import viewMoreIcon from '../../assets/icon/view_more.png';
 import dropDownIcon from '../../assets/icon/drop_down.png';
-
+import ModalEditMenu from './ModalEditMenu'
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
 export default ({ navigation }) => (
@@ -34,7 +36,11 @@ export default ({ navigation }) => (
   </MenuStack.Navigator>
 )
 
-const Menu = (props)=> {
+const Menu = (props) => {
+  const [editMenuVisible,setEditMenuVisible] = useState(false);
+  const toggleEditMenu = ()=>{
+    setEditMenuVisible(!editMenuVisible);
+  }
   const data = [
     {
       id: "1",
@@ -144,7 +150,10 @@ const Menu = (props)=> {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onLongPress={toggleEditMenu}
+            >
               <View style={{ flexDirection: "row" }}>
                 <Image
                   source={{ uri: item.image }}
@@ -193,6 +202,7 @@ const Menu = (props)=> {
           );
         }}
       />
+      <ModalEditMenu visible={{editMenuVisible,toggleEditMenu}} />
     </View>
   );
 }
