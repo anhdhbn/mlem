@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Overlay,Button } from 'react-native-elements'
+import { Overlay, Button } from 'react-native-elements'
 
 export default function (props) {
-  const {modalEditVisible,toggleModalEdit} = props.visible;
+  const { editTableVisible, toggleEditTable } = props.visible;
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
-        visible={modalEditVisible}
+        isVisible={editTableVisible}
         overlayStyle={{
           width: "100%",
           height: 100,
@@ -17,14 +17,14 @@ export default function (props) {
       >
         <View style={styles.container}>
           <Button
-            buttonStyle={{...styles.btnView}}
-            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000'}}
+            buttonStyle={{ ...styles.btnView }}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}
             title='Xoá'
           />
           <Button
-            onPress={toggleModalEdit()}
-            buttonStyle={{...styles.btnView}}
-            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color:'black'}}
+            onPress={toggleEditTable}
+            buttonStyle={{ ...styles.btnView }}
+            titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: 'black' }}
             title='Quay lại'
           />
         </View>

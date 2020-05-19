@@ -1,8 +1,32 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/Ionicons';
 import TickIcon from '../../assets/icon/tick.png'
-export default function (props) {
+const NotificationStack = createStackNavigator();
+/*  NotificationStackScreen*/
+export default ({ navigation }) => (
+  <NotificationStack.Navigator screenOptions={{
+    headerStyle: {
+      backgroundColor: '#D20000',
+    },
+    headerTitleAlign: 'center',
+    headerTintColor: '#fff'
+  }}>
+    <NotificationStack.Screen
+      name="Notification"
+      component={Notification}
+      options={{
+        title: 'Thông báo',
+        headerLeft: () => (
+          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
+        )
+      }}
+    />
+  </NotificationStack.Navigator>
+);
+const Notification =(props)=> {
   const data = [
     {
       image: "https://reactnative.dev/img/tiny_logo.png",

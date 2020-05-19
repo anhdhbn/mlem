@@ -1,12 +1,46 @@
-import React from "react";
-import { Text, View, StyleSheet, Image, TextInput } from "react-native";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
+import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Icon from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import search from "../../assets/icon/search.png";
-import viewMoreIcon from "../../assets/icon/view-more.png";
-import dropDownIcon from "../../assets/icon/drop_down.png";
+import viewMoreIcon from '../../assets/icon/view_more.png';
+import dropDownIcon from '../../assets/icon/drop_down.png';
+import ModalEditMenu from './ModalEditMenu'
+const MenuStack = createStackNavigator();
+/* MenuStackScreen */
+export default ({ navigation }) => (
+  <MenuStack.Navigator screenOptions={{
+    headerStyle: {
+      backgroundColor: '#D20000',
+    },
+    headerTitleAlign: 'center',
+    headerTintColor: '#fff'
+  }}>
+    <MenuStack.Screen
+      name="Menu"
+      component={Menu}
+      options={{
+        title: 'Thực Đơn',
+        headerLeft: () => (
+          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
+        ),
+        headerRight: () => (
+          <AntDesign.Button name='plus' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></AntDesign.Button>
+        ),
+      }}
+    />
+  </MenuStack.Navigator>
+)
 
-export default function (props) {
+const Menu = (props) => {
+  const [editMenuVisible,setEditMenuVisible] = useState(false);
+  const toggleEditMenu = ()=>{
+    setEditMenuVisible(!editMenuVisible);
+  }
   const data = [
     {
       id: "1",
@@ -116,7 +150,10 @@ export default function (props) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onLongPress={toggleEditMenu}
+            >
               <View style={{ flexDirection: "row" }}>
                 <Image
                   source={{ uri: item.image }}
@@ -165,6 +202,7 @@ export default function (props) {
           );
         }}
       />
+      <ModalEditMenu visible={{editMenuVisible,toggleEditMenu}} />
     </View>
   );
 }

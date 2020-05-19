@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { View,StyleSheet } from 'react-native';
 import { Overlay,Button} from 'react-native-elements'
 export default function (props) {
-  const [modalVisible, setModalVisible] = useState(true);
+  const {editMenuVisible,toggleEditMenu} = props.visible;
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
-        visible={modalVisible}
+        visible={editMenuVisible}
         overlayStyle={{
           width: "100%",
           height: 150,
@@ -27,6 +27,7 @@ export default function (props) {
           />
           <Button
             buttonStyle={{ ...styles.btnView }}
+            onPress={toggleEditMenu}
             titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: 'black' }}
             title='Quay lại'
           />

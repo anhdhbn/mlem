@@ -8,7 +8,7 @@ export default function (props) {
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
-        isVisible={modalAddVisible}
+        isVisible={true}
         overlayStyle={{
           width: "100%",
           height: 150,

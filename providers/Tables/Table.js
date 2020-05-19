@@ -1,11 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/Ionicons';
 import search from "../../assets/icon/search.png";
 import dropDownIcon from '../../assets/icon/drop_down.png';
-import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
+
 import ModalEditTable from './ModalEditTable'
-export default function (props) {
+
+const TableStack = createStackNavigator();
+/* TableStackScreen */
+export default TableStackScreen = ({ navigation }) => {
+  const [editTableVisible, setEditTableVisible] = useState(false);
+  const toggleEditTable = () => {
+    setEditTableVisible(!editTableVisible);
+  }
+  return(
+  <TableStack.Navigator screenOptions={{
+    headerStyle: {
+      backgroundColor: '#D20000',
+    },
+    headerTitleAlign: 'center',
+    headerTintColor: '#fff'
+  }}>
+    <TableStack.Screen
+      name="Table"
+      component={Table}
+      options={{
+        title: 'Bàn',
+        headerLeft: () => (
+          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
+        ),
+        headerRight: () => (
+          <AntDesign.Button name='plus' size={25} backgroundColor='#D20000' onPress={() => { }}></AntDesign.Button>
+        ),
+      }}
+    />
+  </TableStack.Navigator>
+
+)}
+const Table = (props) => {
+  const [editTableVisible, setEditTableVisible] = useState(false);
+  const toggleEditTable = () => {
+    setEditTableVisible(!editTableVisible);
+  }
   const data = {
     total: 50,
     emptyTable: 50,
@@ -44,9 +84,7 @@ export default function (props) {
           return (
             <TouchableOpacity
               style={styles.cardView}
-              onLongPress={()=>{
-
-              }}
+              onLongPress={toggleEditTable}
             >
               <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#8A8F9C' }}>{item.tableNum}</Text>
               <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#00B80C' }}>{item.status}</Text>
@@ -54,8 +92,8 @@ export default function (props) {
           )
         }}
       />
+      <ModalEditTable visible={{editTableVisible,toggleEditTable}} />
     </View>
-{/*     <ModalEditTable /> */}
   </View>)
 }
 const styles = StyleSheet.create({
