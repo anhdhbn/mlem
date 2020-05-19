@@ -19,7 +19,7 @@ import authServices from "./customerServices/authServices";
 import MainBody from "./customerPages/mainBody";
 
 import MainProvider from "./providers/MainProvider";
-import SlideBar from "./providerPages/sideBar";
+import SlideBar from "./providers/SideBar";
 
 const AuthContext = React.createContext();
 
