@@ -58,9 +58,7 @@ export default function (props) {
 
       <View style={{ right: 20, marginTop: 20 }}>
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity
-            onPress={() => props.subNumOfDish(props.dish.nameDish)}
-          >
+          <TouchableOpacity onPress={() => props.subNumOfDish(props.dish)}>
             <Image
               source={require("../../assets/icon/-.png")}
               style={{ width: 25, height: 25 }}
@@ -69,9 +67,7 @@ export default function (props) {
           <Text style={{ marginLeft: 8, marginRight: 8, fontSize: 16 }}>
             {props.dish.quantity}
           </Text>
-          <TouchableOpacity
-            onPress={() => props.addNumOfDish(props.dish.nameDish)}
-          >
+          <TouchableOpacity onPress={() => props.addNumOfDish(props.dish)}>
             <Image
               source={require("../../assets/icon/+.png")}
               style={{ width: 25, height: 25 }}

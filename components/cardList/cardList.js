@@ -37,13 +37,24 @@ export default function (props) {
         <View>
           <Text style={styles.title}>{title.toUpperCase()}</Text>
         </View>
-        <View style={styles.seeAll}>
+
+        {cardData ? (
+          <View style={styles.seeAll}>
+            <TouchableOpacity onPress={() => onPressDetail()}>
+              <Text style={{ fontSize: 11, color: "#de3333" }}>
+                Xem Tất Cả >>
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
+        {/* <View style={styles.seeAll}>
           <TouchableOpacity onPress={() => onPressDetail()}>
             <Text style={{ fontSize: 11, color: "#de3333" }}>
               Xem Tất Cả >>
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <SkeletonContent
         containerStyle={{ flex: 1, width: 300, flexDirection: "row" }}

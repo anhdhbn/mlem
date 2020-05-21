@@ -49,12 +49,12 @@ export default class SettingProfile extends Component {
             title={"Cài đặt"}
           />
           <ItemUserProfile
-            icon={require("../../assets/icon/settings.png")}
+            icon={require("../../assets/icon/changepass.png")}
             title={"Đổi mật khẩu"}
           />
           <ItemUserProfile
             onPress={this.props._signOut}
-            icon={require("../../assets/icon/settings.png")}
+            icon={require("../../assets/icon/logout.png")}
             title={"Đăng xuất"}
           />
         </View>

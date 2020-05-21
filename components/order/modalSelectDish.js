@@ -15,7 +15,10 @@ export default function (props) {
   return (
     <Overlay
       visible={props.visible}
-      onBackdropPress={props.hideModal}
+      onBackdropPress={() => {
+        props.hideModal();
+        props.removeDish2Order();
+      }}
       overlayStyle={{
         width: "100%",
         backgroundColor: "#FFFFFF",
@@ -26,7 +29,7 @@ export default function (props) {
       }}
     >
       {/* {console.log("[INFO] Props in modelSelectDish: ", props.modal)} */}
-      {props.modal.nameDish ? props.addDish2Order() : null}
+      {/* {props.modal.nameDish ? props.addDish2Order() : null} */}
       <View style={{ alignItems: "center" }}>
         <Text style={{ fontSize: 27, marginTop: 4, fontFamily: "regular" }}>
           Tuỳ chỉnh món
@@ -91,7 +94,9 @@ export default function (props) {
         <View style={{ right: 20, marginTop: 50 }}>
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
-              onPress={() => props.subNumOfDish(props.modal.nameDish)}
+              onPress={() => {
+                props.subNumOfDish();
+              }}
             >
               <Image
                 source={require("../../assets/icon/-.png")}
@@ -102,7 +107,9 @@ export default function (props) {
               {props.modal.quantity}
             </Text>
             <TouchableOpacity
-              onPress={() => props.addNumOfDish(props.modal.nameDish)}
+              onPress={() => {
+                props.addNumOfDish();
+              }}
             >
               <Image
                 source={require("../../assets/icon/+.png")}
@@ -132,7 +139,7 @@ export default function (props) {
         >
           <View>
             <Text>Size nhỏ</Text>
-            <Text>{props.modal.promoPrice * 0.5}</Text>
+            <Text>{props.modal.promoPrice}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -144,7 +151,9 @@ export default function (props) {
                   normalSize: false,
                   bigSize: false,
                 };
+
                 props.selectOrderSize(selectSize);
+
                 // console.log("[INFO] smail type: ", props.modal.smallSize);
               }}
             />
@@ -159,7 +168,7 @@ export default function (props) {
         >
           <View>
             <Text>Size Vừa</Text>
-            <Text>{props.modal.promoPrice * 0.8}</Text>
+            <Text>{props.modal.promoPrice * 1.2}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -171,6 +180,7 @@ export default function (props) {
                   normalSize: true,
                   bigSize: false,
                 };
+
                 props.selectOrderSize(selectSize);
               }}
             />
@@ -185,7 +195,7 @@ export default function (props) {
         >
           <View>
             <Text>Size Lớn</Text>
-            <Text>{props.modal.promoPrice}</Text>
+            <Text>{props.modal.promoPrice * 1.5}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -240,6 +250,10 @@ export default function (props) {
                   width: 100,
                   height: 40,
                   marginTop: 10,
+                }}
+                onPress={() => {
+                  props.addDish2Order();
+                  props.hideModal();
                 }}
               >
                 <Text
