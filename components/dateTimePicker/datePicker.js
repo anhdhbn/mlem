@@ -75,9 +75,9 @@ const datePicker = (props) => {
         >
           <Icon
             name="date"
-            size={30}
+            size={23}
             color="#bf2315"
-            style={{ marginTop: 4 }}
+            style={{ margin:8 }}
           />
           <Text style={{ fontSize: 20, marginTop: 8, marginLeft: 4 }}>
             {dateShow}
@@ -89,9 +89,9 @@ const datePicker = (props) => {
         >
           <Icon
             name="stopwatch"
-            size={30}
+            size={23}
             color="#bf2315"
-            style={{ marginTop: 4 }}
+            style={{ margin:8 }}
           />
           <Text style={{ fontSize: 20, marginTop: 8, marginLeft: 4 }}>
             {timeShow}

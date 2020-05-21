@@ -411,6 +411,7 @@ export default class order extends Component {
         )}
 
         {this.state.tableAvailable === 0 ? (
+          <>
           <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
             <View>
               <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
@@ -484,7 +485,7 @@ export default class order extends Component {
             >
               <Image
                 source={require("../assets/icon/note.png")}
-                style={{ width: 30, height: 30, marginTop: 6, marginLeft: 8 }}
+                style={{ width: 23, height: 23, marginTop: 8, marginLeft: 8 }}
               />
               <TextInput
                 style={{ width: 400, fontSize: 16 }}
@@ -492,15 +493,26 @@ export default class order extends Component {
               />
             </View>
 
-            <View
+
+          </ScrollView>
+          <View
               style={{
                 flexDirection: "row",
                 position: "relative",
                 backgroundColor: "#fff",
-                height: 80,
+                height: 60,
                 padding: 10,
-                marginBottom: 30,
+                marginBottom: 5,
                 marginTop: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.53,
+                shadowRadius: 13.97,
+
+                elevation: 21,
               }}
             >
               <View style={{ marginTop: 8, paddingLeft: 10 }}>
@@ -529,7 +541,7 @@ export default class order extends Component {
                     borderRadius: 8,
                     width: 70,
                     height: 40,
-                    marginTop: 20,
+                    marginTop: 9,
                   }}
                   onPress={() => {
                     this.createOrder();
@@ -548,8 +560,8 @@ export default class order extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </ScrollView>
+          </View>
+          </>
         ) : this.state.tableAvailable === 0 ? (
           <TableOff />
         ) : null}

@@ -23,10 +23,10 @@ export default function (props) {
         style={{
           flexDirection: "row",
           position: "relative",
-          height: 40,
-          padding: 10,
-          marginBottom: 30,
-          marginTop: 10,
+          height: 45,
+          marginBottom: 10,
+          marginTop: 5,
+
         }}
       >
         <View style={{ paddingLeft: 10 }}>
@@ -47,7 +47,7 @@ export default function (props) {
               borderRadius: 8,
               width: 60,
               height: 40,
-              marginTop: 10,
+              marginTop:5
             }}
           >
             <Text
