@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -8,188 +8,230 @@ import {
   Button,
   ScrollView,
 } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { FlatList, State } from "react-native-gesture-handler";
+import { Input, Overlay } from "react-native-elements";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import TickIcon from "../../assets/icon/tick.png";
-import ViewMore from "../../assets/icon/view more.png";
+import CircleIcon from "../../assets/icon/circle.png";
+import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
-import { NavigationContainer } from "@react-navigation/native";
-const Stack = createStackNavigator();
+import * as signalR from "@aspnet/signalr";
+import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
+import { Avatar } from "react-native-elements";
+import FormData from "form-data";
+import ImagePicker from "react-native-image-picker";
+import menuServices from "../../providerServices/menuServices";
+export default function (props) {
+  const [data, setData] = useState({
+    image: null,
+    name: null,
+    priceEach: 0,
+    discountRate: 0,
+    statusId: null,
+    descreption: null,
+    // image: {
+    //   id: null,
+    //   name: null,
+    //   content: null,
+    //   mimeType: null,
+    //   path: null,
+    //   url: null,
+    // },
+    foodFoodTypeMappings: null,
+    // foodFoodTypeMappings: [
+    //   {
+    //     id: 0,
+    //     foodId: 0,
+    //     foodTypeId: 0,
+    //     foodType: {
+    //       id: 0,
+    //       name: null,
+    //       statusId: 0,
+    //     },
+    //   },
+    // ],
+    foodFoodGroupingMappings: null,
+    // foodFoodGroupingMappings: [
+    //   {
+    //     foodId: 0,
+    //     foodGroupingId: 0,
+    //     foodGrouping: {
+    //       id: 0,
+    //       name: null,
+    //       statusId: 0,
+    //     },
+    //   },
+    // ],
+  });
+  const [size1, setSize1] = useState(false);
+  const [size2, setSize2] = useState(false);
+  const [size3, setSize3] = useState(false);
 
-export default function StackScreen(props) {
+  const setSize = () => {
+    let newFoodTypeMappings = [];
+    if (size1) {
+      newFoodTypeMappings.push({ foodTypeId: 1 });
+    }
+    if (size2) {
+      newFoodTypeMappings.push({ foodTypeId: 2 });
+    }
+    if (size3) {
+      newFoodTypeMappings.push({ foodTypeId: 3 });
+    }
+    setData({ foodFoodTypeMappings: newFoodTypeMappings });
+  };
+
+  const [foodGroupMapping, setFoodGroupMapping] = useState(null);
+
+  const setFoodGroupingMappings = (type) => {
+    let newFoodGroupingMappings = [{ foodGroupingId: type }];
+    setData({ foodFoodGroupingMappings: newFoodGroupingMappings });
+  };
+
+  const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
+  const [visibleChangeName, setVisibleChangeName] = useState(false);
+
+  const testSignalIR = () => {
+    try {
+      let connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://35.238.143.46:5001/signalr")
+        .build();
+
+      connection.on("send", (data) => {
+        console.log("[INFO] call back data in signalR: ", data);
+      });
+
+      connection.start().then(() => connection.invoke("mlem", "Hello"));
+    } catch (error) {
+      console.log("[INFO] Error in signalR");
+    }
+  };
+
+  const increasePrice = () => {
+    setData({ ...data, priceEach: data.priceEach + 1000 });
+  };
+
+  const decreasePrice = () => {
+    if (data.priceEach - 1000 >= 0) {
+      setData({ ...data, priceEach: data.priceEach - 1000 });
+    }
+  };
+
+  const increaseDiscount = () => {
+    if (data.discountRate + 1 <= 100) {
+      setData({ ...data, discountRate: data.discountRate + 1 });
+    }
+  };
+
+  const decreaseDiscount = () => {
+    if (data.discountRate - 1 >= 0) {
+      setData({ ...data, discountRate: data.discountRate - 1 });
+    }
+  };
+
+  const setStatusId = (code) => {
+    setData({ ...data, statusId: code });
+  };
+
+  const [modalName, setModalName] = useState(null);
+
+  const handleChoosePhoto = async () => {
+    const options = {
+      noData: true,
+    };
+    let photo = null;
+    await ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.uri) {
+        photo = response;
+        const data = new FormData();
+        data.append("file", {
+          name: photo.filename,
+          uri:
+            Platform.OS === "android"
+              ? photo.uri
+              : photo.uri.replace("file://", ""),
+        });
+
+        let responseAfterUpload = menuServices
+          .uploadImage(data)
+          .then((response) => response.json())
+          .then((response) => {
+            console.log("upload succes", response);
+            alert("Upload success!");
+          })
+          .catch((error) => {
+            console.log("upload error", error);
+            alert("Upload failed!");
+          });
+
+        console.log("[INFO] 1  photo in handle choose photo: ", photo);
+
+        // let responseAfterUpload = menuServices
+        //   .uploadImage(createFormData(photo))
+        //   .then((response) => response.json())
+        //   .then((response) => {
+        //     console.log("upload succes", response);
+        //     alert("Upload success!");
+        //   })
+        //   .catch((error) => {
+        //     console.log("upload error", error);
+        //     alert("Upload failed!");
+        //   });
+
+        // console.log(responseAfterUpload);
+      }
+    });
+    // console.log("[INFO] 2 photo in handle choose photo: ", photo);
+    // let response = await menuServices
+    //   .uploadImage(createFormData(photo))
+    //   .then((response) => response.json())
+    //   .then((response) => {
+    //     console.log("upload succes", response);
+    //     alert("Upload success!");
+    //   })
+    //   .catch((error) => {
+    //     console.log("upload error", error);
+    //     alert("Upload failed!");
+    //   });
+  };
+
+  const createFormData = (photo) => {
+    const data = new FormData();
+
+    data.append("file", {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === "android"
+          ? photo.uri
+          : photo.uri.replace("file://", ""),
+    });
+    console.log("[INFO] Data: ", data);
+
+    return data;
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#D20000",
-          },
-          headerTitleAlign: "center",
-          headerTintColor: "#fff",
-        }}
+    <>
+      <TouchableOpacity onPress={this.testSignalIR}>
+        <Text>SignalIR</Text>
+      </TouchableOpacity>
+
+      <Overlay
+        isVisible={visibleChangeName}
+        onBackdropPress={() => setVisibleChangeName(false)}
+        overlayStyle={{ width: 300, alignItems: "center" }}
       >
-        <Stack.Screen
-          name="SelectFood"
-          component={SelectFood}
-          options={{
-            title: "Thêm món ăn mới",
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate("SideBar");
-                }}
-              >
-                <Image
-                  source={BackICon}
-                  style={{ height: 15, width: 15, left: 10 }}
-                />
-              </TouchableOpacity>
-            ),
+        <Input
+          placeholder="Tên món ăn"
+          defaultValue={data.descreption}
+          onChangeText={(text) => {
+            // setData({ ...data, name: text });
+            setModalName(text);
           }}
         />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-function SelectFood(props) {
-  const data = {
-    image: "https://reactnative.dev/img/tiny_logo.png",
-    name: "tên món ăn",
-    price: "100000",
-    saleOff: "30%",
-  };
-  return (
-    <ScrollView style={styles.container}>
-      <View>
-        <Image source={{ uri: data.image }} style={styles.image} />
-        <Text style={styles.titleImage}>{data.name}</Text>
-      </View>
-
-      <View>
-        <Text style={styles.title}>các tuỳ chọn</Text>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            padding: 14,
-          }}
-        >
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              <Image source={TickIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>Size lớn</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              <Image source={TickIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>Size vừa</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              <Image source={TickIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>Size nhỏ</Text>
-          </View>
-        </View>
-      </View>
-
-      <View>
-        <Text style={styles.title}>Nhóm món ăn</Text>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 14,
-          }}
-        >
-          <Text>Bấm chọn</Text>
-          <TouchableOpacity>
-            <Image source={ViewMore} style={{ height: 13, width: 13 }} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingLeft: 10,
-            paddingRight: 10,
-            color: "#8A8F9C",
-            backgroundColor: "#DEDEDE",
-          }}
-        >
-          <Text>Đơn Giá (size nhỏ)</Text>
-          <Text> Khuyến mãi</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            padding: 14,
-          }}
-        >
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              <Image source={subIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>{data.price}</Text>
-            <TouchableOpacity>
-              <Image source={addIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>đồng</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              <Image source={subIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>{data.saleOff}</Text>
-            <TouchableOpacity>
-              <Image source={addIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>%</Text>
-          </View>
-        </View>
-      </View>
-
-      <View>
-        <Text style={styles.title}>Trạng thái</Text>
-        <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <View style={{ flexDirection: "row", padding: 14 }}>
-            <TouchableOpacity>
-              <Image source={TickIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>Bán</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity>
-              <Image source={TickIcon} style={styles.iconstyle} />
-            </TouchableOpacity>
-            <Text>Dừng bán</Text>
-          </View>
-        </View>
-      </View>
-
-      <View>
-        <Text style={styles.title}>Mô tả</Text>
-        <Text style={{ left: 10 }}>Mô tả ...</Text>
-      </View>
-
-      <View style={styles.btnView}>
-        <TouchableOpacity
-          style={{
-            width: 146,
-            height: 48,
-            backgroundColor: "#C7c7c7",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ top: 10 }}>Huỷ</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={{
             width: 146,
@@ -197,11 +239,317 @@ function SelectFood(props) {
             backgroundColor: "#DC0000",
             alignItems: "center",
           }}
+          onPress={() => {
+            setData({ ...data, name: modalName });
+            setVisibleChangeName(false);
+          }}
         >
-          <Text style={{ top: 10, color: "#ffffff" }}>Thêm</Text>
+          <Text style={{ top: 10, color: "#ffffff" }}>Xong</Text>
         </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </Overlay>
+
+      <ModalSelectFoodGroup
+        visible={visibleFoodGroup}
+        setVisible={setvisibleFoodGroup}
+        setFoodGroupMapping={setFoodGroupMapping}
+      />
+      {/* <TouchableOpacity onPress={() => testSignalIR()}>
+        <Text>signalR</Text>
+      </TouchableOpacity> */}
+      <ScrollView style={styles.container}>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Avatar
+            size={150}
+            title="Trống"
+            activeOpacity={0.7}
+            source={
+              data.image
+                ? {
+                    uri: data.image,
+                  }
+                : null
+            }
+            // style={{ paddingVertical: 20 }}
+            imageProps={(resizeMode = "center")}
+            // showAccessory={true}
+            // onAccessoryPress={() => {
+            //   console.log("[INFO] Press accessoryPress");
+            // }}
+            onPress={() => {
+              handleChoosePhoto();
+            }}
+            containerStyle={{ marginVertical: 20 }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setVisibleChangeName(true);
+            }}
+          >
+            <Text style={styles.titleImage}>
+              {data.name ? data.name : "Vui lòng nhập tên món ăn"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <Text style={styles.title}>Các tuỳ chọn</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              padding: 14,
+            }}
+          >
+            <View>
+              <TouchableOpacity
+                onPress={() => setSize1(!size1)}
+                style={{ flexDirection: "row" }}
+              >
+                {!size1 ? (
+                  <Image source={CircleIcon} style={styles.iconstyle} />
+                ) : (
+                  <Image source={TickIcon} style={styles.iconstyle} />
+                )}
+                <Text>Size nhỏ</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => setSize2(!size2)}
+                style={{ flexDirection: "row" }}
+              >
+                {!size2 ? (
+                  <Image source={CircleIcon} style={styles.iconstyle} />
+                ) : (
+                  <Image source={TickIcon} style={styles.iconstyle} />
+                )}
+                <Text>Size vừa</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() => setSize3(!size3)}
+                style={{ flexDirection: "row" }}
+              >
+                {!size3 ? (
+                  <Image source={CircleIcon} style={styles.iconstyle} />
+                ) : (
+                  <Image source={TickIcon} style={styles.iconstyle} />
+                )}
+                <Text>Size lớn</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        <View>
+          <Text style={styles.title}>Nhóm món ăn</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: 14,
+            }}
+          >
+            <TouchableOpacity
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              onPress={() => setvisibleFoodGroup(true)}
+            >
+              {/* {console.log(foodGroupMapping)} */}
+              {foodGroupMapping ? (
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  data={foodGroupMapping}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => {
+                    return (
+                      <View style={styles.cardView}>
+                        {item.isCliked ? (
+                          <View
+                            style={{
+                              // Card
+                              borderRadius: 6,
+                              elevation: 3,
+                              backgroundColor: "#fff",
+                              shadowOffset: { width: 1, height: 1 },
+                              shadowColor: "#333",
+                              shadowOpacity: 0.3,
+                              shadowRadius: 2,
+                              marginVertical: 6,
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Image
+                              source={TickIcon}
+                              style={{
+                                width: 18,
+                                height: 18,
+                                margin: 5,
+                              }}
+                            />
+                            <Text
+                              style={{
+                                color: "#8A8F9C",
+                                fontSize: 16,
+                                margin: 5,
+                              }}
+                            >
+                              {item.kindOfFood}
+                            </Text>
+                          </View>
+                        ) : null}
+                      </View>
+                    );
+                  }}
+                />
+              ) : (
+                <Text>Bấm chọn</Text>
+              )}
+
+              <Image
+                source={ViewMore}
+                style={{ height: 13, width: 13, right: 5 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingLeft: 10,
+              paddingRight: 10,
+              color: "#8A8F9C",
+              backgroundColor: "#DEDEDE",
+            }}
+          >
+            <Text>Đơn Giá (size nhỏ)</Text>
+            <Text> Khuyến mãi</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              padding: 14,
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  decreasePrice();
+                }}
+              >
+                <Image source={subIcon} style={styles.iconstyle} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text>{data.priceEach}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  increasePrice();
+                }}
+              >
+                <Image source={addIcon} style={styles.iconstyle} />
+              </TouchableOpacity>
+              <Text>đồng</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  decreaseDiscount();
+                }}
+              >
+                <Image source={subIcon} style={styles.iconstyle} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text>{data.discountRate}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  increaseDiscount();
+                }}
+              >
+                <Image source={addIcon} style={styles.iconstyle} />
+              </TouchableOpacity>
+              <Text>%</Text>
+            </View>
+          </View>
+        </View>
+
+        <View>
+          <Text style={styles.title}>Trạng thái</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <View style={{ paddingVertical: 14 }}>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={() => {
+                  setStatusId(1);
+                }}
+              >
+                {data.statusId === 1 ? (
+                  <Image source={TickIcon} style={styles.iconstyle} />
+                ) : (
+                  <Image source={CircleIcon} style={styles.iconstyle} />
+                )}
+                <Text>Bán</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ paddingVertical: 14 }}>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={() => {
+                  setStatusId(0);
+                }}
+              >
+                {data.statusId != 1 ? (
+                  <Image source={TickIcon} style={styles.iconstyle} />
+                ) : (
+                  <Image source={CircleIcon} style={styles.iconstyle} />
+                )}
+                <Text>Dừng bán</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        <View>
+          <Input
+            placeholder="Mô tả"
+            defaultValue={data.descreption}
+            onChangeText={(text) => {
+              setData({ ...data, descreption: text });
+            }}
+          ></Input>
+        </View>
+
+        <View style={styles.btnView}>
+          <TouchableOpacity
+            style={{
+              width: 146,
+              height: 48,
+              backgroundColor: "#C7c7c7",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ top: 10 }}>Huỷ</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: 146,
+              height: 48,
+              backgroundColor: "#DC0000",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ top: 10, color: "#ffffff" }}>Thêm</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -223,6 +571,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontFamily: "Reguler",
     fontSize: 20,
+    marginVertical: 10,
   },
   iconstyle: {
     width: 18,
