@@ -116,7 +116,8 @@ const Menu = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={"press to search...."}
+          placeholder={"MlemMlem...."}
+          placeholderTextColor='#B21'
         ></TextInput>
       </View>
 
@@ -222,7 +223,8 @@ const styles = StyleSheet.create({
   },
   filterBar: {
     flexDirection: "row",
-    backgroundColor: "#F5F6F7",
+    backgroundColor: "#F6F7F8",
+    height:50,
     padding: 10,
     top: 10,
     width: "100%",
@@ -237,5 +239,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });

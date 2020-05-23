@@ -50,7 +50,8 @@ const Notification =(props)=> {
 
     },
   ]
-  return (<View style={styles.container}>
+  return (
+    <View style={styles.container}>
     <FlatList
       data={data}
       keyExtractor={item => { item.id }}
@@ -85,13 +86,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding:10,
-    backgroundColor:'#FFFFFF',
-    marginTop:5
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    marginTop: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   avatar: {
     height: 67,
     width: 67,
     borderRadius: 50,
-    right:10,
+    right: 10,
+    marginLeft:10
   }
 })
