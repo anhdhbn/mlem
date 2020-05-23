@@ -94,16 +94,28 @@ export default function (props) {
   const [visibleChangeName, setVisibleChangeName] = useState(false);
 
   const testSignalIR = () => {
+    var options = {
+      transport: signalR.HttpTransportType,
+      logging: signalR.LogLevel.Trace,
+      accessToken: function () {
+        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxOCIsInVuaXF1ZV9uYW1lIjoiYWRtaW5AYWRtaW4udm4iLCJuYmYiOjE1OTAyNDc0NDgsImV4cCI6MTYzMzQ0NzQ0OCwiaWF0IjoxNTkwMjQ3NDQ4fQ.o8_Ur535p1BLKSTQ15NQKG56mUhVwxRsPg8HNtojOME";
+      },
+    };
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxOCIsInVuaXF1ZV9uYW1lIjoiYWRtaW5AYWRtaW4udm4iLCJuYmYiOjE1OTAyNDc0NDgsImV4cCI6MTYzMzQ0NzQ0OCwiaWF0IjoxNTkwMjQ3NDQ4fQ.o8_Ur535p1BLKSTQ15NQKG56mUhVwxRsPg8HNtojOME";
     try {
       let connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://35.238.143.46:5001/signalr")
+        .withUrl("http://376fafd8.ngrok.io/signalr?token=" + token)
         .build();
 
-      connection.on("send", (data) => {
+      connection.on("sendToProvider", (data) => {
         console.log("[INFO] call back data in signalR: ", data);
+        connection.invoke("receivedFromCustomer", data);
       });
 
-      connection.start().then(() => connection.invoke("mlem", "Hello"));
+      connection
+        .start()
+        .then(() => connection.invoke("receivedFromCustomer", "Hello"));
     } catch (error) {
       console.log("[INFO] Error in signalR");
     }
@@ -215,8 +227,8 @@ export default function (props) {
 
   return (
     <>
-      <TouchableOpacity onPress={this.testSignalIR}>
-        <Text>SignalIR</Text>
+      <TouchableOpacity onPress={testSignalIR}>
+        <Text>Test signalR</Text>
       </TouchableOpacity>
 
       <Overlay
