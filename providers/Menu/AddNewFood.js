@@ -23,6 +23,8 @@ import { Avatar } from "react-native-elements";
 import FormData from "form-data";
 import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
+//Test
+import homeServices from "../../customerServices/homeServices";
 export default function (props) {
   const [data, setData] = useState({
     image: null,
@@ -94,28 +96,22 @@ export default function (props) {
   const [visibleChangeName, setVisibleChangeName] = useState(false);
 
   const testSignalIR = () => {
-    var options = {
-      transport: signalR.HttpTransportType,
-      logging: signalR.LogLevel.Trace,
-      accessToken: function () {
-        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxOCIsInVuaXF1ZV9uYW1lIjoiYWRtaW5AYWRtaW4udm4iLCJuYmYiOjE1OTAyNDc0NDgsImV4cCI6MTYzMzQ0NzQ0OCwiaWF0IjoxNTkwMjQ3NDQ4fQ.o8_Ur535p1BLKSTQ15NQKG56mUhVwxRsPg8HNtojOME";
-      },
-    };
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxOCIsInVuaXF1ZV9uYW1lIjoiYWRtaW5AYWRtaW4udm4iLCJuYmYiOjE1OTAyNDc0NDgsImV4cCI6MTYzMzQ0NzQ0OCwiaWF0IjoxNTkwMjQ3NDQ4fQ.o8_Ur535p1BLKSTQ15NQKG56mUhVwxRsPg8HNtojOME";
     try {
       let connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://376fafd8.ngrok.io/signalr?token=" + token)
+        .withUrl("https://376fafd8.ngrok.io/signalr")
         .build();
 
-      connection.on("sendToProvider", (data) => {
-        console.log("[INFO] call back data in signalR: ", data);
-        connection.invoke("receivedFromCustomer", data);
+      connection.on("sendToProvider", (user, data) => {
+        console.log("[INFO] call back data in signalR: ", user, data);
       });
 
       connection
         .start()
-        .then(() => connection.invoke("receivedFromCustomer", "Hello"));
+        .catch((error) => {
+          console.log(error);
+          return Promise.reject();
+        })
+        .then(() => homeServices.createNotification({ content: "dcm" }));
     } catch (error) {
       console.log("[INFO] Error in signalR");
     }
@@ -158,8 +154,9 @@ export default function (props) {
       if (response.uri) {
         photo = response;
         const data = new FormData();
-        data.append("file", {
+        data.append("photo", {
           name: photo.filename,
+          type: photo.type,
           uri:
             Platform.OS === "android"
               ? photo.uri
@@ -228,7 +225,7 @@ export default function (props) {
   return (
     <>
       <TouchableOpacity onPress={testSignalIR}>
-        <Text>Test signalR</Text>
+        <Text>SignalIR</Text>
       </TouchableOpacity>
 
       <Overlay

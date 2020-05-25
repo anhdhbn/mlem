@@ -2,6 +2,7 @@
 import axios from "axios";
 
 export const BASE_API_URL = "http://admin.wepick.vn:20000";
+//export const BASE_API_URL = "https://376fafd8.ngrok.io";
 
 const customAxios = axios.create({
   baseURL: BASE_API_URL,
