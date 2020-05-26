@@ -9,7 +9,7 @@ import search from "../../assets/icon/search.png";
 import dropDownIcon from '../../assets/icon/drop_down.png';
 
 import ModalEditTable from './ModalEditTable'
-
+import tableServices from '../../providerServices/tableServices';
 const TableStack = createStackNavigator();
 /* TableStackScreen */
 export default TableStackScreen = ({ navigation }) => {
@@ -17,43 +17,59 @@ export default TableStackScreen = ({ navigation }) => {
   const toggleEditTable = () => {
     setEditTableVisible(!editTableVisible);
   }
-  return(
-  <TableStack.Navigator screenOptions={{
-    headerStyle: {
-      backgroundColor: '#D20000',
-    },
-    headerTitleAlign: 'center',
-    headerTintColor: '#fff'
-  }}>
-    <TableStack.Screen
-      name="Table"
-      component={Table}
-      options={{
-        title: 'Bàn',
-        headerLeft: () => (
-          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
-        ),
-        headerRight: () => (
-          <AntDesign.Button name='plus' size={25} backgroundColor='#D20000' onPress={() => { }}></AntDesign.Button>
-        ),
-      }}
-    />
-  </TableStack.Navigator>
+  return (
+    <TableStack.Navigator screenOptions={{
+      headerStyle: {
+        backgroundColor: '#D20000',
+      },
+      headerTitleAlign: 'center',
+      headerTintColor: '#fff'
+    }}>
+      <TableStack.Screen
+        name="Table"
+        component={Table}
+        options={{
+          title: 'Bàn',
+          headerLeft: () => (
+            <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
+          ),
+          headerRight: () => (
+            <AntDesign.Button name='plus' size={25} backgroundColor='#D20000' onPress={() => { }}></AntDesign.Button>
+          ),
+        }}
+      />
+    </TableStack.Navigator>
 
-)}
+  )
+}
 const Table = (props) => {
   const [editTableVisible, setEditTableVisible] = useState(false);
-  const toggleEditTable = () => {
-    setEditTableVisible(!editTableVisible);
+  const [selectTable,setSelectTable]= useState(null)
+  const toggleEditTable = (props) => {
+    return async()=>{
+     editTableVisible===false ? await setSelectTable(props) : await getData()
+      setEditTableVisible(!editTableVisible);
+    }
   }
-  const data = {
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    const params = {};
+    const respone = await tableServices.list(params)
+    console.log(respone);
+    setData(respone);
+  }
+  useEffect(() => {
+    getData();
+  }, [])
+  /* const data = {
     total: 50,
     emptyTable: 50,
     tables: [{ tableNum: '001', status: 'Trống' }, { tableNum: '002', status: 'Trống' }, { tableNum: '003', status: 'Trống' }]
 
 
-  }
+  } */
   return (<View style={styles.container}>
+    
     <View style={styles.topView}>
       <Text style={{ color: '#00B80C', fontWeight: 'bold' }}>Bàn còn trống: {data.total}</Text>
       <Text style={{ color: '#00B80C', fontWeight: 'bold' }}>Tổng số: {data.emptyTable}</Text>
@@ -79,20 +95,22 @@ const Table = (props) => {
     <View>
       <FlatList
         data={data.tables}
-        keyExtractor={item => item.tableNum}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
               style={styles.cardView}
-              onLongPress={toggleEditTable}
+              onLongPress={toggleEditTable(item)}
             >
-              <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#8A8F9C' }}>{item.tableNum}</Text>
-              <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#00B80C' }}>{item.status}</Text>
+              <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#8A8F9C' }}>{item.code}</Text>
+              {item.status.id == 1
+                ? <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#00B80C' }}>Hoạt động</Text>
+                : <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#DC0000' }}>Trống</Text>}
             </TouchableOpacity>
           )
         }}
       />
-      <ModalEditTable visible={{editTableVisible,toggleEditTable}} />
+      <ModalEditTable visible={{ editTableVisible, toggleEditTable }} data={{selectTable}} />
     </View>
   </View>)
 }

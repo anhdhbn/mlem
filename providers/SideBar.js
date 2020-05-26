@@ -9,7 +9,7 @@ import NotificationStackScreen from "./Notification/Notification";
 export default function () {
   const drawer = createDrawerNavigator();
   return (
-    <drawer.Navigator initialRouteName="Menu">
+    <drawer.Navigator initialRouteName="Table">
       <drawer.Screen name="Home" component={OrderStackScreen} />
       <drawer.Screen name="Menu" component={MenuStackScreen} />
       <drawer.Screen name="Table" component={TableStackScreen} />
