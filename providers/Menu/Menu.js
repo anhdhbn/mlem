@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image, TextInput } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -13,7 +13,9 @@ import ModalEditMenu from "./ModalEditMenu";
 
 import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
+import menuServices from '../../providerServices/menuServices'
 
+const base_url = 'http://admin.wepick.vn:20000';
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
 export default ({ navigation }) => (
@@ -92,75 +94,27 @@ export default ({ navigation }) => (
 
 const Menu = (props) => {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
-  const toggleEditMenu = () => {
-    setEditMenuVisible(!editMenuVisible);
+  const [delDish,setDelDish] = useState()
+  const toggleEditMenu = (props) => {
+    return ()=>{
+      !editMenuVisible && setDelDish(props)
+      setEditMenuVisible(!editMenuVisible);
+    }
   };
-  const data = [
-    {
-      id: "1",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "2",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "3",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "4",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "5",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "6",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "7",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-    {
-      id: "8",
-      foodName: "Tên Món Ăn",
-      status: "Đang Bán",
-      description: "Mô tả món ăn",
-      price: "500000vnd",
-      image: "https://reactnative.dev/img/tiny_logo.png",
-    },
-  ];
+  /* xoá món ăn đang được chọn */
+  const handleDelete = async ()=>{
+    setEditMenuVisible(!editMenuVisible);
+    await menuServices.deleteDish(delDish);
+    getData();
+  }
+  const [data,setData] = useState([]);
+  const getData = async()=>{
+    const res = await menuServices.list({})
+    setData(res)
+  }
+  useEffect(()=>{
+    getData()
+  },[])
   return (
     <View style={styles.container}>
       <View style={styles.viewInput}>
@@ -198,62 +152,73 @@ const Menu = (props) => {
         </TouchableOpacity>
       </View>
 
+      {(data !== []) &&
       <FlatList
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu}>
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={{ uri: item.image }}
-                  style={{ width: 77, height: 71 }}
-                />
-                <View style={{ padding: 5 }}>
-                  <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                    {item.foodName}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "Reguler",
-                      color: "#8A8F9C",
-                      fontSize: 12,
-                    }}
-                  >
-                    {item.description}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "Reguler",
-                      color: "#00B80C",
-                      fontSize: 12,
-                    }}
-                  >
-                    {item.status}
-                  </Text>
-                </View>
-              </View>
-              <View style={{ flexDirection: "row", top: 10 }}>
+      showsHorizontalScrollIndicator={false}
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => {
+        return (
+          <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu(item)}>
+            <View style={{ flexDirection: "row" }}>
+              {item.image !== null &&<Image
+                source={{ uri: `${base_url}${item.image.url}` }}
+                style={{ width: 77, height: 71 }}
+              />}
+              <View style={{ padding: 5 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  {item.name}
+                </Text>
                 <Text
                   style={{
                     fontFamily: "Reguler",
-                    color: "#D20000",
-                    fontSize: 20,
+                    color: "#8A8F9C",
+                    fontSize: 12,
                   }}
                 >
-                  {item.price}
+                  {item.descreption}
                 </Text>
-                <Image
-                  source={viewMoreIcon}
-                  style={{ height: 15, width: 15, top: 7 }}
-                />
+                {item.statusId==1
+                ?<Text
+                  style={{
+                    fontFamily: "Reguler",
+                    color: "#00B80C",
+                    fontSize: 12,
+                  }}
+                >
+                  {item.status.name}
+                </Text>
+                :<Text
+                style={{
+                  fontFamily: "Reguler",
+                  color: "#D00000",
+                  fontSize: 12,
+                }}
+              >
+                {item.status.name}
+              </Text>}
               </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
-      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} />
+            </View>
+            <View style={{ flexDirection: "row", top: 10 }}>
+              <Text
+                style={{
+                  fontFamily: "Reguler",
+                  color: "#D20000",
+                  fontSize: 20,
+                }}
+              >
+                {item.priceEach}
+              </Text>
+              <Image
+                source={viewMoreIcon}
+                style={{ height: 15, width: 15, top: 7 }}
+              />
+            </View>
+          </TouchableOpacity>
+        );
+      }}
+    />}
+      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} data={{handleDelete}} />
     </View>
   );
 };

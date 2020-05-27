@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View,StyleSheet } from 'react-native';
-import { Overlay,Button} from 'react-native-elements'
+import { Overlay,Button} from 'react-native-elements';
+
 export default function (props) {
   const {editMenuVisible,toggleEditMenu} = props.visible;
+  const {handleDelete} = props.data;
+  
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
@@ -24,10 +27,11 @@ export default function (props) {
             buttonStyle={{ ...styles.btnView }}
             titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}
             title='Xoá'
+            onPress={handleDelete}
           />
           <Button
             buttonStyle={{ ...styles.btnView }}
-            onPress={toggleEditMenu}
+            onPress={toggleEditMenu()}
             titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: 'black' }}
             title='Quay lại'
           />
