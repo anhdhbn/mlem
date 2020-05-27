@@ -200,7 +200,7 @@ export default function DetailOrder(props) {
       <View style={styles.btnView}>
         <TouchableOpacity
           style={{
-            backgroundColor: "#DC0000",
+            backgroundColor: "#c7c5bf",
             borderRadius: 8,
             width: 100,
             height: 40,
@@ -213,7 +213,7 @@ export default function DetailOrder(props) {
               fontWeight: "bold",
               padding: 8,
               paddingLeft: 20,
-              color: "#fff",
+              color: "#000",
             }}
           >
             Từ chối
