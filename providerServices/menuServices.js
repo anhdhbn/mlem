@@ -27,12 +27,12 @@ const deleteDish = (params) =>
 
 const config = {
   headers: {
-    "content-type": "multipart/form-data",
+    "Content-Type": "multipart/form-data",
   },
 };
 const uploadImage = (params) =>
   requestServices.customAxios
-    .post(`/api/image/upload`, params, config)
+    .post(`api/image/upload`, params, config)
     .then((res) => res.data);
 
 export default {

@@ -23,11 +23,13 @@ import { Avatar } from "react-native-elements";
 import FormData from "form-data";
 import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
+import RNFetchBlob from "rn-fetch-blob";
 //Test
 import homeServices from "../../customerServices/homeServices";
 export default function (props) {
   const [data, setData] = useState({
-    image: null,
+    image:
+      "http://admin.wepick.vn:20000/api/image/download/food/20200526/fb852616-faf8-4de6-802a-877c61a209cd.png",
     name: null,
     priceEach: 0,
     discountRate: 0,
@@ -150,60 +152,42 @@ export default function (props) {
       noData: true,
     };
     let photo = null;
-    await ImagePicker.launchImageLibrary(options, (response) => {
-      if (response.uri) {
-        photo = response;
-        const data = new FormData();
-        data.append("photo", {
-          name: photo.filename,
-          type: photo.type,
-          uri:
-            Platform.OS === "android"
-              ? photo.uri
-              : photo.uri.replace("file://", ""),
-        });
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        let source = { uri: response.uri };
+        RNFetchBlob.fetch(
+          "POST",
+          "http://admin.wepick.vn:20000/api/image/upload",
+          {
+            // dropbox upload headers
 
-        let responseAfterUpload = menuServices
-          .uploadImage(data)
-          .then((response) => response.json())
-          .then((response) => {
-            console.log("upload succes", response);
-            alert("Upload success!");
+            "Content-Type": "multipart/form-data",
+            // Change BASE64 encoded data to a file path with prefix `RNFetchBlob-file://`.
+            // Or simply wrap the file path with RNFetchBlob.wrap().
+          },
+          [
+            // element with property `filename` will be transformed into `file` in form data
+
+            {
+              name: "file",
+              filename: response.fileName,
+              data: RNFetchBlob.wrap(response.uri),
+            },
+            // custom content type
+          ]
+        )
+          .then((res) => {
+            console.log(res);
           })
-          .catch((error) => {
-            console.log("upload error", error);
-            alert("Upload failed!");
+          .catch((err) => {
+            // error handling ..
+            console.log(err);
           });
-
-        console.log("[INFO] 1  photo in handle choose photo: ", photo);
-
-        // let responseAfterUpload = menuServices
-        //   .uploadImage(createFormData(photo))
-        //   .then((response) => response.json())
-        //   .then((response) => {
-        //     console.log("upload succes", response);
-        //     alert("Upload success!");
-        //   })
-        //   .catch((error) => {
-        //     console.log("upload error", error);
-        //     alert("Upload failed!");
-        //   });
-
-        // console.log(responseAfterUpload);
       }
     });
-    // console.log("[INFO] 2 photo in handle choose photo: ", photo);
-    // let response = await menuServices
-    //   .uploadImage(createFormData(photo))
-    //   .then((response) => response.json())
-    //   .then((response) => {
-    //     console.log("upload succes", response);
-    //     alert("Upload success!");
-    //   })
-    //   .catch((error) => {
-    //     console.log("upload error", error);
-    //     alert("Upload failed!");
-    //   });
   };
 
   const createFormData = (photo) => {
