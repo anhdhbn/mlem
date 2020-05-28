@@ -7,6 +7,7 @@ import {
   Image,
   Button,
   ScrollView,
+  Alert,
 } from "react-native";
 import { FlatList, State } from "react-native-gesture-handler";
 import { Input, Overlay } from "react-native-elements";
@@ -24,12 +25,12 @@ import FormData from "form-data";
 import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
 import RNFetchBlob from "rn-fetch-blob";
+import { Spinner } from "native-base";
 //Test
 import homeServices from "../../customerServices/homeServices";
 export default function (props) {
   const [data, setData] = useState({
-    image:
-      "http://admin.wepick.vn:20000/api/image/download/food/20200526/fb852616-faf8-4de6-802a-877c61a209cd.png",
+    image: null,
     name: null,
     priceEach: 0,
     discountRate: 0,
@@ -69,6 +70,7 @@ export default function (props) {
     //   },
     // ],
   });
+  const [stateAvatar, setStateAvatar] = useState(false);
   const [size1, setSize1] = useState(false);
   const [size2, setSize2] = useState(false);
   const [size3, setSize3] = useState(false);
@@ -158,6 +160,7 @@ export default function (props) {
       } else if (response.customButton) {
       } else {
         let source = { uri: response.uri };
+        setStateAvatar(true);
         RNFetchBlob.fetch(
           "POST",
           "http://admin.wepick.vn:20000/api/image/upload",
@@ -180,30 +183,20 @@ export default function (props) {
           ]
         )
           .then((res) => {
-            console.log(res);
+            console.log(
+              "[INFO] Uri image: ",
+              "http://admin.wepick.vn:20000" + res.url
+            );
+            setData({ image: "http://admin.wepick.vn:20000" + res.url });
+            setStateAvatar(false);
           })
           .catch((err) => {
             // error handling ..
+            Alert.log("Upload error");
             console.log(err);
           });
       }
     });
-  };
-
-  const createFormData = (photo) => {
-    const data = new FormData();
-
-    data.append("file", {
-      name: photo.fileName,
-      type: photo.type,
-      uri:
-        Platform.OS === "android"
-          ? photo.uri
-          : photo.uri.replace("file://", ""),
-    });
-    console.log("[INFO] Data: ", data);
-
-    return data;
   };
 
   return (
@@ -251,28 +244,35 @@ export default function (props) {
       </TouchableOpacity> */}
       <ScrollView style={styles.container}>
         <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Avatar
-            size={150}
-            title="Trống"
-            activeOpacity={0.7}
-            source={
-              data.image
-                ? {
-                    uri: data.image,
-                  }
-                : null
-            }
-            // style={{ paddingVertical: 20 }}
-            imageProps={(resizeMode = "center")}
-            // showAccessory={true}
-            // onAccessoryPress={() => {
-            //   console.log("[INFO] Press accessoryPress");
-            // }}
-            onPress={() => {
-              handleChoosePhoto();
-            }}
-            containerStyle={{ marginVertical: 20 }}
-          />
+          {stateAvatar ? (
+            <View>
+              <Spinner />
+            </View>
+          ) : (
+            <Avatar
+              size={150}
+              title="Trống"
+              activeOpacity={0.7}
+              source={
+                data.image
+                  ? {
+                      uri: data.image,
+                    }
+                  : null
+              }
+              // style={{ paddingVertical: 20 }}
+              imageProps={(resizeMode = "center")}
+              // showAccessory={true}
+              // onAccessoryPress={() => {
+              //   console.log("[INFO] Press accessoryPress");
+              // }}
+              onPress={() => {
+                handleChoosePhoto();
+              }}
+              containerStyle={{ marginVertical: 20 }}
+            />
+          )}
+
           <TouchableOpacity
             onPress={() => {
               setVisibleChangeName(true);
