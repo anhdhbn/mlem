@@ -16,10 +16,15 @@ const listTopOrder = (params) =>
   requestServices.customAxios
     .post(`api/food/list-top-order`, params)
     .then((res) => res.data);
+const createNotification = (params) =>
+  requestServices.customAxios
+    .post(`api/notification/create`, params)
+    .then((res) => res.data);
 
 export default {
   list,
   listFavorite,
   listRecently,
   listTopOrder,
+  createNotification,
 };
