@@ -230,13 +230,14 @@ export default function (props) {
     return response;
   };
 
-  const onPressDetail = (cardData) => {
+  const onPressDetail = (cardData, titleHeader) => {
     cardData
       ? props.navigation.navigate("Detail", {
           listDishs: cardData,
           listFavourite: listLikedDish,
           setListLikedDish: setListLikedDish,
           fetchFavourite: fetchFavourite,
+          titleHeader: titleHeader,
         })
       : null;
   };
@@ -313,58 +314,58 @@ export default function (props) {
       <ScrollView style={styles.home}>
         <HeaderImage />
         <NavBar
-          onPressAll={() => onPressDetail(listAllDish)}
-          onPressLau={() => onPressDetail(listFavorite)}
-          onPressHaisan={() => onPressDetail(listHaisan)}
-          onPressRaucu={() => onPressDetail(listRaucu)}
-          onPressThit={() => onPressDetail(listThit)}
-          onPressDouong={() => onPressDetail(listDouong)}
+          onPressAll={() => onPressDetail(listAllDish, "Tất cả")}
+          onPressLau={() => onPressDetail(listLau, "Món Lẩu - Buffet")}
+          onPressHaisan={() => onPressDetail(listHaisan, "Món hải sản")}
+          onPressRaucu={() => onPressDetail(listRaucu, "Món rau củ")}
+          onPressThit={() => onPressDetail(listThit, "Món thịt")}
+          onPressDouong={() => onPressDetail(listDouong, "Đồ uống")}
         />
         <CardList
           cardData={listFavorite}
-          onPressDetail={() => onPressDetail(listFavorite)}
+          onPressDetail={() => onPressDetail(listFavorite, "Món yêu thích")}
           title={"Yêu thích"}
           isLoading={!listFavorite}
         />
         <CardList
           cardData={listRecently}
-          onPressDetail={() => onPressDetail(listRecently)}
+          onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây")}
           title={"Đặt gần đây"}
           isLoading={isLoadingRecently}
         />
         <CardList
           cardData={listTop}
-          onPressDetail={() => onPressDetail(listTop)}
+          onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất")}
           title={"Đặt nhiều nhất"}
           isLoading={isLoadingTop}
         />
         <CardList
           cardData={listLau}
-          onPressDetail={() => onPressDetail(listLau)}
+          onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet")}
           title={"Lẩu - Buffet"}
           isLoading={isLoadingLau}
         />
         <CardList
           cardData={listHaisan}
-          onPressDetail={() => onPressDetail(listHaisan)}
+          onPressDetail={() => onPressDetail(listHaisan, "Món hải sản")}
           title={"Hải sản"}
           isLoading={isLoadingHaisan}
         />
         <CardList
           cardData={listRaucu}
-          onPressDetail={() => onPressDetail(listRaucu)}
+          onPressDetail={() => onPressDetail(listRaucu, "Món rau củ")}
           title={"Rau củ"}
           isLoading={isLoadingRaucu}
         />
         <CardList
           cardData={listThit}
-          onPressDetail={() => onPressDetail(listThit)}
+          onPressDetail={() => onPressDetail(listThit, "Món thịt")}
           title={"Thịt"}
           isLoading={isLoadingThit}
         />
         <CardList
           cardData={listDouong}
-          onPressDetail={() => onPressDetail(listDouong)}
+          onPressDetail={() => onPressDetail(listDouong, "Món đồ uống")}
           title={"Đồ uống"}
           isLoading={isLoadingDouong}
         />
