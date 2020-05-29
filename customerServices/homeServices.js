@@ -21,10 +21,16 @@ const createNotification = (params) =>
     .post(`api/notification/create`, params)
     .then((res) => res.data);
 
+const updateLikedFood = (params) =>
+  requestServices.customAxios
+    .post(`/api/account/like-food`, params)
+    .then((res) => res.data);
+
 export default {
   list,
   listFavorite,
   listRecently,
   listTopOrder,
   createNotification,
+  updateLikedFood,
 };

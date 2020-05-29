@@ -58,6 +58,10 @@ export default function (props) {
 
   const [activeFab, setActiveFab] = useState(false);
 
+  const [listLikedDish, setListLikedDish] = useState(
+    props.route.params.response.account_AccountFoodFavorites
+  );
+
   useEffect(() => {
     if (!checkProfile) {
       setCheckProfile(true);
@@ -67,85 +71,104 @@ export default function (props) {
     }
 
     if (isLoadingFavourite === true) {
-      getListFoods(-3).then((data) => {
-        setListFavourite(data);
-        setIsLoadingFavourite(false);
-      });
+      fetchFavourite();
       // setIsLoadingFavourite(false);
     }
     if (isLoadingRecently === true) {
-      getListFoods(-2).then((data) => {
-        setListRecently(data);
-        setIsLoadingRecently(false);
-      });
+      fetchRecently();
       // setIsLoadingRecently(false);
     }
     if (isLoadingTop === true) {
-      getListFoods(-1).then((data) => {
-        setListTop(data);
-        setIsLoadingTop(false);
-      });
+      fetchTop();
       // setIsLoadingTop(false);
     }
     if (isLoadingLau === true) {
-      getListFoods(1).then((data) => {
-        setListLau(data);
-        setIsLoadingLau(false);
-      });
+      fetchLau();
       //  setIsLoadingLau(false);
     }
     if (isLoadingHaisan === true) {
-      getListFoods(2).then((data) => {
-        setListHaisan(data);
-        setIsLoadingHaisan(false);
-      });
+      fetchHaisan();
       // setIsLoadingHaisan(false);
     }
     if (isLoadingRaucu === true) {
-      getListFoods(3).then((data) => {
-        setListRaucu(data);
-        setIsLoadingRaucu(false);
-      });
+      fetchRaucu();
       // setIsLoadingRaucu(false);
     }
     if (isLoadingThit === true) {
-      getListFoods(4).then((data) => {
-        setListThit(data);
-        setIsLoadingThit(false);
-      });
+      fetchThit();
       // setIsLoadingThit(false);
     }
     if (isLoadingDouong === true) {
-      getListFoods(5).then((data) => {
-        setListDouong(data);
-        setIsLoadingDouong(false);
-      });
+      fetchDouong();
       // setIsLoadingDouong(false);
     }
     if (isLoadingAllDish === true) {
-      getAllFoods().then((data) => {
-        setListAllDish(data);
-        setIsLoadingAllDish(false);
-      });
+      fetchAllDish();
     }
-
-    // console.log("[INFO] Loading dish", listDouong);
-
-    // // Test
-    // if (isLoadingDouong === true) {
-    //   getAllFoods().then((data) => {
-    //     setListDouong(data);
-    //     setListFavourite(data);
-    //     setListHaisan(data);
-    //     setListLau(data);
-    //     setListRaucu(data);
-    //     setListRecently(data);
-    //     setListThit(data);
-    //     setListTop(data);
-    //     setIsLoadingDouong(false);
-    //   });
-    // }
   }, []);
+
+  const fetchFavourite = () => {
+    getListFoods(-3).then((data) => {
+      setListFavourite(data);
+      setIsLoadingFavourite(false);
+    });
+  };
+
+  const fetchRecently = () => {
+    getListFoods(-2).then((data) => {
+      setListRecently(data);
+      setIsLoadingRecently(false);
+    });
+  };
+
+  const fetchTop = () => {
+    getListFoods(-1).then((data) => {
+      setListTop(data);
+      setIsLoadingTop(false);
+    });
+  };
+
+  const fetchLau = () => {
+    getListFoods(1).then((data) => {
+      setListLau(data);
+      setIsLoadingLau(false);
+    });
+  };
+
+  const fetchHaisan = () => {
+    getListFoods(2).then((data) => {
+      setListHaisan(data);
+      setIsLoadingHaisan(false);
+    });
+  };
+
+  const fetchRaucu = () => {
+    getListFoods(3).then((data) => {
+      setListRaucu(data);
+      setIsLoadingRaucu(false);
+    });
+  };
+
+  const fetchThit = () => {
+    getListFoods(4).then((data) => {
+      setListThit(data);
+      setIsLoadingThit(false);
+    });
+  };
+
+  const fetchDouong = () => {
+    getListFoods(5).then((data) => {
+      setListDouong(data);
+      setIsLoadingDouong(false);
+    });
+  };
+
+  const fetchAllDish = () => {
+    getAllFoods().then((data) => {
+      setListAllDish(data);
+      setIsLoadingAllDish(false);
+    });
+  };
 
   const getAllFoods = async () => {
     let params = {};
@@ -209,7 +232,12 @@ export default function (props) {
 
   const onPressDetail = (cardData) => {
     cardData
-      ? props.navigation.navigate("Detail", { listDishs: cardData })
+      ? props.navigation.navigate("Detail", {
+          listDishs: cardData,
+          listFavourite: listLikedDish,
+          setListLikedDish: setListLikedDish,
+          fetchFavourite: fetchFavourite,
+        })
       : null;
   };
 
