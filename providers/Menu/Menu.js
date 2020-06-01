@@ -177,21 +177,21 @@ const Menu = (props) => {
 
       <View style={styles.filterBar}>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Phân loại </Text>
+          <Text style={ styles.textFilter }>Phân loại </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Ngày tạo </Text>
+          <Text style={ styles.textFilter }>Ngày tạo </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Trạng thái </Text>
+          <Text style={ styles.textFilter }>Trạng thái </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
@@ -275,15 +275,24 @@ const styles = StyleSheet.create({
   filterBar: {
     flexDirection: "row",
     backgroundColor: "#F6F7F8",
-    height:50,
-    padding: 10,
-    top: 10,
+    height:33,
+    padding: 6,
+    top: 3,
     width: "100%",
     justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   card: {
     width: "100%",
-    top: 10,
+    top: 5,
     marginTop: 10,
     backgroundColor: "#FFFFFF",
     padding: 10,
@@ -300,4 +309,7 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
+  textFilter: {
+    color: '#8A8F9C',
+  }
 });

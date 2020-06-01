@@ -251,7 +251,7 @@ export default function (props) {
           ) : (
             <Avatar
               size={150}
-              title="Trống"
+              // title="Ảnh"
               activeOpacity={0.7}
               source={
                 data.image
@@ -260,6 +260,14 @@ export default function (props) {
                     }
                   : null
               }
+                icon = {
+                  {
+                    name: "camera",
+                    size : 50,
+                    color: '#d4d3cf',
+                    type: 'font-awesome'
+                  }
+                }
               // style={{ paddingVertical: 20 }}
               imageProps={(resizeMode = "center")}
               // showAccessory={true}
@@ -342,10 +350,12 @@ export default function (props) {
               flexDirection: "row",
               justifyContent: "space-between",
               padding: 14,
+              position: 'relative',
+              flex:10
             }}
           >
             <TouchableOpacity
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{ flexDirection: "row", justifyContent: "space-between",flex:7 }}
               onPress={() => setvisibleFoodGroup(true)}
             >
               {/* {console.log(foodGroupMapping)} */}
@@ -400,11 +410,17 @@ export default function (props) {
                 <Text>Bấm chọn</Text>
               )}
 
-              <Image
-                source={ViewMore}
-                style={{ height: 13, width: 13, right: 5 }}
-              />
+
             </TouchableOpacity>
+            {foodGroupMapping === null &&
+              <TouchableOpacity style={{ right: 15, position: 'absolute', flex: 3, marginTop:13}}>
+                <Image
+                  source={ViewMore}
+                  style={{ height: 13, width: 13, }}
+                  onPress={() => setvisibleFoodGroup(true)}
+                />
+              </TouchableOpacity>}
+
           </View>
         </View>
         <View>
@@ -414,12 +430,14 @@ export default function (props) {
               justifyContent: "space-between",
               paddingLeft: 10,
               paddingRight: 10,
+              height: 25,
+              paddingTop:2,
               color: "#8A8F9C",
               backgroundColor: "#DEDEDE",
             }}
           >
-            <Text>Đơn Giá (size nhỏ)</Text>
-            <Text> Khuyến mãi</Text>
+            <Text style={{ color: "#8A8F9C", }}>Đơn Giá (size nhỏ)</Text>
+            <Text style={{ color: "#8A8F9C", }}> Khuyến mãi</Text>
           </View>
           <View
             style={{
@@ -552,6 +570,9 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingLeft: 10,
+    height: 25,
+    paddingTop:2,
+    justifyContent: 'center',
     color: "#8A8F9C",
     backgroundColor: "#DEDEDE",
   },
