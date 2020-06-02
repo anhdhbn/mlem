@@ -2,11 +2,14 @@ import { requestServices } from "./index";
 
 // API Danh sách món ăn
 
-const list = (params) =>
+const list = (params) => {
+  const param = {
+    foodGroupingId: { equal: "2" },
+  }
   requestServices.customAxios
-    .post("/api/food/list", params)
-    .then((res) => res.data);
-
+    .post("/api/food/list", param)
+    .then((res) => res);
+}
 // API Thêm món ăn
 const createDish = (params) =>
   requestServices.customAxios

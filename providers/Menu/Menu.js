@@ -9,12 +9,12 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import search from "../../assets/icon/search.png";
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
-import ModalEditMenu from "./ModalEditMenu";
 
+import ModalEditMenu from "./ModalEditMenu";
 import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
 import menuServices from '../../providerServices/menuServices'
-
+import FilterBar from './Filter';
 const base_url = 'http://admin.wepick.vn:20000';
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
@@ -94,27 +94,34 @@ export default ({ navigation }) => (
 
 const Menu = (props) => {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
-  const [delDish,setDelDish] = useState()
+  const [delDish, setDelDish] = useState()
   const toggleEditMenu = (props) => {
-    return ()=>{
+    return () => {
       !editMenuVisible && setDelDish(props)
       setEditMenuVisible(!editMenuVisible);
     }
   };
   /* xoá món ăn đang được chọn */
-  const handleDelete = async ()=>{
+  const handleDelete = async () => {
     setEditMenuVisible(!editMenuVisible);
     await menuServices.deleteDish(delDish);
     getData();
   }
-  const [data,setData] = useState([]);
-  const getData = async()=>{
+  /* lấy data */
+  const [data, setData] = useState([]);
+  const getData = async () => {
     const res = await menuServices.list({})
     setData(res)
   }
-  useEffect(()=>{
+  /* xử lý filter */
+  const handleFilter= (props)=>{
+   const res = menuServices.list(props);
+   console.log('data: ',res)
+   /* setData(res) */
+  }
+  useEffect(() => {
     getData()
-  },[])
+  }, [])
   return (
     <View style={styles.container}>
       <View style={styles.viewInput}>
@@ -128,98 +135,74 @@ const Menu = (props) => {
           placeholderTextColor='#B21'
         ></TextInput>
       </View>
-
-      <View style={styles.filterBar}>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={ styles.textFilter }>Phân loại </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={ styles.textFilter }>Ngày tạo </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={ styles.textFilter }>Trạng thái </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-      </View>
-
+      <FilterBar handleFilter={handleFilter} />
       {(data !== []) &&
-      <FlatList
-      showsHorizontalScrollIndicator={false}
-      data={data}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => {
-        return (
-          <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu(item)}>
-            <View style={{ flexDirection: "row" }}>
-              {item.image !== null &&<Image
-                source={{ uri: `${base_url}${item.image.url}` }}
-                style={{ width: 77, height: 71 }}
-              />}
-              <View style={{ padding: 5 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#8A8F9C",
-                    fontSize: 12,
-                  }}
-                >
-                  {item.descreption}
-                </Text>
-                {item.statusId==1
-                ?<Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#00B80C",
-                    fontSize: 12,
-                  }}
-                >
-                  {item.status.name}
-                </Text>
-                :<Text
-                style={{
-                  fontFamily: "Reguler",
-                  color: "#D00000",
-                  fontSize: 12,
-                }}
-              >
-                {item.status.name}
-              </Text>}
-              </View>
-            </View>
-            <View style={{ flexDirection: "row", top: 10 }}>
-              <Text
-                style={{
-                  fontFamily: "Reguler",
-                  color: "#D20000",
-                  fontSize: 20,
-                }}
-              >
-                {item.priceEach}
-              </Text>
-              <Image
-                source={viewMoreIcon}
-                style={{ height: 15, width: 15, top: 7 }}
-              />
-            </View>
-          </TouchableOpacity>
-        );
-      }}
-    />}
-      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} data={{handleDelete}} />
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu(item)}>
+                <View style={{ flexDirection: "row" }}>
+                  {item.image !== null && <Image
+                    source={{ uri: `${base_url}${item.image.url}` }}
+                    style={{ width: 77, height: 71 }}
+                  />}
+                  <View style={{ padding: 5 }}>
+                    <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                      {item.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "Reguler",
+                        color: "#8A8F9C",
+                        fontSize: 12,
+                      }}
+                    >
+                      {item.descreption}
+                    </Text>
+                    {item.statusId == 1
+                      ? <Text
+                        style={{
+                          fontFamily: "Reguler",
+                          color: "#00B80C",
+                          fontSize: 12,
+                        }}
+                      >
+                        {item.status.name}
+                      </Text>
+                      : <Text
+                        style={{
+                          fontFamily: "Reguler",
+                          color: "#D00000",
+                          fontSize: 12,
+                        }}
+                      >
+                        {item.status.name}
+                      </Text>}
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row", top: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#D20000",
+                      fontSize: 20,
+                    }}
+                  >
+                    {item.priceEach}
+                  </Text>
+                  <Image
+                    source={viewMoreIcon}
+                    style={{ height: 15, width: 15, top: 7 }}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />}
+      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} data={{ handleDelete }} />
     </View>
   );
 };
@@ -240,7 +223,7 @@ const styles = StyleSheet.create({
   filterBar: {
     flexDirection: "row",
     backgroundColor: "#F6F7F8",
-    height:33,
+    height: 33,
     padding: 6,
     top: 3,
     width: "100%",

@@ -10,7 +10,7 @@ import PaymentStackScreen from './Payment/Payment';
 export default function () {
   const drawer = createDrawerNavigator();
   return (
-    <drawer.Navigator initialRouteName="Table">
+    <drawer.Navigator initialRouteName="Menu">
       <drawer.Screen name="Home" component={OrderStackScreen} />
       <drawer.Screen name="Menu" component={MenuStackScreen} />
       <drawer.Screen name="Table" component={TableStackScreen} />
