@@ -60,7 +60,7 @@ export default ({ navigation }) => (
         title: "Thêm mới món ăn",
         headerLeft: () => (
           <Icon.Button
-            name="ios-menu"
+            name="ios-arrow-back"
             size={25}
             backgroundColor="#D20000"
             onPress={() => {

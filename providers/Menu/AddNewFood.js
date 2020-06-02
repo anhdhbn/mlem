@@ -297,8 +297,12 @@ export default function (props) {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-around",
-              padding: 14,
+              justifyContent: "space-between",
+              paddingLeft: 13,
+              paddingRight: 20,
+              paddingTop: 14,
+              paddingBottom:14,
+              // padding: 14,
             }}
           >
             <View>
@@ -355,7 +359,7 @@ export default function (props) {
             }}
           >
             <TouchableOpacity
-              style={{ flexDirection: "row", justifyContent: "space-between",flex:7 }}
+              style={{ flexDirection: "row", justifyContent: "space-between",flex:7,paddingLeft:7 }}
               onPress={() => setvisibleFoodGroup(true)}
             >
               {/* {console.log(foodGroupMapping)} */}
@@ -378,7 +382,7 @@ export default function (props) {
                               shadowColor: "#333",
                               shadowOpacity: 0.3,
                               shadowRadius: 2,
-                              marginVertical: 6,
+                              marginVertical: 2,
                               flexDirection: "row",
                               justifyContent: "space-between",
                             }}
@@ -407,7 +411,7 @@ export default function (props) {
                   }}
                 />
               ) : (
-                <Text>Bấm chọn</Text>
+                <Text >Bấm chọn</Text>
               )}
 
 
@@ -428,8 +432,8 @@ export default function (props) {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
+              paddingLeft: 20,
+              paddingRight: 35,
               height: 25,
               paddingTop:2,
               color: "#8A8F9C",
@@ -437,13 +441,16 @@ export default function (props) {
             }}
           >
             <Text style={{ color: "#8A8F9C", }}>Đơn Giá (size nhỏ)</Text>
-            <Text style={{ color: "#8A8F9C", }}> Khuyến mãi</Text>
+            <Text style={{ color: "#8A8F9C" }}> Khuyến mãi</Text>
           </View>
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-around",
-              padding: 14,
+              justifyContent: "space-between",
+              paddingLeft: 11,
+              paddingRight: 25,
+              paddingTop: 14,
+              paddingBottom:14,
             }}
           >
             <View style={{ flexDirection: "row" }}>
@@ -452,7 +459,7 @@ export default function (props) {
                   decreasePrice();
                 }}
               >
-                <Image source={subIcon} style={styles.iconstyle} />
+                <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <TouchableOpacity>
                 <Text>{data.priceEach}</Text>
@@ -462,7 +469,7 @@ export default function (props) {
                   increasePrice();
                 }}
               >
-                <Image source={addIcon} style={styles.iconstyle} />
+                <Image source={addIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <Text>đồng</Text>
             </View>
@@ -472,7 +479,7 @@ export default function (props) {
                   decreaseDiscount();
                 }}
               >
-                <Image source={subIcon} style={styles.iconstyle} />
+                <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <TouchableOpacity>
                 <Text>{data.discountRate}</Text>
@@ -482,7 +489,7 @@ export default function (props) {
                   increaseDiscount();
                 }}
               >
-                <Image source={addIcon} style={styles.iconstyle} />
+                <Image source={addIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <Text>%</Text>
             </View>
@@ -492,9 +499,15 @@ export default function (props) {
         <View>
           <Text style={styles.title}>Trạng thái</Text>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingLeft: 13,
+              paddingRight: 20,
+              paddingTop: 14,
+              paddingBottom:14 }}
           >
-            <View style={{ paddingVertical: 14 }}>
+            <View >
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
@@ -502,14 +515,14 @@ export default function (props) {
                 }}
               >
                 {data.statusId === 1 ? (
-                  <Image source={TickIcon} style={styles.iconstyle} />
+                  <Image source={TickIcon} style={styles.iconStyle} />
                 ) : (
-                  <Image source={CircleIcon} style={styles.iconstyle} />
+                  <Image source={CircleIcon} style={styles.iconStyle} />
                 )}
                 <Text>Bán</Text>
               </TouchableOpacity>
             </View>
-            <View style={{ paddingVertical: 14 }}>
+            <View >
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
@@ -517,9 +530,9 @@ export default function (props) {
                 }}
               >
                 {data.statusId != 1 ? (
-                  <Image source={TickIcon} style={styles.iconstyle} />
+                  <Image source={TickIcon} style={styles.iconStyle} />
                 ) : (
-                  <Image source={CircleIcon} style={styles.iconstyle} />
+                  <Image source={CircleIcon} style={styles.iconStyle} />
                 )}
                 <Text>Dừng bán</Text>
               </TouchableOpacity>
@@ -569,7 +582,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F6F7",
   },
   title: {
-    paddingLeft: 10,
+    paddingLeft: 20,
     height: 25,
     paddingTop:2,
     justifyContent: 'center',
@@ -590,6 +603,12 @@ const styles = StyleSheet.create({
   iconstyle: {
     width: 18,
     height: 18,
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  iconStyle: {
+    width: 21,
+    height: 21,
     marginRight: 10,
     marginLeft: 10,
   },

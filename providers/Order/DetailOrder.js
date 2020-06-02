@@ -50,24 +50,8 @@ import Spinner from "../../components/Spinner/Spinner";
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  // const data = {
-  //   customerName: "Dinh Tien Dat",
-  //   customerPhone: "0000000",
-  //   createTime: "12:00-13/04/2000",
-  //   orderTime: "12:00-1/1/2000",
-  //   tables: ["5", "6", "7"],
-  //   menu: [
-  //     { id: "1", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "2", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "3", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "4", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "5", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "6", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "7", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "8", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "9", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //   ],
-  // };
+
+
 
   useEffect(() => {
     // console.log(props.route.params.data);
@@ -75,18 +59,17 @@ export default function DetailOrder(props) {
     let newArrayQuantity = props.route.params.data.orderContents.map((item) => {
       return item.quantity;
     });
-    setTotalQuantity(newArrayQuantity.reduce((a, b) => a + b, 0));
-    // console.log(newArrayQuantity.reduce((a, b) => a + b, 0));
+
   }, []);
   return data ? (
     <SafeAreaView style={styles.container }>
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>{data.account.displayName}</Text>
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>+{data.account.phone}</Text>
-            <Text style={{ fontSize:16 }}>
-              Mới Tạo lúc {moment(data.createdAt).format("HH:mm") + " - "}
+            <Text style={{ fontSize:18,fontWeight:'bold' }}>{data.account.displayName}</Text>
+            <Text style={{ fontSize:14, color:"#8A8F9C" }}>+{data.account.phone}</Text>
+            <Text style={{ fontSize:14, color:"#8A8F9C" }}>
+              {data?.status?.name} {moment(data.createdAt).format("HH:mm") + " - "}
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
@@ -191,10 +174,10 @@ export default function DetailOrder(props) {
         }}
        >
           <View style={{ flex:5 ,alignItems:"center"}}>
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>Tổng cộng({totalQuantity} món):</Text>
+            <Text style={{ fontSize:16 }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
           </View>
           <View style={{ flex:5 ,alignItems:"center"}}>
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>{data.total} vnđ</Text>
+            <Text style={{ fontSize:16 }}>{data.total}</Text>
           </View>
       </View>
       <View style={styles.btnView}>
@@ -210,7 +193,6 @@ export default function DetailOrder(props) {
           <Text
             style={{
               fontSize: 16,
-              fontWeight: "bold",
               padding: 8,
               paddingLeft: 20,
               color: "#000",
@@ -223,7 +205,7 @@ export default function DetailOrder(props) {
           style={{
             backgroundColor: "#DC0000",
             borderRadius: 8,
-            width: 100,
+            width: 110,
             height: 40,
           }}
           onPress={() => {}}
@@ -231,7 +213,6 @@ export default function DetailOrder(props) {
           <Text
             style={{
               fontSize: 16,
-              fontWeight: "bold",
               padding: 8,
               paddingLeft: 20,
               color: "#fff",
