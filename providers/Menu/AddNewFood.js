@@ -30,71 +30,24 @@ import { Spinner } from "native-base";
 import homeServices from "../../customerServices/homeServices";
 export default function (props) {
   const [data, setData] = useState({
-    image: null,
     name: null,
-    priceEach: 0,
-    discountRate: 0,
+
     statusId: null,
     descreption: null,
-    // image: {
-    //   id: null,
-    //   name: null,
-    //   content: null,
-    //   mimeType: null,
-    //   path: null,
-    //   url: null,
-    // },
     foodFoodTypeMappings: null,
-    // foodFoodTypeMappings: [
-    //   {
-    //     id: 0,
-    //     foodId: 0,
-    //     foodTypeId: 0,
-    //     foodType: {
-    //       id: 0,
-    //       name: null,
-    //       statusId: 0,
-    //     },
-    //   },
-    // ],
     foodFoodGroupingMappings: null,
-    // foodFoodGroupingMappings: [
-    //   {
-    //     foodId: 0,
-    //     foodGroupingId: 0,
-    //     foodGrouping: {
-    //       id: 0,
-    //       name: null,
-    //       statusId: 0,
-    //     },
-    //   },
-    // ],
   });
+
+  const [imageId, setImageId] = useState(null);
+  const [image, setImage] = useState(null);
+
+  const [priceEach, setPriceEach] = useState(0);
+  const [discountRate, setDiscountRate] = useState(0);
   const [stateAvatar, setStateAvatar] = useState(false);
   const [size1, setSize1] = useState(false);
   const [size2, setSize2] = useState(false);
   const [size3, setSize3] = useState(false);
-
-  const setSize = () => {
-    let newFoodTypeMappings = [];
-    if (size1) {
-      newFoodTypeMappings.push({ foodTypeId: 1 });
-    }
-    if (size2) {
-      newFoodTypeMappings.push({ foodTypeId: 2 });
-    }
-    if (size3) {
-      newFoodTypeMappings.push({ foodTypeId: 3 });
-    }
-    setData({ foodFoodTypeMappings: newFoodTypeMappings });
-  };
-
   const [foodGroupMapping, setFoodGroupMapping] = useState(null);
-
-  const setFoodGroupingMappings = (type) => {
-    let newFoodGroupingMappings = [{ foodGroupingId: type }];
-    setData({ foodFoodGroupingMappings: newFoodGroupingMappings });
-  };
 
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
@@ -122,24 +75,24 @@ export default function (props) {
   };
 
   const increasePrice = () => {
-    setData({ ...data, priceEach: data.priceEach + 1000 });
+    setPriceEach(priceEach + 1000);
   };
 
   const decreasePrice = () => {
-    if (data.priceEach - 1000 >= 0) {
-      setData({ ...data, priceEach: data.priceEach - 1000 });
+    if (priceEach - 1000 >= 0) {
+      setPriceEach(priceEach - 1000);
     }
   };
 
   const increaseDiscount = () => {
-    if (data.discountRate + 1 <= 100) {
-      setData({ ...data, discountRate: data.discountRate + 1 });
+    if (discountRate + 1 <= 100) {
+      setDiscountRate(discountRate + 1);
     }
   };
 
   const decreaseDiscount = () => {
-    if (data.discountRate - 1 >= 0) {
-      setData({ ...data, discountRate: data.discountRate - 1 });
+    if (discountRate - 1 >= 0) {
+      setDiscountRate(discountRate - 1);
     }
   };
 
@@ -183,20 +136,72 @@ export default function (props) {
           ]
         )
           .then((res) => {
-            console.log(
-              "[INFO] Uri image: ",
-              "http://admin.wepick.vn:20000" + res.url
-            );
-            setData({ image: "http://admin.wepick.vn:20000" + res.url });
+            let data = JSON.parse(res.data);
+            // console.log(data.url);
+            // console.log(
+            //   "[INFO] Uri image: ",
+            //   "http://admin.wepick.vn:20000" + data.url
+            // );
+
+            setImageId(data.id);
+            setImage("http://admin.wepick.vn:20000" + data.url);
+
             setStateAvatar(false);
           })
           .catch((err) => {
             // error handling ..
             Alert.log("Upload error");
             console.log(err);
+            setStateAvatar(false);
           });
       }
     });
+  };
+
+  const createParams = () => {
+    let foodFoodTypeMappings = [];
+    if (size1) {
+      foodFoodTypeMappings.push({ foodTypeId: 1 });
+    }
+
+    if (size2) {
+      foodFoodTypeMappings.push({ foodTypeId: 2 });
+    }
+
+    if (size3) {
+      foodFoodTypeMappings.push({ foodTypeId: 3 });
+    }
+
+    let foodFoodGroupingMappings = [];
+
+    // console.log(foodGroupMapping);
+
+    for (let index = 0; index < foodGroupMapping.length; index++) {
+      if (foodGroupMapping[index].isCliked) {
+        foodFoodGroupingMappings.push({
+          foodGroupingId: foodGroupMapping[index].id,
+        });
+      }
+    }
+
+    let params = JSON.stringify({
+      name: data.name,
+      priceEach: priceEach,
+      discountRate: discountRate,
+      imageId: imageId,
+      statusId: data.statusId,
+      descreption: data.descreption,
+      foodFoodTypeMappings: foodFoodTypeMappings,
+      foodFoodGroupingMappings: foodFoodGroupingMappings,
+    });
+
+    console.log("{INFO] Params: ", params);
+  };
+
+  const createFood = async () => {
+    let params = createParams();
+    let response = await menuServices.createDish(params);
+    console.log("[INFO] Response in create Food: ", response);
   };
 
   return (
@@ -254,20 +259,18 @@ export default function (props) {
               // title="Ảnh"
               activeOpacity={0.7}
               source={
-                data.image
+                image
                   ? {
-                      uri: data.image,
+                      uri: image,
                     }
                   : null
               }
-                icon = {
-                  {
-                    name: "camera",
-                    size : 50,
-                    color: '#d4d3cf',
-                    type: 'font-awesome'
-                  }
-                }
+              icon={{
+                name: "camera",
+                size: 50,
+                color: "#d4d3cf",
+                type: "font-awesome",
+              }}
               // style={{ paddingVertical: 20 }}
               imageProps={(resizeMode = "center")}
               // showAccessory={true}
@@ -301,7 +304,7 @@ export default function (props) {
               paddingLeft: 13,
               paddingRight: 20,
               paddingTop: 14,
-              paddingBottom:14,
+              paddingBottom: 14,
               // padding: 14,
             }}
           >
@@ -354,12 +357,17 @@ export default function (props) {
               flexDirection: "row",
               justifyContent: "space-between",
               padding: 14,
-              position: 'relative',
-              flex:10
+              position: "relative",
+              flex: 10,
             }}
           >
             <TouchableOpacity
-              style={{ flexDirection: "row", justifyContent: "space-between",flex:7,paddingLeft:7 }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 7,
+                paddingLeft: 7,
+              }}
               onPress={() => setvisibleFoodGroup(true)}
             >
               {/* {console.log(foodGroupMapping)} */}
@@ -411,20 +419,25 @@ export default function (props) {
                   }}
                 />
               ) : (
-                <Text >Bấm chọn</Text>
+                <Text>Bấm chọn</Text>
               )}
-
-
             </TouchableOpacity>
-            {foodGroupMapping === null &&
-              <TouchableOpacity style={{ right: 15, position: 'absolute', flex: 3, marginTop:13}}>
+            {foodGroupMapping === null && (
+              <TouchableOpacity
+                style={{
+                  right: 15,
+                  position: "absolute",
+                  flex: 3,
+                  marginTop: 13,
+                }}
+              >
                 <Image
                   source={ViewMore}
-                  style={{ height: 13, width: 13, }}
+                  style={{ height: 13, width: 13 }}
                   onPress={() => setvisibleFoodGroup(true)}
                 />
-              </TouchableOpacity>}
-
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <View>
@@ -435,12 +448,12 @@ export default function (props) {
               paddingLeft: 20,
               paddingRight: 35,
               height: 25,
-              paddingTop:2,
+              paddingTop: 2,
               color: "#8A8F9C",
               backgroundColor: "#DEDEDE",
             }}
           >
-            <Text style={{ color: "#8A8F9C", }}>Đơn Giá (size nhỏ)</Text>
+            <Text style={{ color: "#8A8F9C" }}>Đơn Giá (size nhỏ)</Text>
             <Text style={{ color: "#8A8F9C" }}> Khuyến mãi</Text>
           </View>
           <View
@@ -450,7 +463,7 @@ export default function (props) {
               paddingLeft: 11,
               paddingRight: 25,
               paddingTop: 14,
-              paddingBottom:14,
+              paddingBottom: 14,
             }}
           >
             <View style={{ flexDirection: "row" }}>
@@ -462,7 +475,7 @@ export default function (props) {
                 <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Text>{data.priceEach}</Text>
+                <Text>{priceEach}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -482,7 +495,7 @@ export default function (props) {
                 <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Text>{data.discountRate}</Text>
+                <Text>{discountRate}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -505,9 +518,10 @@ export default function (props) {
               paddingLeft: 13,
               paddingRight: 20,
               paddingTop: 14,
-              paddingBottom:14 }}
+              paddingBottom: 14,
+            }}
           >
-            <View >
+            <View>
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
@@ -522,7 +536,7 @@ export default function (props) {
                 <Text>Bán</Text>
               </TouchableOpacity>
             </View>
-            <View >
+            <View>
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
@@ -568,6 +582,7 @@ export default function (props) {
               backgroundColor: "#DC0000",
               alignItems: "center",
             }}
+            onPress={() => createFood()}
           >
             <Text style={{ top: 10, color: "#ffffff" }}>Thêm</Text>
           </TouchableOpacity>
@@ -584,8 +599,8 @@ const styles = StyleSheet.create({
   title: {
     paddingLeft: 20,
     height: 25,
-    paddingTop:2,
-    justifyContent: 'center',
+    paddingTop: 2,
+    justifyContent: "center",
     color: "#8A8F9C",
     backgroundColor: "#DEDEDE",
   },
