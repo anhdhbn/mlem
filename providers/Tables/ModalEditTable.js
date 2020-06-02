@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Overlay, Button } from 'react-native-elements'
 
+import tableServices from '../../providerServices/tableServices';
 export default function (props) {
   const { editTableVisible, toggleEditTable } = props.visible;
+  const {selectTable} = props.data;
+  const handleDelete = async()=>{
+    await tableServices.deleteTable(selectTable);
+    toggleEditTable()
+  }
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
@@ -19,10 +25,11 @@ export default function (props) {
           <Button
             buttonStyle={{ ...styles.btnView }}
             titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: '#DC0000' }}
+            onPress={handleDelete}
             title='Xoá'
           />
           <Button
-            onPress={toggleEditTable}
+            onPress={toggleEditTable()}
             buttonStyle={{ ...styles.btnView }}
             titleStyle={{ fontFamily: 'Regular', fontSize: 20, color: 'black' }}
             title='Quay lại'

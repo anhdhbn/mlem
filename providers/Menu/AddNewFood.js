@@ -28,6 +28,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import { Spinner } from "native-base";
 //Test
 import homeServices from "../../customerServices/homeServices";
+import { TextInput } from "react-native-paper";
 export default function (props) {
   const [data, setData] = useState({
     image: null,
@@ -132,7 +133,7 @@ export default function (props) {
   };
 
   const increaseDiscount = () => {
-    if (data.discountRate + 1 <= 100) {
+    if (data.discountRate + 1 < 100) {
       setData({ ...data, discountRate: data.discountRate + 1 });
     }
   };
@@ -148,7 +149,7 @@ export default function (props) {
   };
 
   const [modalName, setModalName] = useState(null);
-
+  
   const handleChoosePhoto = async () => {
     const options = {
       noData: true,
@@ -462,7 +463,9 @@ export default function (props) {
                 <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Text>{data.priceEach}</Text>
+               <TextInput value={data.priceEach.toString()} 
+                  onChangeText={e=>{setData({...data,priceEach:parseInt(e)})}}
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -481,9 +484,9 @@ export default function (props) {
               >
                 <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Text>{data.discountRate}</Text>
-              </TouchableOpacity>
+                <TextInput value={data.discountRate.toString()} 
+                  onChangeText={e=>{setData({...data,discountRate:parseInt(e)})}}
+                />
               <TouchableOpacity
                 onPress={() => {
                   increaseDiscount();

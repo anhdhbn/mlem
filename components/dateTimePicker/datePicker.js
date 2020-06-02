@@ -15,6 +15,7 @@ const datePicker = (props) => {
   const [date, setDate] = useState(new Date(props.date));
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const timeVisible = props.timeVisible
   const [dateShow, setDateShow] = useState(props.date.format("DD/MM/YYYY"));
   const [timeShow, setTimeShow] = useState(props.date.format("HH:mm"));
 
@@ -49,7 +50,6 @@ const datePicker = (props) => {
     <View>
       <View
         style={{
-          backgroundColor: "white",
           height: 50,
           flexDirection: "row",
           justifyContent: "space-between",
@@ -57,7 +57,6 @@ const datePicker = (props) => {
           paddingRight: 76,
 
           borderRadius: 6,
-          elevation: 3,
           backgroundColor: "#fff",
           shadowOffset: { width: 1, height: 1 },
           shadowColor: "#333",
@@ -79,7 +78,7 @@ const datePicker = (props) => {
             {dateShow}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {!timeVisible&&<TouchableOpacity
           onPress={showTimepicker}
           style={{ flexDirection: "row", marginTop: 5 }}
         >
@@ -92,7 +91,7 @@ const datePicker = (props) => {
           <Text style={{ fontSize: 16, marginTop: 6, marginLeft: 4 }}>
             {timeShow}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
       {show && (
         <DateTimePicker
