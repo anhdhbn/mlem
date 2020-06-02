@@ -4,11 +4,16 @@ import { requestServices } from "./index";
 
 const list = (params) =>
   requestServices.customAxios
-    .post("/api/food/list", params)
+    .post("api/food/list", params)
     .then((res) => res.data);
 
+const configJSON = {
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
 // API Thêm món ăn
-const createDish = (params) =>
+const createDish = (params, configJSON) =>
   requestServices.customAxios
     .post("/api/food/create", params)
     .then((res) => res.data);
@@ -16,13 +21,13 @@ const createDish = (params) =>
 // API Sửa món ăn
 const updateDish = (params) =>
   requestServices.customAxios
-    .post("/api/food/update", params)
+    .post("api/food/update", params)
     .then((res) => res.data);
 
 // API Xóa món ăn
 const deleteDish = (params) =>
   requestServices.customAxios
-    .post("/api/food/delete", params)
+    .post("api/food/delete", params)
     .then((res) => res.data);
 
 const config = {
