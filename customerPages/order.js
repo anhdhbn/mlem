@@ -378,6 +378,7 @@ export default class order extends Component {
                     fontSize: 16,
                     fontWeight: "bold",
                     padding: 8,
+                    paddingLeft : 20,
                     color: "#76c963",
                   }}
                 >
@@ -392,7 +393,7 @@ export default class order extends Component {
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+              <Text style={{ fontSize: 18,  padding: 4, paddingLeft:20 }}>
                 Thời gian
               </Text>
             </View>
@@ -414,7 +415,7 @@ export default class order extends Component {
           <>
             <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
               <View>
-                <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+                <Text style={{ fontSize: 18, padding: 8 ,paddingLeft:20}}>
                   Số bàn và số lượng người đặt
                 </Text>
               </View>
@@ -428,16 +429,12 @@ export default class order extends Component {
                 numOfPeople={this.state.numOfPeople}
               />
               <View>
-                <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+                <Text style={{ fontSize: 18, padding: 8,paddingLeft:20 }}>
                   Chọn món
                 </Text>
               </View>
 
-              {/* list of dish */}
-              {/* {console.log(
-              "[INFO] list dish before render OderItem",
-              this.state.listDish
-            )} */}
+
               {this.state.listDish.length > 0 ? (
                 this.state.listDish.map((dish) => (
                   <OrderItem
@@ -447,7 +444,7 @@ export default class order extends Component {
                   />
                 ))
               ) : (
-                <Text>Đã đặt gì đâu mà có để hiển thị -.-</Text>
+                <Text> </Text>
               )}
 
               <View
@@ -469,7 +466,7 @@ export default class order extends Component {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 17, color: "#fff", fontWeight: "bold" }}
+                    style={{ fontSize: 16, color: "#fff" }}
                   >
                     + Thêm món
                   </Text>

@@ -15,24 +15,25 @@ export default function (props) {
       style={{
         backgroundColor: "#fff",
         height: 40,
+        paddingRight: 40,
+        paddingLeft:20,
         flexDirection: "row",
         position: "relative",
-        paddingLeft: 8,
       }}
     >
       <View style={{ flexDirection: "row", paddingTop: 8 }}>
         {props.numOfTable === 0 ? (
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icon/circle.png")}
-              style={{ width: 24, height: 24 }}
+              source={require("../../assets/icon/-.png")}
+              style={{ width: 20, height: 20 }}
             />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => props.subTable()}>
             <Image
               source={require("../../assets/icon/-.png")}
-              style={{ width: 25, height: 25 }}
+              style={{ width: 20, height: 20 }}
             />
           </TouchableOpacity>
         )}
@@ -50,7 +51,7 @@ export default function (props) {
         ) : (
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icon/circle.png")}
+              source={require("../../assets/icon/+.png")}
               style={{ width: 24, height: 24 }}
             />
           </TouchableOpacity>
@@ -76,7 +77,7 @@ export default function (props) {
         ) : (
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icon/circle.png")}
+              source={require("../../assets/icon/-.png")}
               style={{ width: 24, height: 24 }}
             />
           </TouchableOpacity>
