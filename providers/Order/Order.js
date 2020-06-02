@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
-import Icon from "react-native-vector-icons/Ionicons";
-
 import { createStackNavigator } from "@react-navigation/stack";
 
+
+import Icon from "react-native-vector-icons/Ionicons";
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
+
 import orderServices from "../../providerServices/orderServices";
 import DetailOrder from "./DetailOrder";
 import Spinner from "../../components/Spinner/Spinner";
-
+import Filter from './Filter';
 const OrderStack = createStackNavigator();
 /*OrderStackScreen  */
 export default ({ navigation }) => (
@@ -59,68 +60,10 @@ export default ({ navigation }) => (
     />
   </OrderStack.Navigator>
 );
+
 const Order = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  // const data = [
-  //   {
-  //     id: "1",
-  //     customerName: "Đinh Tiến Đạt",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "2",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "3",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "4",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "5",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "6",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "7",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  //   {
-  //     id: "8",
-  //     customerName: "Dtd",
-  //     status: "active",
-  //     phoneNumber: "0000000",
-  //     price: "500000vnd",
-  //   },
-  // ];
-
   useEffect(() => {
     getData();
   }, []);
@@ -131,79 +74,13 @@ const Order = (props) => {
     let response = await orderServices.listOrdered(params);
     setData(response);
     setIsLoading(false);
-
-    // let lengthDishOrdered = response.length;
-    // for (let index = 0; index < lengthDishOrdered; index++) {
-    //   let dishOrdered = response[index];
-    //   // "errors": null,
-    //   //   "id": 8,
-    //   //   "code": "#1",
-    //   //   "orderDate": "2020-08-19T23:15:30",
-    //   //   "payDate": null,
-    //   //   "accountId": 11,
-    //   //   "numOfTable": 1,
-    //   //   "numOfPerson": 1,
-    //   //   "descreption": "null",
-    //   //   "statusId": 0,
-    //   //   "subTotal": null,
-    //   //   "total": null,
-    // //   "account": {
-    // //     "errors": null,
-    // //     "id": 16,
-    // //     "displayName": null,
-    // //     "email": "test@testinternet.com",
-    // //     "phone": "1234444444",
-    // //     "password": "Uz+TuSYZc+UibjZKsdF7vvPEObsSUJK7Chzo16xyPmA=",
-    // //     "salt": "Q7dAZu05yOhTz8DyeTv+6g==",
-    // //     "passwordRecoveryCode": null,
-    // //     "expiredTimeCode": null,
-    // //     "address": null,
-    // //     "dob": null,
-    // //     "avatar": null,
-    // //     "sexId": null,
-    // //     "statusId": 0,
-    // //     "roleId": 2
-    //   //   "orderContents": [
-    //   //     {
-    //   //         "errors": null,
-    //   //         "id": 8,
-    //   //         "code": "#10",
-    //   //         "orderId": 8,
-    //   //         "foodFoodTypeMappingId": 32,
-    //   //         "quantity": 2,
-    //   //         "statusId": 0,
-    //   //         "amount": null,
-    //   //         "foodFoodTypeMapping": {
-    //   //             "errors": null,
-    //   //             "id": 32,
-    //   //             "foodId": 18,
-    //   //             "foodTypeId": 2,
-    //   //             "food": {
-    //   //                 "errors": null,
-    //   //                 "id": 18,
-    //   //                 "name": "Đồ uống 1",
-    //   //                 "priceEach": 10000.0000,
-    //   //                 "discountRate": 10.0000,
-    //   //                 "imageId": null,
-    //   //                 "statusId": 1,
-    //   //                 "descreption": "Món này được giảm giá",
-    //   //                 "image": null
-    //   //             },
-    //   //             "foodType": {
-    //   //                 "errors": null,
-    //   //                 "id": 2,
-    //   //                 "name": "Size vừa",
-    //   //                 "statusId": 1
-    //   //             }
-    //   //         },
-    //   //         "order": null
-    //   //     }
-    //   // ],
-    //   // "reservations": []
-    //   // console.log("[INFO] dish ordered: ", dishOrdered);
-    // }
   };
-
+/* filter  */
+const handleFilter= (props)=>{
+  const res = orderServices.listOrdered(props);
+  console.log('data: ',res)
+  /* setData(res) */
+ }
   const onselect = (code) => {
     // console.log("On select");
     let orderedData = data.find((item) => item.code === code);
@@ -220,29 +97,7 @@ const Order = (props) => {
         </View>
       ) : null}
       {/* {console.log(props)} */}
-      <View style={styles.filterBar}>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={{ color: "#8A8F9C", }}>Sắp Xếp </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={{ color: "#8A8F9C", }}>Hôm nay </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text style={{ color: "#8A8F9C", }}>Trạng thái </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-      </View>
+      <Filter handleFilter={handleFilter}/>
       <FlatList
         showsHorizontalScrollIndicator={false}
         data={data}
