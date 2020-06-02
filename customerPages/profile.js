@@ -97,7 +97,7 @@ export default class Profile extends Component {
   async update() {
     // response.avatar has 99999 line
     let params = this.createParams();
-    console.log("[INFO] Params in profile: ", params);
+    // console.log("[INFO] Params in profile: ", params);
     let response = await profileService.update(params);
     // response.avatar has 99999 line
     // console.log("[INFO] Response in profile after UPDATE", response);
