@@ -67,7 +67,8 @@ const Table = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={"press to search...."}
+          placeholder={"Mã...."}
+          placeholderTextColor='#B20'
         ></TextInput>
       </View>
       <TouchableOpacity style={{ flexDirection: 'row', top: 10, right: 10 }}>
@@ -86,8 +87,8 @@ const Table = (props) => {
               style={styles.cardView}
               onLongPress={toggleEditTable}
             >
-              <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#8A8F9C' }}>{item.tableNum}</Text>
-              <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#00B80C' }}>{item.status}</Text>
+              <Text style={{ fontSize: 16, color: '#8A8F9C',fontWeight:'bold' }}>{item.tableNum}</Text>
+              <Text style={{ fontSize: 16, color: '#00B80C' }}>{item.status}</Text>
             </TouchableOpacity>
           )
         }}
@@ -102,12 +103,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F6F7'
   },
   topView: {
+    marginTop:15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 10,
     backgroundColor: '#FFFFFF',
     bottom: 8,
-    marginTop: 3,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   viewInput: {
     width: '50%',
@@ -122,7 +132,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     justifyContent: 'space-between',
-    marginBottom: 5
+    borderRadius:8,
+    marginBottom: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   cardView: {
     flexDirection: 'row',
@@ -130,7 +150,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 50,
     backgroundColor: '#FFFFFF',
     marginBottom: 5,
-    padding: 5
+    borderRadius:3,
+    padding: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+
 
   }
 })

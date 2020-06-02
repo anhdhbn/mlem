@@ -87,7 +87,14 @@ export default function (props) {
                   }}
                 >
                   <Image
-                    source={{ uri: item.image }}
+                    source={
+                      item.image
+                        ? {
+                            uri:
+                              "http://admin.wepick.vn:20000" + item.image.url,
+                          }
+                        : null
+                    }
                     style={{ width: 130, height: 110 }}
                   />
 

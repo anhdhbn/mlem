@@ -21,21 +21,73 @@ import TabBar from "../components/tabBar/tabBar";
 import SmartDishCard from "../components/smartDishCard/smartDishCard";
 import styles from "../styles/favouriteDishStyle";
 
+import homeServices from "../customerServices/homeServices";
+
 export default class Detail extends Component {
   constructor(props) {
     super(props);
     this.handClickIcon = this.handClickIcon.bind(this);
 
-    this.state = {};
+    this.state = {
+      listFavourite: this.props.route.params.listFavourite,
+      isUpdating: false,
+    };
   }
 
-  handClickIcon(nameDish) {
+  handClickIcon = async (newDish) => {
     // console.log("[INFO] CLick icon in favouriteDish.js");
-    let newListFavouriteDishs = this.state.listFavouriteDishs.map((dish) =>
-      dish.nameDish === nameDish ? { ...dish, isLike: !dish.isLike } : dish
+    // let newListFavouriteDishs = this.state.listFavouriteDishs.map((dish) =>
+    //   dish.nameDish === newDish ? { ...dish, isLike: !dish.isLike } : dish
+    // );
+    // this.setState({ listFavouriteDishs: newListFavouriteDishs });
+    console.log("[INFO] Clicked dish: ", newDish);
+    let newListFavourite = [];
+    let isAdded = false;
+    for (let index = 0; index < this.state.listFavourite.length; index++) {
+      if (this.state.listFavourite[index].foodId === newDish.id) {
+        isAdded = true;
+        continue;
+      } else {
+        newListFavourite.push(this.state.listFavourite[index]);
+      }
+    }
+
+    if (isAdded === false) {
+      newListFavourite.push({ foodId: newDish.id });
+    }
+
+    this.setState({ listFavourite: newListFavourite }, () => {
+      console.log("[INFO] list Favourite dish: ", this.state.listFavourite);
+    });
+
+    this.setIsUpdating(true);
+    let params = { account_AccountFoodFavorites: newListFavourite };
+    let response = await homeServices.updateLikedFood(params);
+    this.setIsUpdating(false);
+    this.props.route.params.setListLikedDish(
+      response.account_AccountFoodFavorites
     );
-    this.setState({ listFavouriteDishs: newListFavouriteDishs });
-  }
+
+    this.props.route.params.fetchFavourite();
+
+    console.log(
+      "[INFO] Response in detail.js, called updateLikedFood. New list: ",
+      response.account_AccountFoodFavorites
+    );
+  };
+
+  setIsUpdating = (value) => {
+    this.setState({ isUpdating: value });
+  };
+
+  checkLikedFood = (id2Check) => {
+    for (let index = 0; index < this.state.listFavourite.length; index++) {
+      if (this.state.listFavourite[index].foodId === id2Check) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   render() {
     return (
@@ -44,7 +96,7 @@ export default class Detail extends Component {
         <View tabLabel="Trang chủ" style={styles.tabView}>
           <Header
             // onPressBack={navigation.navigate("MainBody")}
-            title="Tất cả"
+            title={this.props.route.params.titleHeader}
           ></Header>
           <ScrollView showsVerticalScrollIndicator={false}>
             {this.props.route.params.listDishs.map((dish) => (
@@ -63,6 +115,7 @@ export default class Detail extends Component {
               // }
               <SmartDishCard
                 key={dish.id}
+                id={dish.id}
                 linkImageDish={dish.image}
                 nameDish={dish.name}
                 describeDish={dish.descreption}
@@ -73,7 +126,7 @@ export default class Detail extends Component {
                 linkIconActive={require("../assets/icon/heart.png")}
                 linkIconInactive={require("../assets/icon/heart-unlike.png")}
                 handClickIcon={this.handClickIcon}
-                isActive={false}
+                isActive={this.checkLikedFood(dish.id)}
               ></SmartDishCard>
             ))}
           </ScrollView>

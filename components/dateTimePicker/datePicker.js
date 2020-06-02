@@ -47,19 +47,15 @@ const datePicker = (props) => {
 
   return (
     <View>
-      {/* <View>
-        <Button onPress={showDatepicker} title="Show date time picker!" />
-      </View>
-      <View>
-        <Button onPress={showTimepicker} title="Show time picker!" />
-      </View> */}
-
       <View
         style={{
           backgroundColor: "white",
           height: 50,
           flexDirection: "row",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
+          paddingLeft: 15,
+          paddingRight: 76,
+
           borderRadius: 6,
           elevation: 3,
           backgroundColor: "#fff",
@@ -75,11 +71,11 @@ const datePicker = (props) => {
         >
           <Icon
             name="date"
-            size={30}
+            size={20}
             color="#bf2315"
-            style={{ marginTop: 4 }}
+            style={{ margin:6 }}
           />
-          <Text style={{ fontSize: 20, marginTop: 8, marginLeft: 4 }}>
+          <Text style={{ fontSize: 16, marginTop: 6, marginLeft: 4 }}>
             {dateShow}
           </Text>
         </TouchableOpacity>
@@ -89,11 +85,11 @@ const datePicker = (props) => {
         >
           <Icon
             name="stopwatch"
-            size={30}
+            size={20}
             color="#bf2315"
-            style={{ marginTop: 4 }}
+            style={{ margin:6 }}
           />
-          <Text style={{ fontSize: 20, marginTop: 8, marginLeft: 4 }}>
+          <Text style={{ fontSize: 16, marginTop: 6, marginLeft: 4 }}>
             {timeShow}
           </Text>
         </TouchableOpacity>

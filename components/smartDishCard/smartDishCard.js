@@ -87,11 +87,18 @@ export default class SmartDishCard extends Component {
             }}
           >
             <Image
-              source={{
-                uri: this.props.linkImageDish,
-              }}
+              source={
+                this.props.linkImageDish
+                  ? {
+                      uri:
+                        "http://admin.wepick.vn:20000" +
+                        this.props.linkImageDish.url,
+                    }
+                  : null
+              }
               style={{ width: 100, height: 100, marginHorizontal: 10, flex: 3 }}
-            ></Image>
+            />
+
             <View style={{ flex: 5, flexDirection: "column" }}>
               <Text style={{ fontSize: 20 }}>{this.props.nameDish}</Text>
               <Text>{this.props.describeDish}</Text>

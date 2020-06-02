@@ -378,6 +378,7 @@ export default class order extends Component {
                     fontSize: 16,
                     fontWeight: "bold",
                     padding: 8,
+                    paddingLeft : 20,
                     color: "#76c963",
                   }}
                 >
@@ -392,7 +393,7 @@ export default class order extends Component {
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+              <Text style={{ fontSize: 18,  padding: 4, paddingLeft:20 }}>
                 Thời gian
               </Text>
             </View>
@@ -410,97 +411,103 @@ export default class order extends Component {
           </View>
         )}
 
-        {this.state.tableAvailable === 0 ? (
-          <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
-            <View>
-              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-                Số bàn và số lượng người đặt
-              </Text>
-            </View>
-            <SelectTable
-              tableAvailable={this.state.tableAvailable}
-              subTable={this.subTable}
-              addTable={this.addTable}
-              subPeople={this.subPeople}
-              addPeople={this.addPeople}
-              numOfTable={this.state.numOfTable}
-              numOfPeople={this.state.numOfPeople}
-            />
-            <View>
-              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-                Chọn món
-              </Text>
-            </View>
+        {this.state.tableAvailable != 0 ? (
+          <>
+            <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
+              <View>
+                <Text style={{ fontSize: 18, padding: 8 ,paddingLeft:20}}>
+                  Số bàn và số lượng người đặt
+                </Text>
+              </View>
+              <SelectTable
+                tableAvailable={this.state.tableAvailable}
+                subTable={this.subTable}
+                addTable={this.addTable}
+                subPeople={this.subPeople}
+                addPeople={this.addPeople}
+                numOfTable={this.state.numOfTable}
+                numOfPeople={this.state.numOfPeople}
+              />
+              <View>
+                <Text style={{ fontSize: 18, padding: 8,paddingLeft:20 }}>
+                  Chọn món
+                </Text>
+              </View>
 
-            {/* list of dish */}
-            {/* {console.log(
-              "[INFO] list dish before render OderItem",
-              this.state.listDish
-            )} */}
-            {this.state.listDish.length > 0 ? (
-              this.state.listDish.map((dish) => (
-                <OrderItem
-                  dish={dish}
-                  addNumOfDish={this.addNumOfDish}
-                  subNumOfDish={this.subNumOfDish}
-                />
-              ))
-            ) : (
-              <Text>Đã đặt gì đâu mà có để hiển thị -.-</Text>
-            )}
 
-            <View
-              style={{
-                backgroundColor: "#e67777",
-                height: 45,
-                padding: 12,
-                borderRadius: 10,
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate("SelectDish", {
-                    addDish2Order: this.addDish2Order,
-                    removeDish2Order: this.removeDish2Order,
-                    getTotalPrice: this.getTotalPrice,
-                    getTotalPromoPrice: this.getTotalPromoPrice,
-                  });
+              {this.state.listDish.length > 0 ? (
+                this.state.listDish.map((dish) => (
+                  <OrderItem
+                    dish={dish}
+                    addNumOfDish={this.addNumOfDish}
+                    subNumOfDish={this.subNumOfDish}
+                  />
+                ))
+              ) : (
+                <Text> </Text>
+              )}
+
+              <View
+                style={{
+                  backgroundColor: "#e67777",
+                  height: 45,
+                  padding: 12,
+                  borderRadius: 10,
                 }}
               >
-                <Text
-                  style={{ fontSize: 17, color: "#fff", fontWeight: "bold" }}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate("SelectDish", {
+                      addDish2Order: this.addDish2Order,
+                      removeDish2Order: this.removeDish2Order,
+                      getTotalPrice: this.getTotalPrice,
+                      getTotalPromoPrice: this.getTotalPromoPrice,
+                    });
+                  }}
                 >
-                  + Thêm món
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                height: 40,
-                flexDirection: "row",
-                backgroundColor: "#fff",
-                marginTop: 8,
-              }}
-            >
-              <Image
-                source={require("../assets/icon/note.png")}
-                style={{ width: 30, height: 30, marginTop: 6, marginLeft: 8 }}
-              />
-              <TextInput
-                style={{ width: 400, fontSize: 16 }}
-                placeholder="ghi chú ..."
-              />
-            </View>
-
+                  <Text
+                    style={{ fontSize: 16, color: "#fff" }}
+                  >
+                    + Thêm món
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  height: 40,
+                  flexDirection: "row",
+                  backgroundColor: "#fff",
+                  marginTop: 8,
+                }}
+              >
+                <Image
+                  source={require("../assets/icon/note.png")}
+                  style={{ width: 23, height: 23, marginTop: 8, marginLeft: 8 }}
+                />
+                <TextInput
+                  style={{ width: 400, fontSize: 16 }}
+                  placeholder="ghi chú ..."
+                />
+              </View>
+            </ScrollView>
             <View
               style={{
                 flexDirection: "row",
                 position: "relative",
                 backgroundColor: "#fff",
-                height: 80,
+                height: 60,
                 padding: 10,
-                marginBottom: 30,
+                marginBottom: 5,
                 marginTop: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.53,
+                shadowRadius: 13.97,
+
+                elevation: 21,
               }}
             >
               <View style={{ marginTop: 8, paddingLeft: 10 }}>
@@ -529,7 +536,7 @@ export default class order extends Component {
                     borderRadius: 8,
                     width: 70,
                     height: 40,
-                    marginTop: 20,
+                    marginTop: 9,
                   }}
                   onPress={() => {
                     this.createOrder();
@@ -549,7 +556,7 @@ export default class order extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-          </ScrollView>
+          </>
         ) : this.state.tableAvailable === 0 ? (
           <TableOff />
         ) : null}

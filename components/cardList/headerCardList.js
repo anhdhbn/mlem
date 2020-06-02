@@ -24,7 +24,8 @@ export default function () {
             />
             <TextInput
               style={styles.input}
-              placeholder={"press to search...."}
+              placeholder={"MlemMlem"}
+              placeholderTextColor="#B21"
             ></TextInput>
           </View>
         </View>
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#c4c1c0",
     flexDirection: "row",
     overflow: "hidden",
-    shadowOpacity: 0.5,
+    opacity: .8,
   },
   input: {
     height: 35,

@@ -47,11 +47,11 @@ export default ({ navigation }) => (
         title: "Chi tiết đơn hàng",
         headerLeft: () => (
           <Icon.Button
-            name="ios-menu"
+            name="ios-arrow-back"
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.openDrawer();
+              navigation.goBack();
             }}
           ></Icon.Button>
         ),
@@ -222,21 +222,21 @@ const Order = (props) => {
       {/* {console.log(props)} */}
       <View style={styles.filterBar}>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Sắp Xếp </Text>
+          <Text style={{ color: "#8A8F9C", }}>Sắp Xếp </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Hôm nay </Text>
+          <Text style={{ color: "#8A8F9C", }}>Hôm nay </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Trạng thái </Text>
+          <Text style={{ color: "#8A8F9C", }}>Trạng thái </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
@@ -280,7 +280,7 @@ const Order = (props) => {
                     fontSize: 14,
                   }}
                 >
-                  {item.statusId}
+                  {item?.status?.name}
                 </Text>
               </View>
               <View style={{ flexDirection: "row", top: 10 }}>
@@ -312,10 +312,20 @@ const styles = StyleSheet.create({
   },
   filterBar: {
     flexDirection: "row",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F5F6F7",
+
     padding: 10,
     width: "100%",
     justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 9,
+    },
+    shadowOpacity: 0.48,
+    shadowRadius: 11.95,
+
+    elevation: 18,
   },
   card: {
     width: "100%",
@@ -325,5 +335,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });

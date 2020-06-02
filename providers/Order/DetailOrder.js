@@ -7,6 +7,7 @@ import {
   Image,
   Button,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 // import { createStackNavigator } from "@react-navigation/stack";
 
@@ -49,24 +50,8 @@ import Spinner from "../../components/Spinner/Spinner";
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  // const data = {
-  //   customerName: "Dinh Tien Dat",
-  //   customerPhone: "0000000",
-  //   createTime: "12:00-13/04/2000",
-  //   orderTime: "12:00-1/1/2000",
-  //   tables: ["5", "6", "7"],
-  //   menu: [
-  //     { id: "1", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "2", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "3", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "4", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "5", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "6", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "7", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "8", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "9", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //   ],
-  // };
+
+
 
   useEffect(() => {
     // console.log(props.route.params.data);
@@ -74,18 +59,17 @@ export default function DetailOrder(props) {
     let newArrayQuantity = props.route.params.data.orderContents.map((item) => {
       return item.quantity;
     });
-    setTotalQuantity(newArrayQuantity.reduce((a, b) => a + b, 0));
-    // console.log(newArrayQuantity.reduce((a, b) => a + b, 0));
+
   }, []);
   return data ? (
-    <>
-      <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container }>
+      <ScrollView >
         <View style={styles.customerInfoView}>
-          <View>
-            <Text>Họ và tên: {data.account.displayName}</Text>
-            <Text>SĐT: {data.account.phone}</Text>
-            <Text>
-              Mới Tạo lúc {moment(data.createdAt).format("HH:mm") + " - "}
+          <View >
+            <Text style={{ fontSize:18,fontWeight:'bold' }}>{data.account.displayName}</Text>
+            <Text style={{ fontSize:14, color:"#8A8F9C" }}>+{data.account.phone}</Text>
+            <Text style={{ fontSize:14, color:"#8A8F9C" }}>
+              {data?.status?.name} {moment(data.createdAt).format("HH:mm") + " - "}
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
@@ -113,23 +97,25 @@ export default function DetailOrder(props) {
               Số Lượng {data.numOfTable} bàn - {data.numOfPerson} người
             </Text>
           </View>
-          <View>
+          <View style={{ marginLeft: 5 }}>
             <Text>Chọn bàn: {"\n\n"}</Text>
           </View>
-          <View
+
+        </View>
+        <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-around",
+              flex: 10,
+              marginTop:5
             }}
           >
-            <Text>Tên</Text>
-            <Text>Size</Text>
-            <Text>Số lượng</Text>
-            <Text>Thành tiền</Text>
+            <View style={{ flex: 3,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Tên</Text></View>
+            <View style={{ flex: 2,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Size</Text></View>
+            <View style={{ flex: 2,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Số lượng</Text></View>
+            <View style={{ flex: 3,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Thành tiền</Text></View>
           </View>
-        </View>
 
-        <View style={{ height: "50%" }}>
+        <View style={{ height: "50%", flex:10}}>
           <FlatList
             showsHorizontalScrollIndicator={false}
             data={data.orderContents}
@@ -137,10 +123,10 @@ export default function DetailOrder(props) {
             renderItem={({ item }) => {
               return (
                 <View style={styles.cardView}>
-                  <Text>{item.foodFoodTypeMapping.food.name}</Text>
-                  <Text>{item.foodFoodTypeMapping.foodType.name}</Text>
-                  <Text>{item.quantity}</Text>
-                  <Text>
+                  <View style={{ flex: 3,alignItems:'center'}}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
+                  <View style={{ flex: 2,alignItems:'center'}}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
+                  <View style={{ flex: 2,alignItems:'center'}}><Text>{item.quantity}</Text></View>
+                  <View style={{ flex: 3,alignItems:'center'}}><Text>
                     {item.foodFoodTypeMapping.foodType.id === 1
                       ? (item.quantity *
                           item.foodFoodTypeMapping.food.priceEach *
@@ -157,40 +143,59 @@ export default function DetailOrder(props) {
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
                         100}
-                  </Text>
+                  </Text></View>
+
                 </View>
               );
             }}
           />
         </View>
       </ScrollView>
-      <View
+      <View style={{
+        backgroundColor: '#ffffff',
+        borderRadius: 10,
+        height: 80,
+        bottom: 0,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 10,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 13.16,
+
+        elevation: 20,
+      }}
+      >
+        <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-around",
+          flex: 10
         }}
-      >
-        <Text>Tổng cộng({totalQuantity} món):</Text>
-        <Text>{data.total} vnđ</Text>
+       >
+          <View style={{ flex:5 ,alignItems:"center"}}>
+            <Text style={{ fontSize:16 }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
+          </View>
+          <View style={{ flex:5 ,alignItems:"center"}}>
+            <Text style={{ fontSize:16 }}>{data.total}</Text>
+          </View>
       </View>
       <View style={styles.btnView}>
         <TouchableOpacity
           style={{
-            backgroundColor: "#DC0000",
+            backgroundColor: "#c7c5bf",
             borderRadius: 8,
             width: 100,
             height: 40,
-            marginTop: 20,
           }}
           onPress={() => {}}
         >
           <Text
             style={{
               fontSize: 16,
-              fontWeight: "bold",
               padding: 8,
               paddingLeft: 20,
-              color: "#fff",
+              color: "#000",
             }}
           >
             Từ chối
@@ -200,26 +205,25 @@ export default function DetailOrder(props) {
           style={{
             backgroundColor: "#DC0000",
             borderRadius: 8,
-            width: 100,
+            width: 110,
             height: 40,
-            marginTop: 20,
           }}
           onPress={() => {}}
         >
           <Text
             style={{
               fontSize: 16,
-              fontWeight: "bold",
               padding: 8,
               paddingLeft: 20,
               color: "#fff",
             }}
           >
-            Đồng ý
+            Xác nhận
           </Text>
         </TouchableOpacity>
       </View>
-    </>
+      </View>
+    </SafeAreaView>
   ) : (
     <Spinner />
   );
@@ -233,24 +237,50 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
+    paddingLeft:15,
     backgroundColor: "#FFFFFF",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderWidth: 0.5,
+    shadowRadius: 10,
+
   },
   orderInfoView: {
     backgroundColor: "#FFFFFF",
     top: 10,
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   cardView: {
     marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "#FFFFFF",
-    height: 46,
+    height: 40,
+    paddingTop:10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+    marginBottom:5
   },
   btnView: {
     flexDirection: "row",
     justifyContent: "space-around",
-    top: 10,
-    marginBottom: 100,
+    paddingBottom:8
   },
+
 });

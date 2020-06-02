@@ -60,9 +60,15 @@ export default function (props) {
         }}
       >
         <Image
-          source={{
-            uri: props.modal.linkImageDish,
-          }}
+          source={
+            props.modal.linkImageDish
+              ? {
+                  uri:
+                    "http://admin.wepick.vn:20000" +
+                    props.modal.linkImageDish.url,
+                }
+              : null
+          }
           style={{
             width: 100,
             height: 100,

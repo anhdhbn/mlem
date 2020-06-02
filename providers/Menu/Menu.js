@@ -1,46 +1,100 @@
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
-import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from "react";
+import { Text, View, StyleSheet, Image, TextInput } from "react-native";
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import Icon from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from "react-native-vector-icons/Ionicons";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 import search from "../../assets/icon/search.png";
-import viewMoreIcon from '../../assets/icon/view_more.png';
-import dropDownIcon from '../../assets/icon/drop_down.png';
-import ModalEditMenu from './ModalEditMenu'
+import viewMoreIcon from "../../assets/icon/view_more.png";
+import dropDownIcon from "../../assets/icon/drop_down.png";
+import ModalEditMenu from "./ModalEditMenu";
+
+import CreateFood from "./AddNewFood";
+import EditFood from "./EditFood";
+
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
 export default ({ navigation }) => (
-  <MenuStack.Navigator screenOptions={{
-    headerStyle: {
-      backgroundColor: '#D20000',
-    },
-    headerTitleAlign: 'center',
-    headerTintColor: '#fff'
-  }}>
+  <MenuStack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#D20000",
+      },
+      headerTitleAlign: "center",
+      headerTintColor: "#fff",
+    }}
+  >
     <MenuStack.Screen
       name="Menu"
       component={Menu}
       options={{
-        title: 'Thực Đơn',
+        title: "Thực Đơn",
         headerLeft: () => (
-          <Icon.Button name='ios-menu' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></Icon.Button>
+          <Icon.Button
+            name="ios-menu"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.openDrawer();
+            }}
+          ></Icon.Button>
         ),
         headerRight: () => (
-          <AntDesign.Button name='plus' size={25} backgroundColor='#D20000' onPress={() => { navigation.openDrawer() }}></AntDesign.Button>
+          <AntDesign.Button
+            name="plus"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.navigate("CreateFood");
+            }}
+          ></AntDesign.Button>
+        ),
+      }}
+    />
+    <MenuStack.Screen
+      name="CreateFood"
+      component={CreateFood}
+      options={{
+        title: "Thêm mới món ăn",
+        headerLeft: () => (
+          <Icon.Button
+            name="ios-arrow-back"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.goBack();
+            }}
+          ></Icon.Button>
+        ),
+      }}
+    />
+    <MenuStack.Screen
+      name="EditFood"
+      component={EditFood}
+      options={{
+        title: "Tùy chỉnh món ăn",
+        headerLeft: () => (
+          <Icon.Button
+            name="ios-menu"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.goBack();
+            }}
+          ></Icon.Button>
         ),
       }}
     />
   </MenuStack.Navigator>
-)
+);
 
 const Menu = (props) => {
-  const [editMenuVisible,setEditMenuVisible] = useState(false);
-  const toggleEditMenu = ()=>{
+  const [editMenuVisible, setEditMenuVisible] = useState(false);
+  const toggleEditMenu = () => {
     setEditMenuVisible(!editMenuVisible);
-  }
+  };
   const data = [
     {
       id: "1",
@@ -116,27 +170,28 @@ const Menu = (props) => {
         />
         <TextInput
           style={styles.input}
-          placeholder={"press to search...."}
+          placeholder={"MlemMlem...."}
+          placeholderTextColor='#B21'
         ></TextInput>
       </View>
 
       <View style={styles.filterBar}>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Phân loại </Text>
+          <Text style={ styles.textFilter }>Phân loại </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Ngày tạo </Text>
+          <Text style={ styles.textFilter }>Ngày tạo </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
           />
         </TouchableOpacity>
         <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Trạng thái </Text>
+          <Text style={ styles.textFilter }>Trạng thái </Text>
           <Image
             source={dropDownIcon}
             style={{ height: 15, width: 15, top: 3 }}
@@ -150,10 +205,7 @@ const Menu = (props) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity
-              style={styles.card}
-              onLongPress={toggleEditMenu}
-            >
+            <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu}>
               <View style={{ flexDirection: "row" }}>
                 <Image
                   source={{ uri: item.image }}
@@ -202,10 +254,10 @@ const Menu = (props) => {
           );
         }}
       />
-      <ModalEditMenu visible={{editMenuVisible,toggleEditMenu}} />
+      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} />
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -222,20 +274,42 @@ const styles = StyleSheet.create({
   },
   filterBar: {
     flexDirection: "row",
-    backgroundColor: "#F5F6F7",
-    padding: 10,
-    top: 10,
+    backgroundColor: "#F6F7F8",
+    height:33,
+    padding: 6,
+    top: 3,
     width: "100%",
     justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   card: {
     width: "100%",
-    top: 10,
+    top: 5,
     marginTop: 10,
     backgroundColor: "#FFFFFF",
     padding: 10,
     borderRadius: 10,
     flexDirection: "row",
     justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
+  textFilter: {
+    color: '#8A8F9C',
+  }
 });
