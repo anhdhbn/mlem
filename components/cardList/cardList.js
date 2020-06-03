@@ -99,7 +99,13 @@ export default function (props) {
                   />
 
                   <Text style={styles.foodname}>{item.name}</Text>
-                  <Text style={styles.price}>{item.priceEach}</Text>
+                  {item.discountRate ? (
+                    <Text style={styles.price}>
+                      {(item.priceEach * (100 - item.discountRate)) / 100}
+                    </Text>
+                  ) : (
+                    <Text style={styles.price}>{item.priceEach}</Text>
+                  )}
                 </TouchableOpacity>
               </View>
             );
