@@ -62,6 +62,8 @@ export default function (props) {
     props.route.params.response.account_AccountFoodFavorites
   );
 
+  const [delaySearch, setDelayDearch] = useState(0);
+
   useEffect(() => {
     if (!checkProfile) {
       setCheckProfile(true);
@@ -175,6 +177,24 @@ export default function (props) {
     let response = await homeServices.list(params);
     // console.log("[INFO] Response in getAllFoods: ", response);
     return response;
+  };
+
+  const searchDish = async (name) => {
+    let params = {
+      name: {
+        equal: name,
+      },
+    };
+
+    var currentSec = new Date().getSeconds();
+    if (currentSec != delaySearch) {
+      // console.log("[INFO] params to search: ", params);
+      setDelayDearch(currentSec);
+      let response = await homeServices.list(params);
+
+      return response;
+    }
+    return null;
   };
 
   const getListFoods = async (code) => {
@@ -312,7 +332,7 @@ export default function (props) {
 
       {/* {console.log("Start Rendering")} */}
       <ScrollView style={styles.home}>
-        <HeaderImage />
+        <HeaderImage searchDish={searchDish} />
         <NavBar
           onPressAll={() => onPressDetail(listAllDish, "Tất cả")}
           onPressLau={() => onPressDetail(listLau, "Món Lẩu - Buffet")}
@@ -321,54 +341,134 @@ export default function (props) {
           onPressThit={() => onPressDetail(listThit, "Món thịt")}
           onPressDouong={() => onPressDetail(listDouong, "Đồ uống")}
         />
-        <CardList
-          cardData={listFavorite}
-          onPressDetail={() => onPressDetail(listFavorite, "Món yêu thích")}
-          title={"Yêu thích"}
-          isLoading={!listFavorite}
-        />
-        <CardList
-          cardData={listRecently}
-          onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây")}
-          title={"Đặt gần đây"}
-          isLoading={isLoadingRecently}
-        />
-        <CardList
-          cardData={listTop}
-          onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất")}
-          title={"Đặt nhiều nhất"}
-          isLoading={isLoadingTop}
-        />
-        <CardList
-          cardData={listLau}
-          onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet")}
-          title={"Lẩu - Buffet"}
-          isLoading={isLoadingLau}
-        />
-        <CardList
-          cardData={listHaisan}
-          onPressDetail={() => onPressDetail(listHaisan, "Món hải sản")}
-          title={"Hải sản"}
-          isLoading={isLoadingHaisan}
-        />
-        <CardList
-          cardData={listRaucu}
-          onPressDetail={() => onPressDetail(listRaucu, "Món rau củ")}
-          title={"Rau củ"}
-          isLoading={isLoadingRaucu}
-        />
-        <CardList
-          cardData={listThit}
-          onPressDetail={() => onPressDetail(listThit, "Món thịt")}
-          title={"Thịt"}
-          isLoading={isLoadingThit}
-        />
-        <CardList
-          cardData={listDouong}
-          onPressDetail={() => onPressDetail(listDouong, "Món đồ uống")}
-          title={"Đồ uống"}
-          isLoading={isLoadingDouong}
-        />
+
+        {listFavorite === null ? (
+          <CardList
+            cardData={listFavorite}
+            onPressDetail={() => onPressDetail(listFavorite, "Món yêu thích")}
+            title={"Yêu thích"}
+            isLoading={!listFavorite}
+          />
+        ) : listFavorite.length != 0 ? (
+          <CardList
+            cardData={listFavorite}
+            onPressDetail={() => onPressDetail(listFavorite, "Món yêu thích")}
+            title={"Yêu thích"}
+            isLoading={!listFavorite}
+          />
+        ) : null}
+
+        {listRecently === null ? (
+          <CardList
+            cardData={listRecently}
+            onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây")}
+            title={"Đặt gần đây"}
+            isLoading={isLoadingRecently}
+          />
+        ) : listRecently.length != 0 ? (
+          <CardList
+            cardData={listRecently}
+            onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây")}
+            title={"Đặt gần đây"}
+            isLoading={isLoadingRecently}
+          />
+        ) : null}
+
+        {listTop === null ? (
+          <CardList
+            cardData={listTop}
+            onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất")}
+            title={"Đặt nhiều nhất"}
+            isLoading={isLoadingTop}
+          />
+        ) : listTop.length != 0 ? (
+          <CardList
+            cardData={listTop}
+            onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất")}
+            title={"Đặt nhiều nhất"}
+            isLoading={isLoadingTop}
+          />
+        ) : null}
+
+        {listLau === null ? (
+          <CardList
+            cardData={listLau}
+            onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet")}
+            title={"Lẩu - Buffet"}
+            isLoading={isLoadingLau}
+          />
+        ) : listLau.length != 0 ? (
+          <CardList
+            cardData={listLau}
+            onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet")}
+            title={"Lẩu - Buffet"}
+            isLoading={isLoadingLau}
+          />
+        ) : null}
+
+        {listHaisan === null ? (
+          <CardList
+            cardData={listHaisan}
+            onPressDetail={() => onPressDetail(listHaisan, "Món hải sản")}
+            title={"Hải sản"}
+            isLoading={isLoadingHaisan}
+          />
+        ) : listHaisan.length != 0 ? (
+          <CardList
+            cardData={listHaisan}
+            onPressDetail={() => onPressDetail(listHaisan, "Món hải sản")}
+            title={"Hải sản"}
+            isLoading={isLoadingHaisan}
+          />
+        ) : null}
+
+        {listRaucu === null ? (
+          <CardList
+            cardData={listRaucu}
+            onPressDetail={() => onPressDetail(listRaucu, "Món rau củ")}
+            title={"Rau củ"}
+            isLoading={isLoadingRaucu}
+          />
+        ) : listRaucu.length != 0 ? (
+          <CardList
+            cardData={listRaucu}
+            onPressDetail={() => onPressDetail(listRaucu, "Món rau củ")}
+            title={"Rau củ"}
+            isLoading={isLoadingRaucu}
+          />
+        ) : null}
+
+        {listThit === null ? (
+          <CardList
+            cardData={listThit}
+            onPressDetail={() => onPressDetail(listThit, "Món thịt")}
+            title={"Thịt"}
+            isLoading={isLoadingThit}
+          />
+        ) : listThit.length != 0 ? (
+          <CardList
+            cardData={listThit}
+            onPressDetail={() => onPressDetail(listThit, "Món thịt")}
+            title={"Thịt"}
+            isLoading={isLoadingThit}
+          />
+        ) : null}
+
+        {listDouong === null ? (
+          <CardList
+            cardData={listDouong}
+            onPressDetail={() => onPressDetail(listDouong, "Món đồ uống")}
+            title={"Đồ uống"}
+            isLoading={isLoadingDouong}
+          />
+        ) : listDouong.length != 0 ? (
+          <CardList
+            cardData={listDouong}
+            onPressDetail={() => onPressDetail(listDouong, "Món đồ uống")}
+            title={"Đồ uống"}
+            isLoading={isLoadingDouong}
+          />
+        ) : null}
       </ScrollView>
     </>
   );

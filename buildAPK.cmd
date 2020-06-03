@@ -1,3 +1,3 @@
 cd android
 ./gradlew assembleRelease
-cd ..
+cd .. 

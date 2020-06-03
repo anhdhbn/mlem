@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   TextInput,
@@ -11,7 +11,8 @@ import {
 import SliderSwiper from "../slider/slider";
 import search from "../../assets/icon/search.png";
 import setting from "../../assets/icon/settings.png";
-export default function () {
+export default function (props) {
+  const [responseSearch, setResponseSearch] = useState(null);
   return (
     <>
       <SliderSwiper />
@@ -26,6 +27,12 @@ export default function () {
               style={styles.input}
               placeholder={"MlemMlem"}
               placeholderTextColor="#B21"
+              onChangeText={(text) => {
+                props.searchDish(text).then((data) => {
+                  setResponseSearch(data);
+                  console.log("[INFO] Response after search: ", data);
+                });
+              }}
             ></TextInput>
           </View>
         </View>
@@ -59,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#c4c1c0",
     flexDirection: "row",
     overflow: "hidden",
-    opacity: .8,
+    opacity: 0.8,
   },
   input: {
     height: 35,

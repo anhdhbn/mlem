@@ -121,7 +121,11 @@ export default class Detail extends Component {
                 describeDish={dish.descreption}
                 price={dish.priceEach}
                 // promoPrice={dish.discountRate * dish.priceEach}
-                promoPrice={dish.discountRate}
+                promoPrice={
+                  dish.discountRate
+                    ? (dish.priceEach * (100 - dish.discountRate)) / 100
+                    : dish.discountRate
+                }
                 // For icon
                 linkIconActive={require("../assets/icon/heart.png")}
                 linkIconInactive={require("../assets/icon/heart-unlike.png")}
