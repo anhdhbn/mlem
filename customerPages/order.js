@@ -53,6 +53,7 @@ export default class order extends Component {
     let time = moment().format("HH:mm");
     this.setDate(date);
     this.setTime(time);
+    this.getNumTableAvailable(date);
   };
 
   setTableAvailable = (value) => {
@@ -440,7 +441,6 @@ export default class order extends Component {
                   Chọn món
                 </Text>
               </View>
-
 
               {this.state.listDish.length > 0 ? (
                 this.state.listDish.map((dish) => (
