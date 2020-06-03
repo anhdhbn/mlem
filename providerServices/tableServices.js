@@ -3,7 +3,7 @@ import { requestServices } from "./index";
 // API Danh sách bàn và trạng thái
 const list = (params) =>
   requestServices.customAxios
-    .post(`api​/table​/list`, params)
+    .post(`api/table/list`, params)
     .then((res) => res.data);
 
 //API Xóa bàn
