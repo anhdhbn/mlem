@@ -62,6 +62,8 @@ export default function (props) {
     props.route.params.response.account_AccountFoodFavorites
   );
 
+  const [delaySearch, setDelayDearch] = useState(0);
+
   useEffect(() => {
     if (!checkProfile) {
       setCheckProfile(true);
@@ -175,6 +177,24 @@ export default function (props) {
     let response = await homeServices.list(params);
     // console.log("[INFO] Response in getAllFoods: ", response);
     return response;
+  };
+
+  const searchDish = async (name) => {
+    let params = {
+      name: {
+        equal: name,
+      },
+    };
+
+    var currentSec = new Date().getSeconds();
+    if (currentSec != delaySearch) {
+      // console.log("[INFO] params to search: ", params);
+      setDelayDearch(currentSec);
+      let response = await homeServices.list(params);
+
+      return response;
+    }
+    return null;
   };
 
   const getListFoods = async (code) => {
@@ -312,7 +332,7 @@ export default function (props) {
 
       {/* {console.log("Start Rendering")} */}
       <ScrollView style={styles.home}>
-        <HeaderImage />
+        <HeaderImage searchDish={searchDish} />
         <NavBar
           onPressAll={() => onPressDetail(listAllDish, "Tất cả")}
           onPressLau={() => onPressDetail(listLau, "Món Lẩu - Buffet")}
