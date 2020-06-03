@@ -318,7 +318,7 @@ export default class order extends Component {
       subTotal: this.state.totalPromoPrice,
     };
 
-    // console.log("[INFO] Params: ", params);
+    console.log("[INFO] Params to create order: ", JSON.stringify(params));
 
     let response = await orderServices.createOrder(params);
     // console.log("[INFO] Reponse in createOrder: ", response);
