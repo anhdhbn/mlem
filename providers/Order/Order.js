@@ -77,9 +77,10 @@ const Order = (props) => {
   };
 /* filter  */
 const handleFilter= (props)=>{
-  const res = orderServices.listOrdered(props);
-  console.log('data: ',res)
-  /* setData(res) */
+ orderServices.listOrdered(props).then(res=>{
+   console.log(res)
+   setData(res)
+ });
  }
   const onselect = (code) => {
     // console.log("On select");

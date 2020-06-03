@@ -43,36 +43,54 @@ export default TableStackScreen = ({ navigation }) => {
   )
 }
 const Table = (props) => {
+  const [emptyTable,setEmptyTable] = useState(0)
   const [editTableVisible, setEditTableVisible] = useState(false);
-  const [selectTable,setSelectTable]= useState(null)
+  const [selectTable,setSelectTable]= useState(null);
+ 
   const toggleEditTable = (props) => {
+    return () => {
+      !editTableVisible && setSelectTable(props);
+      setEditTableVisible(!editTableVisible);
+    }
+  };
+  /* xoá món ăn đang được chọn */
+  const handleDelete = async () => {
+    setEditTableVisible(!editTableVisible);
+    await tableServices.deleteTable(selectTable);
+    getData();
+  }
+  /* const toggleEditTable = (props) => {
     return async()=>{
      editTableVisible===false ? await setSelectTable(props) : await getData()
       setEditTableVisible(!editTableVisible);
     }
-  }
+  } */
   const [data, setData] = useState([]);
   const getData = async () => {
     const params = {};
     const respone = await tableServices.list(params)
-    console.log(respone);
     setData(respone);
   }
-  useEffect(() => {
-    getData();
+  useEffect(async() => {
+   await getData();
   }, [])
   /* const data = {
     total: 50,
     emptyTable: 50,
     tables: [{ tableNum: '001', status: 'Trống' }, { tableNum: '002', status: 'Trống' }, { tableNum: '003', status: 'Trống' }]
-
-
   } */
+  const countEmptyTables = async(tables)=>{
+    let count = 0;
+   await  tables.forEach(table => {
+      table.statusId=="1" ? count ++ :null  
+    });
+    return count
+  }
   return (<View style={styles.container}>
     
     <View style={styles.topView}>
-      <Text style={{ color: '#00B80C', fontWeight: 'bold' }}>Bàn còn trống: {data.total}</Text>
-      <Text style={{ color: '#00B80C', fontWeight: 'bold' }}>Tổng số: {data.emptyTable}</Text>
+      <Text style={{ color: '#00B80C', fontWeight: 'bold' }}>Bàn còn trống: {emptyTable}</Text>
+      <Text style={{ color: '#00B80C', fontWeight: 'bold' }}>Tổng số: {data.length}</Text>
     </View>
     {/*  */}
     <View style={styles.toolView}>
@@ -95,13 +113,13 @@ const Table = (props) => {
     {/* Card View */}
     <View>
       <FlatList
-        data={data.tables}
+        data={data}
         keyExtractor={item => item.id}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
               style={styles.cardView}
-              onLongPress={toggleEditTable(item)}
+              onPress={toggleEditTable(item)}
             >
               <Text style={{ fontFamily: 'Regular', fontSize: 16, color: '#8A8F9C' }}>{item.code}</Text>
               {item.status.id == 1
@@ -111,7 +129,7 @@ const Table = (props) => {
           )
         }}
       />
-      <ModalEditTable visible={{ editTableVisible, toggleEditTable }} data={{selectTable}} />
+      <ModalEditTable visible={{ editTableVisible, toggleEditTable }} data={{handleDelete}} />
     </View>
   </View>)
 }

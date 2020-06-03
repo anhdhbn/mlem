@@ -5,11 +5,7 @@ import { Overlay, Button } from 'react-native-elements'
 import tableServices from '../../providerServices/tableServices';
 export default function (props) {
   const { editTableVisible, toggleEditTable } = props.visible;
-  const {selectTable} = props.data;
-  const handleDelete = async()=>{
-    await tableServices.deleteTable(selectTable);
-    toggleEditTable()
-  }
+  const {handleDelete} = props.data;
   return (
     <View style={{ backgroundColor: '#c3c3c3' }}>
       <Overlay
