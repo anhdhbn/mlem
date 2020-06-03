@@ -53,6 +53,7 @@ export default class order extends Component {
     let time = moment().format("HH:mm");
     this.setDate(date);
     this.setTime(time);
+    this.getNumTableAvailable(date);
   };
 
   setTableAvailable = (value) => {
@@ -378,7 +379,7 @@ export default class order extends Component {
                     fontSize: 16,
                     fontWeight: "bold",
                     padding: 8,
-                    paddingLeft : 20,
+                    paddingLeft: 20,
                     color: "#76c963",
                   }}
                 >
@@ -393,7 +394,7 @@ export default class order extends Component {
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 18,  padding: 4, paddingLeft:20 }}>
+              <Text style={{ fontSize: 18, padding: 4, paddingLeft: 20 }}>
                 Thời gian
               </Text>
             </View>
@@ -415,7 +416,7 @@ export default class order extends Component {
           <>
             <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
               <View>
-                <Text style={{ fontSize: 18, padding: 8 ,paddingLeft:20}}>
+                <Text style={{ fontSize: 18, padding: 8, paddingLeft: 20 }}>
                   Số bàn và số lượng người đặt
                 </Text>
               </View>
@@ -429,11 +430,10 @@ export default class order extends Component {
                 numOfPeople={this.state.numOfPeople}
               />
               <View>
-                <Text style={{ fontSize: 18, padding: 8,paddingLeft:20 }}>
+                <Text style={{ fontSize: 18, padding: 8, paddingLeft: 20 }}>
                   Chọn món
                 </Text>
               </View>
-
 
               {this.state.listDish.length > 0 ? (
                 this.state.listDish.map((dish) => (
@@ -465,9 +465,7 @@ export default class order extends Component {
                     });
                   }}
                 >
-                  <Text
-                    style={{ fontSize: 16, color: "#fff" }}
-                  >
+                  <Text style={{ fontSize: 16, color: "#fff" }}>
                     + Thêm món
                   </Text>
                 </TouchableOpacity>
