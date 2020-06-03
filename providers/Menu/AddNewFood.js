@@ -53,6 +53,9 @@ export default function (props) {
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
 
+  const [invalidPriceInput, setInvalidPriceInput] = useState(false);
+  const [invalidDiscountInput, setInvalidDiscountInput] = useState(false);
+
   const testSignalIR = () => {
     try {
       let connection = new signalR.HubConnectionBuilder()
@@ -102,7 +105,7 @@ export default function (props) {
   };
 
   const [modalName, setModalName] = useState(null);
-  
+
   const handleChoosePhoto = async () => {
     const options = {
       noData: true,
@@ -476,8 +479,25 @@ export default function (props) {
                 <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
               <TouchableOpacity>
-               <TextInput value={data.priceEach.toString()} 
+                {/* <TextInput value={data.priceEach.toString()} 
                   onChangeText={e=>{setData({...data,priceEach:parseInt(e)})}}
+                /> */}
+
+                <TextInput
+                  value={priceEach.toString()}
+                  onChangeText={(e) => {
+                    if (e.replace(/[^0-9]/g, "").length === e.length) {
+                      if (Number(e) < 0) {
+                        setPriceEach(0);
+                      } else {
+                        setPriceEach(Number(e));
+                      }
+
+                      setInvalidPriceInput(false);
+                    } else {
+                      setInvalidPriceInput(true);
+                    }
+                  }}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -497,9 +517,31 @@ export default function (props) {
               >
                 <Image source={subIcon} style={styles.iconStyle} />
               </TouchableOpacity>
-                <TextInput value={data.discountRate.toString()} 
-                  onChangeText={e=>{setData({...data,discountRate:parseInt(e)})}}
-                />
+              {/* <TextInput
+                value={data.discountRate.toString()}
+                onChangeText={(e) => {
+                  setData({ ...data, discountRate: parseInt(e) });
+                }}
+              /> */}
+
+              <TextInput
+                value={discountRate.toString()}
+                onChangeText={(e) => {
+                  if (e.replace(/[^0-9]/g, "").length === e.length) {
+                    if (Number(e) > 100) {
+                      setDiscountRate(100);
+                    } else if (Number(e) < 0) {
+                      setDiscountRate(0);
+                    } else {
+                      setDiscountRate(Number(e));
+                    }
+
+                    setInvalidDiscountInput(false);
+                  } else {
+                    setInvalidDiscountInput(true);
+                  }
+                }}
+              />
               <TouchableOpacity
                 onPress={() => {
                   increaseDiscount();
