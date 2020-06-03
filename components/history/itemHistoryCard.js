@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import moment from "moment";
 import {
   SafeAreaView,
   StyleSheet,
@@ -21,6 +22,13 @@ export default class ItemHistoryCard extends Component {
     // };
   }
 
+  formatPrice(price) {
+    if(price != null){
+        return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ"
+    }
+    else return "";
+}
+
   render() {
     return (
       <View
@@ -42,11 +50,11 @@ export default class ItemHistoryCard extends Component {
             style={{
               marginLeft: 7,
               marginVertical: 5,
-              fontSize: 20,
+              fontSize: 18,
               color: "#232A2F",
             }}
           >
-            {this.props.dmy}
+          {moment(this.props.dmy).format("DD/MM/YYYY")}
           </Text>
           <Text
             style={{
@@ -54,6 +62,16 @@ export default class ItemHistoryCard extends Component {
               marginVertical: 5,
               fontSize: 16,
               color: "#232A2F",
+            }}
+          >
+          {moment(this.props.dmy).format("HH:mm")}
+          </Text>
+          <Text
+            style={{
+              marginLeft: 7,
+              marginVertical: 5,
+              fontSize: 14,
+              color: "#8A8F9C",
             }}
           >
             {this.props.id}
@@ -64,7 +82,7 @@ export default class ItemHistoryCard extends Component {
             style={{
               marginRight: 7,
               marginVertical: 5,
-              fontSize: 16,
+              fontSize: 14,
               color: "#8A8F9C",
               textAlign: "right",
             }}
@@ -82,14 +100,14 @@ export default class ItemHistoryCard extends Component {
           <Text
             style={{
               marginRight: 7,
+              marginTop: 30,
               marginVertical: 5,
-              fontSize: 25,
-              fontWeight: "bold",
+              fontSize: 20,
               color: "#232A2F",
               textAlign: "right",
             }}
           >
-            {this.props.price}
+            {this.formatPrice(this.props.price)}
           </Text>
         </View>
       </View>

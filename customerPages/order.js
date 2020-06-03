@@ -332,7 +332,7 @@ export default class order extends Component {
 
   setDate = (date) => {
     // console.log("[INFO] Date: ", date);
-    this.getNumTableAvailable(date, this.state.time);
+    this.getNumTableAvailable(this.state.date, this.state.time);
     this.setState({ date: date });
   };
 
@@ -350,6 +350,12 @@ export default class order extends Component {
     this.setState({ visibleAlert: false });
   };
 
+  formatPrice(price) {
+    if(price != null){
+        return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ"
+    }
+    else return "";
+  }
   render() {
     return (
       <>
@@ -377,7 +383,7 @@ export default class order extends Component {
                   style={{
                     fontSize: 16,
                     fontWeight: "bold",
-                    padding: 8,
+                    padding: 5,
                     paddingLeft : 20,
                     color: "#76c963",
                   }}
@@ -393,7 +399,7 @@ export default class order extends Component {
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 18,  padding: 4, paddingLeft:20 }}>
+              <Text style={{ fontSize: 14,  padding: 4, paddingLeft:20, color:'#8A8F9C' }}>
                 Thời gian
               </Text>
             </View>
@@ -415,7 +421,7 @@ export default class order extends Component {
           <>
             <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
               <View>
-                <Text style={{ fontSize: 18, padding: 8 ,paddingLeft:20}}>
+                <Text style={{ fontSize: 14, padding: 8 ,paddingLeft:20, color:'#8A8F9C'}}>
                   Số bàn và số lượng người đặt
                 </Text>
               </View>
@@ -429,7 +435,7 @@ export default class order extends Component {
                 numOfPeople={this.state.numOfPeople}
               />
               <View>
-                <Text style={{ fontSize: 18, padding: 8,paddingLeft:20 }}>
+                <Text style={{ fontSize: 14, padding: 8,paddingLeft:20, color:'#8A8F9C' }}>
                   Chọn món
                 </Text>
               </View>
@@ -443,13 +449,11 @@ export default class order extends Component {
                     subNumOfDish={this.subNumOfDish}
                   />
                 ))
-              ) : (
-                <Text> </Text>
-              )}
+              ) : null}
 
               <View
                 style={{
-                  backgroundColor: "#e67777",
+                  backgroundColor: "#FFFFFF",
                   height: 45,
                   padding: 12,
                   borderRadius: 10,
@@ -466,7 +470,7 @@ export default class order extends Component {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 16, color: "#fff" }}
+                    style={{ fontSize: 16, color: "#232A2F" }}
                   >
                     + Thêm món
                   </Text>
@@ -474,7 +478,7 @@ export default class order extends Component {
               </View>
               <View
                 style={{
-                  height: 40,
+                  height: 45,
                   flexDirection: "row",
                   backgroundColor: "#fff",
                   marginTop: 8,
@@ -482,11 +486,11 @@ export default class order extends Component {
               >
                 <Image
                   source={require("../assets/icon/note.png")}
-                  style={{ width: 23, height: 23, marginTop: 8, marginLeft: 8 }}
+                  style={{ width: 15, height: 15, marginTop: 12, marginLeft: 8 }}
                 />
                 <TextInput
-                  style={{ width: 400, fontSize: 16 }}
-                  placeholder="ghi chú ..."
+                  style={{ width: 400, fontSize: 16}}
+                  placeholder="Ghi chú"
                 />
               </View>
             </ScrollView>
@@ -510,7 +514,8 @@ export default class order extends Component {
                 elevation: 21,
               }}
             >
-              <View style={{ marginTop: 8, paddingLeft: 10 }}>
+            <Image source={require('../assets/icon/mm.png')} style={{ width:42,height:42,paddingLeft:8 }} />
+              <View style={{ paddingLeft: 10 }}>
                 {this.state.totalPromoPrice !== this.state.totalPrice ? (
                   <>
                     <Text style={{ fontSize: 19, fontWeight: "bold" }}>
@@ -526,7 +531,7 @@ export default class order extends Component {
                     </Text>
                   </>
                 ) : (
-                  <Text style={{}}>{this.state.totalPrice}đ</Text>
+                  <Text style={{}}>{this.formatPrice(this.state.totalPrice)}</Text>
                 )}
               </View>
               <View style={{ position: "absolute", right: 20 }}>

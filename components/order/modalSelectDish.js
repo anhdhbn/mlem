@@ -11,6 +11,13 @@ import {
 
 import { Overlay, CheckBox } from "react-native-elements";
 
+ function formatPrice(price) {
+  if(price != null){
+      return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ"
+  }
+  else return "";
+}
+
 export default function (props) {
   return (
     <Overlay
@@ -30,20 +37,12 @@ export default function (props) {
     >
       {/* {console.log("[INFO] Props in modelSelectDish: ", props.modal)} */}
       {/* {props.modal.nameDish ? props.addDish2Order() : null} */}
-      <View style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 27, marginTop: 4, fontFamily: "regular" }}>
+      <View style={{ alignItems: "center", borderBottomWidth:0.5 }}>
+        <Text style={{ fontSize: 20, marginTop: 4, marginBottom: 8, fontFamily: "regular" }}>
           Tuỳ chỉnh món
         </Text>
       </View>
-      <View
-        style={{
-          width: "100%",
-          borderWidth: 0.8,
-          borderColor: "#adaaaa",
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      ></View>
+      
       <View
         style={{
           // Card
@@ -51,7 +50,7 @@ export default function (props) {
           elevation: 3,
           backgroundColor: "#fff",
           shadowOffset: { width: 1, height: 1 },
-          shadowColor: "#333",
+          shadowColor: "#fff",
           shadowOpacity: 0.3,
           shadowRadius: 2,
           marginVertical: 6,
@@ -85,15 +84,16 @@ export default function (props) {
                 style={{
                   textDecorationLine: "line-through",
                   color: "grey",
+                  fontSize: 15
                 }}
               >
-                {props.modal.price} đ
+                {formatPrice(props.modal.price)} đ
               </Text>
-              <Text>{props.modal.promoPrice} đ</Text>
+              <Text style={{fontSize: 20}}>{formatPrice(props.modal.promoPrice)}</Text>
             </View>
           ) : (
             <View>
-              <Text style={{}}>{props.modal.price} đ</Text>
+              <Text style={{fontSize: 20}}>{formatPrice(props.modal.price)}</Text>
             </View>
           )}
         </View>
@@ -128,12 +128,12 @@ export default function (props) {
       <View
         style={{
           height: 30,
-          backgroundColor: "#d6d5d2",
+          backgroundColor: "#F5F6F7",
           width: "100%",
           justifyContent: "center",
         }}
       >
-        <Text style={{ fontSize: 16, paddingLeft: 10 }}>Size</Text>
+        <Text style={{ fontSize: 16, paddingLeft: 10}}>Size</Text>
       </View>
       <View>
         <View
@@ -144,8 +144,8 @@ export default function (props) {
           }}
         >
           <View>
-            <Text>Size nhỏ</Text>
-            <Text>{props.modal.promoPrice}</Text>
+            <Text style = {{paddingLeft: 10}}>Nhỏ</Text>
+            <Text style = {{paddingLeft: 10}}>{formatPrice(props.modal.promoPrice)}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -173,8 +173,8 @@ export default function (props) {
           }}
         >
           <View>
-            <Text>Size Vừa</Text>
-            <Text>{props.modal.promoPrice * 1.2}</Text>
+            <Text style = {{paddingLeft: 10}}>Vừa (+ 20%)</Text>
+            <Text style = {{paddingLeft: 10}}>{formatPrice(props.modal.promoPrice * 1.2)}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -200,8 +200,8 @@ export default function (props) {
           }}
         >
           <View>
-            <Text>Size Lớn</Text>
-            <Text>{props.modal.promoPrice * 1.5}</Text>
+            <Text style = {{paddingLeft: 10}}>Lớn (+ 50%)</Text>
+            <Text style = {{paddingLeft: 10}}>{formatPrice(props.modal.promoPrice * 1.5)}</Text>
           </View>
           <View style={{ right: -30, position: "absolute" }}>
             <CheckBox
@@ -237,7 +237,7 @@ export default function (props) {
           >
             <View style={{ paddingLeft: 10 }}>
               <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                {props.totalPromoPrice}đ
+                {formatPrice(props.totalPromoPrice)}
               </Text>
               <Text
                 style={{
@@ -245,7 +245,7 @@ export default function (props) {
                   color: "grey",
                 }}
               >
-                {props.totalPrice}đ
+                {formatPrice(props.totalPrice)}
               </Text>
             </View>
             <View style={{ position: "absolute", right: 20 }}>
@@ -254,7 +254,7 @@ export default function (props) {
                   backgroundColor: "#DC0000",
                   borderRadius: 8,
                   width: 100,
-                  height: 40,
+                  height: 45,
                   marginTop: 10,
                 }}
                 onPress={() => {
@@ -264,9 +264,9 @@ export default function (props) {
               >
                 <Text
                   style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
+                    fontSize: 15,
                     padding: 8,
+                    paddingBottom: 8,
                     paddingLeft: 10,
                     color: "#fff",
                   }}

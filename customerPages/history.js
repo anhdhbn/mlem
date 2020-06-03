@@ -157,7 +157,7 @@ export default class History extends Component {
   render() {
     return (
       <View>
-        <Header title="Lịch sử" />
+        <Header title="Nhật ký" />
         <FilterBar renderOrdered={this.renderOrdered} />
 
         <TouchableOpacity onPress={this.testSignalIR}>

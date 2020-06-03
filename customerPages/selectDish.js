@@ -338,7 +338,7 @@ export default class order extends Component {
                 this.setListDishRender(0);
               }}
             >
-              <Text style={{ fontSize: 16 }}> Tất cả </Text>
+              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Tất cả </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{}}
@@ -346,7 +346,7 @@ export default class order extends Component {
                 this.setListDishRender(6);
               }}
             >
-              <Text style={{ fontSize: 16 }}> Top bán chạy </Text>
+              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Top bán chạy </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{}}
@@ -354,7 +354,7 @@ export default class order extends Component {
                 this.setListDishRender(7);
               }}
             >
-              <Text style={{ fontSize: 16 }}> Đặt gần đây </Text>
+              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Đặt gần đây </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{}}
@@ -362,7 +362,7 @@ export default class order extends Component {
                 this.setListDishRender(8);
               }}
             >
-              <Text style={{ fontSize: 16 }}> Giá thấp đến cao </Text>
+              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Giá thấp đến cao </Text>
             </TouchableOpacity>
           </View>
 
