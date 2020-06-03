@@ -27,7 +27,7 @@ const createUser = (params) =>
 
 const postTokenFB = (params) =>
   requestServices.customAxios
-    .post(`api/account/facebook/auth`, params)
+    .post(`api/account/login/facebook`, params)
     .then((res) => res.data);
 
 export default {

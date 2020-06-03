@@ -332,6 +332,7 @@ export default class order extends Component {
 
   setDate = (date) => {
     // console.log("[INFO] Date: ", date);
+    
     this.getNumTableAvailable(this.state.date, this.state.time);
     this.setState({ date: date });
   };

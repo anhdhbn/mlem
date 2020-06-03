@@ -335,10 +335,10 @@ export default function (props) {
         <HeaderImage searchDish={searchDish} />
         <NavBar
           onPressAll={() => onPressDetail(listAllDish, "Tất cả")}
-          onPressLau={() => onPressDetail(listLau, "Món Lẩu - Buffet")}
-          onPressHaisan={() => onPressDetail(listHaisan, "Món hải sản")}
-          onPressRaucu={() => onPressDetail(listRaucu, "Món rau củ")}
-          onPressThit={() => onPressDetail(listThit, "Món thịt")}
+          onPressLau={() => onPressDetail(listLau, "Lẩu - Buffet")}
+          onPressHaisan={() => onPressDetail(listHaisan, "Hải sản")}
+          onPressRaucu={() => onPressDetail(listRaucu, "Rau củ")}
+          onPressThit={() => onPressDetail(listThit, "Thịt")}
           onPressDouong={() => onPressDetail(listDouong, "Đồ uống")}
         />
 
@@ -409,14 +409,14 @@ export default function (props) {
         {listHaisan === null ? (
           <CardList
             cardData={listHaisan}
-            onPressDetail={() => onPressDetail(listHaisan, "Món hải sản")}
+            onPressDetail={() => onPressDetail(listHaisan, "Hải sản")}
             title={"Hải sản"}
             isLoading={isLoadingHaisan}
           />
         ) : listHaisan.length != 0 ? (
           <CardList
             cardData={listHaisan}
-            onPressDetail={() => onPressDetail(listHaisan, "Món hải sản")}
+            onPressDetail={() => onPressDetail(listHaisan, "Hải sản")}
             title={"Hải sản"}
             isLoading={isLoadingHaisan}
           />
@@ -425,14 +425,14 @@ export default function (props) {
         {listRaucu === null ? (
           <CardList
             cardData={listRaucu}
-            onPressDetail={() => onPressDetail(listRaucu, "Món rau củ")}
+            onPressDetail={() => onPressDetail(listRaucu, "Rau củ")}
             title={"Rau củ"}
             isLoading={isLoadingRaucu}
           />
         ) : listRaucu.length != 0 ? (
           <CardList
             cardData={listRaucu}
-            onPressDetail={() => onPressDetail(listRaucu, "Món rau củ")}
+            onPressDetail={() => onPressDetail(listRaucu, "Rau củ")}
             title={"Rau củ"}
             isLoading={isLoadingRaucu}
           />
@@ -441,14 +441,14 @@ export default function (props) {
         {listThit === null ? (
           <CardList
             cardData={listThit}
-            onPressDetail={() => onPressDetail(listThit, "Món thịt")}
+            onPressDetail={() => onPressDetail(listThit, "Thịt")}
             title={"Thịt"}
             isLoading={isLoadingThit}
           />
         ) : listThit.length != 0 ? (
           <CardList
             cardData={listThit}
-            onPressDetail={() => onPressDetail(listThit, "Món thịt")}
+            onPressDetail={() => onPressDetail(listThit, "Thịt")}
             title={"Thịt"}
             isLoading={isLoadingThit}
           />
@@ -457,14 +457,14 @@ export default function (props) {
         {listDouong === null ? (
           <CardList
             cardData={listDouong}
-            onPressDetail={() => onPressDetail(listDouong, "Món đồ uống")}
+            onPressDetail={() => onPressDetail(listDouong, "Đồ uống")}
             title={"Đồ uống"}
             isLoading={isLoadingDouong}
           />
         ) : listDouong.length != 0 ? (
           <CardList
             cardData={listDouong}
-            onPressDetail={() => onPressDetail(listDouong, "Món đồ uống")}
+            onPressDetail={() => onPressDetail(listDouong, "Đồ uống")}
             title={"Đồ uống"}
             isLoading={isLoadingDouong}
           />

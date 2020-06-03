@@ -21,7 +21,7 @@ export default function (props) {
           <View style={styles.viewInput}>
             <Image
               source={search}
-              style={{ width: 15, height: 15, marginLeft: 10, marginTop: 8 }}
+              style={{ width: 15, height: 15, marginLeft: 10, marginTop: 12 }}
             />
             <TextInput
               style={styles.input}
@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
   },
   viewInput: {
     position: "relative",
-    width: 280,
+    width: 350,
     borderRadius: 10,
-    height: 30,
-    marginLeft: 60,
+    height: 40,
+    marginLeft: 30,
     marginTop: 10,
     backgroundColor: "#c4c1c0",
     flexDirection: "row",
@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   input: {
-    height: 35,
+    height: 40,
     borderRadius: 10,
-    width: 300,
+    width: 350,
     backgroundColor: "#c4c1c0",
   },
 });

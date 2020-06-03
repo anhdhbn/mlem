@@ -213,7 +213,7 @@ class SignIn extends Component {
                   console.log("login is cancelled.");
                 } else {
                   AccessToken.getCurrentAccessToken().then((data) => {
-                    console.log(data.accessToken.toString());
+                    console.log("[INFO] Facebook token: ", data.accessToken.toString());
                     authServices.postTokenFB({
                       token: data.accessToken.toString(),
                     });
@@ -231,7 +231,7 @@ class SignIn extends Component {
               style={styles.imgFBGG}
             />
             <Text style={{ paddingRight: 30, color: "black" }}>
-              tiếp tục với Google
+              Tiếp tục với Google
             </Text>
           </TouchableOpacity>
         </View>
