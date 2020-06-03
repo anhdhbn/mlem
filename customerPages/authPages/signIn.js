@@ -101,7 +101,7 @@ class SignIn extends Component {
         // console.log("[INFO] Props in signIn: ", this.props.navigation);
         console.log("[INFO] Sign in data: ", data);
 
-        let isWrong = await this.props.signIn(data);
+        let isWrong = await this.props.signIn(data, false);
 
         // console.log("[INFO] Return isWrong: ", isWrong);
         this.setIsWrong(isWrong);
@@ -123,7 +123,7 @@ class SignIn extends Component {
       password: "123456a@",
     };
     this.setLoading(true);
-    await this.props.signIn(params);
+    await this.props.signIn(params, false);
     this.setLoading(false);
   };
 
@@ -212,11 +212,14 @@ class SignIn extends Component {
                 } else if (result.isCancelled) {
                   console.log("login is cancelled.");
                 } else {
-                  AccessToken.getCurrentAccessToken().then((data) => {
-                    console.log("[INFO] Facebook token: ", data.accessToken.toString());
-                    authServices.postTokenFB({
-                      token: data.accessToken.toString(),
-                    });
+                  AccessToken.getCurrentAccessToken().then(async (data) => {
+                    console.log(
+                      "[INFO] Facebook token: ",
+                      data.accessToken.toString()
+                    );
+                    this.setLoading(true);
+                    await this.props.signIn(data.accessToken.toString(), true);
+                    this.setLoading(false);
                   });
                 }
               }}

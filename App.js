@@ -126,25 +126,38 @@ export default function App({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data) => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
-        let response = await authServices.login(data).catch((reason) => {
-          // console.log("==========================================");
-          const message = reason.response.data;
-          console.log(message);
+      signIn: async (data, isToken = false) => {
+        if (isToken) {
+          let response = await authServices.postTokenFB({ token: data });
+          console.log("[INFO] Response after auth with fb: ", response);
+          console.log(data);
+          dispatch({
+            type: "SIGN_IN",
+            token: data,
+            response: response,
+          });
 
-          return false;
-        });
+          return true;
+        } else {
+          // In a production app, we need to send some data (usually username, password) to server and get a token
+          // We will also need to handle errors if sign in failed
+          // After getting token, we need to persist the token using `AsyncStorage`
+          // In the example, we'll use a dummy token
+          let response = await authServices.login(data).catch((reason) => {
+            // console.log("==========================================");
+            const message = reason.response.data;
+            console.log(message);
 
-        dispatch({
-          type: "SIGN_IN",
-          token: response.token,
-          response: response,
-        });
-        return true;
+            return false;
+          });
+
+          dispatch({
+            type: "SIGN_IN",
+            token: response.token,
+            response: response,
+          });
+          return true;
+        }
       },
       signOut: () => dispatch({ type: "SIGN_OUT" }),
     }),
