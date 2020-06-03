@@ -117,6 +117,16 @@ class SignIn extends Component {
     }
   }
 
+  loginProvider = async () => {
+    let params = {
+      email: "hungvimanh.cntt@gmail.com",
+      password: "123456a@",
+    };
+    this.setLoading(true);
+    await this.props.signIn(params);
+    this.setLoading(false);
+  };
+
   setEmailError = () => {
     this.setState({ emailError: "Email không được để trống" });
   };
@@ -300,14 +310,24 @@ class SignIn extends Component {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={{ marginTop: 20, alignItems: "center" }}>
-            <TouchableOpacity
-              style={styles.submitBtn}
-              onPress={() => this.onSubmit()}
-            >
-              <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
-            </TouchableOpacity>
-          </View>
+          <>
+            <View style={{ marginTop: 20, alignItems: "center" }}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => this.onSubmit()}
+              >
+                <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ marginTop: 20, alignItems: "center" }}>
+              <TouchableOpacity
+                style={styles.submitBtn}
+                onPress={() => this.loginProvider()}
+              >
+                <Text style={styles.textBtnSubmit}>Đăng nhập Provider</Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
         <View style={styles.footer}>
           <View style={{ flexDirection: "row", marginTop: 60 }}>
