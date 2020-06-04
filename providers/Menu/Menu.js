@@ -97,14 +97,14 @@ const Menu = (props) => {
   const [delDish, setDelDish] = useState()
   const toggleEditMenu = (props) => {
     return () => {
-      !editMenuVisible && setDelDish(props)
+      !editMenuVisible && setDelDish(props);
       setEditMenuVisible(!editMenuVisible);
     }
   };
   /* xoá món ăn đang được chọn */
   const handleDelete = async () => {
     setEditMenuVisible(!editMenuVisible);
-    await menuServices.deleteDish(delDish);
+    await menuServices.deleteDish(delDish)
     getData();
   }
   /* lấy data */
@@ -114,10 +114,23 @@ const Menu = (props) => {
     setData(res)
   }
   /* xử lý filter */
-  const handleFilter= (props)=>{
-   const res = menuServices.list(props);
-   console.log('data: ',res)
-   /* setData(res) */
+  const handleFilter = (props) => {
+    menuServices.list(props).then(res => {
+      /* console.log('data: ',res) */
+      setData(res)
+    });
+  }
+  const handleFilterText = async (props) => {
+    console.log(props)
+    const params = {
+      name: {
+        contain: props
+      }
+    }
+    menuServices.list(params).then(rs => {
+     setData(rs);
+    })
+
   }
   useEffect(() => {
     getData()
@@ -133,6 +146,7 @@ const Menu = (props) => {
           style={styles.input}
           placeholder={"MlemMlem...."}
           placeholderTextColor='#B21'
+          onChangeText={(e) => { handleFilterText(e) }}
         ></TextInput>
       </View>
       <FilterBar handleFilter={handleFilter} />

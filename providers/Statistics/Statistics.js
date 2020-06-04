@@ -14,35 +14,33 @@ import { NavigationContainer } from "@react-navigation/native";
 const StatisticStack = createStackNavigator();
 /*StatisticStackScreen  */
 export default ({ navigation }) => (
-  <NavigationContainer >
-    <StatisticStack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#D20000",
-        },
-        headerTitleAlign: "center",
-        headerTintColor: "#fff",
+  <StatisticStack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#D20000",
+      },
+      headerTitleAlign: "center",
+      headerTintColor: "#fff",
+    }}
+  >
+    <StatisticStack.Screen
+      name="Statistic"
+      component={Statistic}
+      options={{
+        title: "Thống kê",
+        headerLeft: () => (
+          <Icon.Button
+            name="ios-menu"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.openDrawer();
+            }}
+          ></Icon.Button>
+        ),
       }}
-    >
-      <StatisticStack.Screen
-        name="Statistic"
-        component={Statistic}
-        options={{
-          title: "Thống kê",
-          headerLeft: () => (
-            <Icon.Button
-              name="ios-menu"
-              size={25}
-              backgroundColor="#D20000"
-              onPress={() => {
-                navigation.openDrawer();
-              }}
-            ></Icon.Button>
-          ),
-        }}
-      />
-    </StatisticStack.Navigator>
-  </NavigationContainer>
+    />
+  </StatisticStack.Navigator>
 );
 const Statistic = (props) => {
   const [firstDate, setFirstDate] = useState(Moment());
