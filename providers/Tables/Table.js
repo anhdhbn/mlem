@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Picker } from "native-base";
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -9,6 +10,7 @@ import search from "../../assets/icon/search.png";
 import dropDownIcon from '../../assets/icon/drop_down.png';
 
 import ModalEditTable from './ModalEditTable'
+import Filter from './Filter';
 import tableServices from '../../providerServices/tableServices';
 const TableStack = createStackNavigator();
 /* TableStackScreen */
@@ -79,6 +81,22 @@ const Table = (props) => {
     emptyTable: 50,
     tables: [{ tableNum: '001', status: 'Trống' }, { tableNum: '002', status: 'Trống' }, { tableNum: '003', status: 'Trống' }]
   } */
+  const handleFilter = async(props)=>{
+    tableServices.list(props).then(res=>{
+    setData(res)    
+    })
+  }
+  const handleFilterText = async (props) => {
+    const params = {
+      code: {
+        contain: props
+      }
+    }
+    tableServices.list(params).then(rs => {
+     setData(rs);     
+    })
+
+  }
   const countEmptyTables = async(tables)=>{
     let count = 0;
    await  tables.forEach(table => {
@@ -102,13 +120,11 @@ const Table = (props) => {
         <TextInput
           style={styles.input}
           placeholder={"Mã...."}
+          onChangeText={(e)=>{handleFilterText(e)}}
           placeholderTextColor='#B20'
         ></TextInput>
       </View>
-      <TouchableOpacity style={{ flexDirection: 'row', top: 10, right: 10 }}>
-        <Text style={{ color: '#8A8F9C' }}>Trạng thái</Text>
-        <Image source={dropDownIcon} style={{ height: 15, width: 15, top: 3, left: 3 }} />
-      </TouchableOpacity>
+      <Filter handleFilter={handleFilter}/>
     </View>
     {/* Card View */}
     <View>
