@@ -57,14 +57,14 @@ export default function (props) {
         </View> */}
       </View>
       <SkeletonContent
-        containerStyle={{ flex: 1, width: 300, flexDirection: "row" }}
+        containerStyle={{ flex: 1, width: '100%', flexDirection: "row" }}
         isLoading={cardData ? false : true}
         // isLoading={isLoading}
         layout={[
-          { key: "1", width: 100, height: 100, margin: 10 },
-          { key: "2", width: 100, height: 100, margin: 10 },
-          { key: "3", width: 100, height: 100, margin: 10 },
-          { key: "4", width: 100, height: 100, margin: 10 },
+          { key: "1", width: 70, height: 70, margin: 10 },
+          { key: "2", width: 70, height: 70, margin: 10 },
+          { key: "3", width: 70, height: 70, margin: 10 },
+          { key: "4", width: 70, height: 70, margin: 10 },
         ]}
       >
         <FlatList
@@ -76,7 +76,7 @@ export default function (props) {
             return (
               <View
                 style={{
-                  padding: 10,
+                  padding: 6,
                 }}
               >
                 <TouchableOpacity
@@ -95,7 +95,7 @@ export default function (props) {
                           }
                         : null
                     }
-                    style={{ width: 130, height: 110 }}
+                    style={{ width: 100, height: 85 }}
                   />
 
                   <Text style={styles.foodname}>{item.name}</Text>

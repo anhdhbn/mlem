@@ -526,7 +526,7 @@ export default class order extends Component {
               }}
             >
             <Image source={require('../assets/icon/mm.png')} style={{ width:42,height:42,paddingLeft:8 }} />
-              <View style={{ paddingLeft: 10 }}>
+              <View style={{ paddingLeft: 10,justifyContent:'center' }}>
                 {this.state.totalPromoPrice !== this.state.totalPrice ? (
                   <>
                     <Text style={{ fontSize: 19, fontWeight: "bold" }}>
@@ -542,7 +542,9 @@ export default class order extends Component {
                     </Text>
                   </>
                 ) : (
-                  <Text style={{}}>{this.formatPrice(this.state.totalPrice)}</Text>
+                    <View>
+                      <Text style={{}}>{this.formatPrice(this.state.totalPrice)}</Text>
+                    </View>
                 )}
               </View>
               <View style={{ position: "absolute", right: 20 }}>
