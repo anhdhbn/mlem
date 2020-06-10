@@ -121,7 +121,6 @@ const Menu = (props) => {
     });
   }
   const handleFilterText = async (props) => {
-    console.log(props)
     const params = {
       name: {
         contain: props

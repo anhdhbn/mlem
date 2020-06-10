@@ -9,66 +9,23 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-// import { createStackNavigator } from "@react-navigation/stack";
-
 import moment from "moment";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import PhoneIcon from "../../assets/icon/provider/phone.png";
 import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
+import orderServices from "../../providerServices/orderServices";
 
-// const Stack = createStackNavigator();
-
-// export default function StackScreen(props) {
-//   return (
-//     <Stack.Navigator screenOptions={{
-//       headerStyle: {
-//         backgroundColor: '#D20000',
-//       },
-//       headerTitleAlign: 'center',
-//       headerTintColor: '#fff'
-
-//     }}>
-//       <Stack.Screen
-//         name="Home"
-//         component={DetailOrder}
-//         options={{
-//           title: 'Chi tiết đơn hàng',
-//           headerLeft: () => (
-//             <TouchableOpacity onPress={()=>{
-//               props.navigation.navigate('SideBar')
-//             }}>
-//               <Image source={BackICon} style={{height:15,width:15,left:10}} />
-//             </TouchableOpacity>
-//           )
-//         }}
-//       />
-//     </Stack.Navigator>
-//   )
-// }
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  // const data = {
-  //   customerName: "Dinh Tien Dat",
-  //   customerPhone: "0000000",
-  //   createTime: "12:00-13/04/2000",
-  //   orderTime: "12:00-1/1/2000",
-  //   tables: ["5", "6", "7"],
-  //   menu: [
-  //     { id: "1", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "2", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "3", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "4", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "5", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "6", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "7", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "8", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "9", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //   ],
-  // };
-
+  const handlePay = ()=>{
+    const res =orderServices.payment(data);
+ /*    return res; */
+    console.log(res);
+    
+  }
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
@@ -80,6 +37,7 @@ export default function DetailOrder(props) {
   }, []);
   return data ? (
     <SafeAreaView style={styles.container }>
+      {console.log(data)}
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >
@@ -227,7 +185,7 @@ export default function DetailOrder(props) {
             height: 40,
             alignItems:'center'
           }}
-          onPress={() => {}}
+          onPress={() => {handlePay()}}
         >
           <Text
             style={{
@@ -236,6 +194,7 @@ export default function DetailOrder(props) {
               padding: 8,
               color: "#fff",
             }}
+           
           >
             Thanh toán
           </Text>

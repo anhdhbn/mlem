@@ -23,10 +23,15 @@ const listReservation = (params) =>
   requestServices.customAxios
     .post(`/api/order/list-reservation`, params)
     .then((res) => res.data);
-
+const payment = (params) =>{
+  requestServices.customAxios
+  .post(`/api/order/done`,params)
+  .then((res)=> res.data)
+}
 export default {
   listOrdered,
   approveOrdered,
   rejectOrdered,
   listReservation,
+  payment
 };

@@ -5,12 +5,13 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Moment from 'moment';
 import { createStackNavigator } from "@react-navigation/stack";
 
+import statisticServices from '../../providerServices/statisticServices';
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
 import Spinner from "../../components/Spinner/Spinner";
 import DatePicker from '../../components/dateTimePicker/datePicker';
 import { NavigationContainer } from "@react-navigation/native";
-
+import menuServices from '../../providerServices/menuServices'
 const StatisticStack = createStackNavigator();
 /*StatisticStackScreen  */
 export default ({ navigation }) => (
@@ -43,8 +44,6 @@ export default ({ navigation }) => (
   </StatisticStack.Navigator>
 );
 const Statistic = (props) => {
-  const [firstDate, setFirstDate] = useState(Moment());
-  const [lastDate, setLastDate] = useState(Moment());
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -52,6 +51,9 @@ const Statistic = (props) => {
   }, []);
 
   const getData = async () => {
+    const res = await statisticServices.list({account:{email: "vietlinh15@coldmail.com",}});
+    console.log(res)
+    
   };
 
   return (
@@ -76,16 +78,8 @@ const Statistic = (props) => {
         elevation: 3,
       }}>
         <View style={styles.selectTimeView}>
-          <DatePicker
-            setDate={setFirstDate}
-            date={firstDate}
-            timeVisible={true}
-          />
-          <DatePicker
-            setDate={setLastDate}
-            date={lastDate}
-            timeVisible={true}
-          />
+          {console.log(data)
+          }
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <Text style={{
@@ -93,64 +87,10 @@ const Statistic = (props) => {
             right: 20,
             fontWeight: "bold",
             fontSize: 20
-          }}>Tổng số:</Text>
+          }}>Tổng số1:</Text>
         </View>
       </View>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        keyExtractor={(item) => item.code}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => {
-                onselect(item.code);
-              }}
-            >
-              {/* {console.log("Navigation in Flatlist: ", props.navigation)} */}
-              <View>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  {item.account.displayName}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#8A8F9C",
-                    fontSize: 14,
-                  }}
-                >
-                  {item.account.phone}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#8A8F9C",
-                    fontSize: 14,
-                  }}
-                >
-                  {item.statusId}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", top: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#D20000",
-                    fontSize: 20,
-                  }}
-                >
-                  {item.total}
-                </Text>
-                <Image
-                  source={viewMoreIcon}
-                  style={{ height: 15, width: 15, top: 7 }}
-                />
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
+      
     </View>
   );
 };
