@@ -188,7 +188,7 @@ export default function (props) {
       }
     }
 
-    let params = JSON.stringify({
+    let params = {
       name: data.name,
       priceEach: priceEach,
       discountRate: discountRate,
@@ -197,7 +197,7 @@ export default function (props) {
       descreption: data.descreption,
       foodFoodTypeMappings: foodFoodTypeMappings,
       foodFoodGroupingMappings: foodFoodGroupingMappings,
-    });
+    };
 
     return params;
   };
@@ -221,6 +221,7 @@ export default function (props) {
     //     { foodGroupingId: "2" },
     //   ],
     // };
+
     console.log("{INFO] Params: ", params);
     let response = await menuServices.createDish(params);
     console.log("[INFO] Response in create Food: ", response);
