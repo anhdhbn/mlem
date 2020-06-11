@@ -15,45 +15,8 @@ import TickIcon from "../../assets/icon/tick.png";
 import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
-import { NavigationContainer } from "@react-navigation/native";
-const Stack = createStackNavigator();
 
-export default function StackScreen(props) {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#D20000",
-          },
-          headerTitleAlign: "center",
-          headerTintColor: "#fff",
-        }}
-      >
-        <Stack.Screen
-          name="EditFood"
-          component={EditFood}
-          options={{
-            title: "Tuỳ chỉnh món ăn",
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate("SideBar");
-                }}
-              >
-                <Image
-                  source={BackICon}
-                  style={{ height: 15, width: 15, left: 10 }}
-                />
-              </TouchableOpacity>
-            ),
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-function EditFood(props) {
+export default function EditFood(props) {
   const data = {
     image: "https://reactnative.dev/img/tiny_logo.png",
     name: "tên món ăn",

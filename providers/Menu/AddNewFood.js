@@ -204,26 +204,15 @@ export default function (props) {
 
   const createFood = async () => {
     let params = createParams();
-    // params = {
-    //   name: "Cơm 3",
-    //   priceEach: 2000,
-    //   discountRate: 6,
-    //   imageId: 10071,
-    //   statusId: 1,
-    //   descreption: null,
-    //   foodFoodTypeMappings: [
-    //     { foodTypeId: 1 },
-    //     { foodTypeId: 2 },
-    //     { foodTypeId: 3 },
-    //   ],
-    //   foodFoodGroupingMappings: [
-    //     { foodGroupingId: "1" },
-    //     { foodGroupingId: "2" },
-    //   ],
-    // };
 
-    console.log("{INFO] Params: ", params);
-    let response = await menuServices.createDish(params);
+    // console.log("{INFO] Params: ", params);
+    let response = await menuServices.createDish(params).catch(
+      ((response) => {
+        console.log("[INFO] Response after create food: ", response);
+      })((error) => {
+        console.log("[INFO] Error after create food: ", error);
+      })
+    );
     console.log("[INFO] Response in create Food: ", response);
   };
 

@@ -13,9 +13,9 @@ import dropDownIcon from "../../assets/icon/drop_down.png";
 import ModalEditMenu from "./ModalEditMenu";
 import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
-import menuServices from '../../providerServices/menuServices'
-import FilterBar from './Filter';
-const base_url = 'http://admin.wepick.vn:20000';
+import menuServices from "../../providerServices/menuServices";
+import FilterBar from "./Filter";
+const base_url = "http://admin.wepick.vn:20000";
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
 export default ({ navigation }) => (
@@ -94,47 +94,65 @@ export default ({ navigation }) => (
 
 const Menu = (props) => {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
-  const [delDish, setDelDish] = useState()
+  const [selectedDish, setselectedDish] = useState();
   const toggleEditMenu = (props) => {
     return () => {
-      !editMenuVisible && setDelDish(props);
+      !editMenuVisible && setselectedDish(props);
       setEditMenuVisible(!editMenuVisible);
-    }
+    };
   };
   /* xoá món ăn đang được chọn */
   const handleDelete = async () => {
     setEditMenuVisible(!editMenuVisible);
-    await menuServices.deleteDish(delDish)
+    await menuServices.deleteDish(selectedDish);
     getData();
-  }
+  };
+
+  // Tùy chỉnh món ăn đang được chọn
+  const handleChangeDish = async (dish) => {
+    await menuServices.updateDish(dish);
+    getData();
+  };
+
   /* lấy data */
   const [data, setData] = useState([]);
   const getData = async () => {
-    const res = await menuServices.list({})
-    setData(res)
-  }
+    const res = await menuServices.list({});
+    setData(res);
+  };
   /* xử lý filter */
   const handleFilter = (props) => {
-    menuServices.list(props).then(res => {
+    menuServices.list(props).then((res) => {
       /* console.log('data: ',res) */
-      setData(res)
+      setData(res);
     });
-  }
+  };
   const handleFilterText = async (props) => {
-    console.log(props)
+    console.log(props);
     const params = {
       name: {
-        contain: props
-      }
-    }
-    menuServices.list(params).then(rs => {
-     setData(rs);
-    })
+        contain: props,
+      },
+    };
+    menuServices.list(params).then((rs) => {
+      setData(rs);
+    });
+  };
 
-  }
+  const pressChangeDish = () => {
+    // props.navigation.navigate("EditFood", {
+    //   data: selectedDish,
+    //   handleChangeDish: handleChangeDish,
+    // });
+    setEditMenuVisible(!editMenuVisible);
+    props.navigation.navigate("EditFood", {
+      data: selectedDish,
+      handleChangeDish: handleChangeDish,
+    });
+  };
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.viewInput}>
@@ -145,24 +163,31 @@ const Menu = (props) => {
         <TextInput
           style={styles.input}
           placeholder={"MlemMlem...."}
-          placeholderTextColor='#B21'
-          onChangeText={(e) => { handleFilterText(e) }}
+          placeholderTextColor="#B21"
+          onChangeText={(e) => {
+            handleFilterText(e);
+          }}
         ></TextInput>
       </View>
       <FilterBar handleFilter={handleFilter} />
-      {(data !== []) &&
+      {data !== [] && (
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu(item)}>
+              <TouchableOpacity
+                style={styles.card}
+                onLongPress={toggleEditMenu(item)}
+              >
                 <View style={{ flexDirection: "row" }}>
-                  {item.image !== null && <Image
-                    source={{ uri: `${base_url}${item.image.url}` }}
-                    style={{ width: 77, height: 71 }}
-                  />}
+                  {item.image !== null && (
+                    <Image
+                      source={{ uri: `${base_url}${item.image.url}` }}
+                      style={{ width: 77, height: 71 }}
+                    />
+                  )}
                   <View style={{ padding: 5 }}>
                     <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                       {item.name}
@@ -176,8 +201,8 @@ const Menu = (props) => {
                     >
                       {item.descreption}
                     </Text>
-                    {item.statusId == 1
-                      ? <Text
+                    {item.statusId == 1 ? (
+                      <Text
                         style={{
                           fontFamily: "Reguler",
                           color: "#00B80C",
@@ -186,7 +211,8 @@ const Menu = (props) => {
                       >
                         {item.status.name}
                       </Text>
-                      : <Text
+                    ) : (
+                      <Text
                         style={{
                           fontFamily: "Reguler",
                           color: "#D00000",
@@ -194,7 +220,8 @@ const Menu = (props) => {
                         }}
                       >
                         {item.status.name}
-                      </Text>}
+                      </Text>
+                    )}
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", top: 10 }}>
@@ -215,8 +242,13 @@ const Menu = (props) => {
               </TouchableOpacity>
             );
           }}
-        />}
-      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} data={{ handleDelete }} />
+        />
+      )}
+      <ModalEditMenu
+        visible={{ editMenuVisible, toggleEditMenu }}
+        deleteDish={handleDelete}
+        changeDish={pressChangeDish}
+      />
     </View>
   );
 };
@@ -272,6 +304,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textFilter: {
-    color: '#8A8F9C',
-  }
+    color: "#8A8F9C",
+  },
 });
