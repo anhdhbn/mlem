@@ -90,7 +90,7 @@ export default function (props) {
 
   const increaseDiscount = () => {
     if (data.discountRate + 1 <= 100) {
-      setData({ ...data, discountRate: data.discountRate + 1 });
+      setDiscountRate(discountRate + 1);
     }
   };
 
@@ -180,11 +180,13 @@ export default function (props) {
 
     // console.log(foodGroupMapping);
 
-    for (let index = 0; index < foodGroupMapping.length; index++) {
-      if (foodGroupMapping[index].isCliked) {
-        foodFoodGroupingMappings.push({
-          foodGroupingId: foodGroupMapping[index].id,
-        });
+    if (foodGroupMapping) {
+      for (let index = 0; index < foodGroupMapping.length; index++) {
+        if (foodGroupMapping[index].isCliked) {
+          foodFoodGroupingMappings.push({
+            foodGroupingId: foodGroupMapping[index].id,
+          });
+        }
       }
     }
 
