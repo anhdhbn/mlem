@@ -2,19 +2,15 @@ import { requestServices } from "./index";
 
 // API Danh sách món ăn
 
-const list = (params) => requestServices.customAxios
+const list = (params) =>
+  requestServices.customAxios
     .post("api/food/list", params)
     .then((res) => res.data);
 
-const configJSON = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
 // API Thêm món ăn
-const createDish = (params, configJSON) =>
+const createDish = (params) =>
   requestServices.customAxios
-    .post("/api/food/create", params)
+    .post("api/food/create", params)
     .then((res) => res.data);
 
 // API Sửa món ăn
@@ -45,4 +41,4 @@ export default {
   updateDish,
   deleteDish,
   uploadImage,
-}
+};
