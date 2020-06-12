@@ -188,7 +188,7 @@ export default function (props) {
       }
     }
 
-    let params = JSON.stringify({
+    let params = {
       name: data.name,
       priceEach: priceEach,
       discountRate: discountRate,
@@ -197,13 +197,32 @@ export default function (props) {
       descreption: data.descreption,
       foodFoodTypeMappings: foodFoodTypeMappings,
       foodFoodGroupingMappings: foodFoodGroupingMappings,
-    });
+    };
 
-    console.log("{INFO] Params: ", params);
+    return params;
   };
 
   const createFood = async () => {
     let params = createParams();
+    // params = {
+    //   name: "Cơm 3",
+    //   priceEach: 2000,
+    //   discountRate: 6,
+    //   imageId: 10071,
+    //   statusId: 1,
+    //   descreption: null,
+    //   foodFoodTypeMappings: [
+    //     { foodTypeId: 1 },
+    //     { foodTypeId: 2 },
+    //     { foodTypeId: 3 },
+    //   ],
+    //   foodFoodGroupingMappings: [
+    //     { foodGroupingId: "1" },
+    //     { foodGroupingId: "2" },
+    //   ],
+    // };
+
+    console.log("{INFO] Params: ", params);
     let response = await menuServices.createDish(params);
     console.log("[INFO] Response in create Food: ", response);
   };

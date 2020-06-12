@@ -20,6 +20,7 @@ import TableOff from "../components/order/tableOff";
 
 import Snackbar from "../components/common/snackbarUpdating";
 import Spinner from "../components/Spinner/Spinner";
+import Modal from "../components/Modal/Modal"
 export default class order extends Component {
   constructor(props) {
     super(props);
@@ -45,6 +46,8 @@ export default class order extends Component {
       descreption: null,
       totalPrice: 0,
       totalPromoPrice: 0,
+
+      modalConfirmVisible :false
     };
   }
 
@@ -289,6 +292,7 @@ export default class order extends Component {
       });
     }
 
+
     // Check numOfTable
     if (this.state.numOfTable === 0) {
       this.createAlert("Vui lòng chọn số bàn cần đặt");
@@ -333,7 +337,6 @@ export default class order extends Component {
 
   setDate = (date) => {
     // console.log("[INFO] Date: ", date);
-    
     this.getNumTableAvailable(this.state.date, this.state.time);
     this.setState({ date: date });
   };
@@ -358,6 +361,13 @@ export default class order extends Component {
     }
     else return "";
   }
+  handleCancel = () => {
+    this.setState({modalConfirmVisible : false})
+  }
+  submitOrder = () => {
+      this.setState({modalConfirmVisible : false})
+    }
+
   render() {
     return (
       <>
@@ -452,7 +462,7 @@ export default class order extends Component {
                 ))
               ) : null}
 
-              <View
+            <View
                 style={{
                   backgroundColor: "#FFFFFF",
                   height: 45,
@@ -516,7 +526,7 @@ export default class order extends Component {
               }}
             >
             <Image source={require('../assets/icon/mm.png')} style={{ width:42,height:42,paddingLeft:8 }} />
-              <View style={{ paddingLeft: 10 }}>
+              <View style={{ paddingLeft: 10,justifyContent:'center' }}>
                 {this.state.totalPromoPrice !== this.state.totalPrice ? (
                   <>
                     <Text style={{ fontSize: 19, fontWeight: "bold" }}>
@@ -532,7 +542,9 @@ export default class order extends Component {
                     </Text>
                   </>
                 ) : (
-                  <Text style={{}}>{this.formatPrice(this.state.totalPrice)}</Text>
+                    <View>
+                      <Text style={{}}>{this.formatPrice(this.state.totalPrice)}</Text>
+                    </View>
                 )}
               </View>
               <View style={{ position: "absolute", right: 20 }}>
@@ -544,9 +556,8 @@ export default class order extends Component {
                     height: 40,
                     marginTop: 9,
                   }}
-                  onPress={() => {
-                    this.createOrder();
-                  }}
+
+                  onPress={()=>{this.setState({modalConfirmVisible : true})}}
                 >
                   <Text
                     style={{
@@ -565,8 +576,17 @@ export default class order extends Component {
           </>
         ) : this.state.tableAvailable === 0 ? (
           <TableOff />
-        ) : null}
+          ) : null}
+        <Modal
+          modalConfirmVisible={this.state.modalConfirmVisible}
+          title="Bạn có muốn gửi đơn?"
+          titleCancel="Huỷ"
+          titleSubmit="Đặt"
+          handleCancel={this.handleCancel}
+          handleSubmit={this.submitOrder}
+        />
       </>
+
     );
   }
 }
