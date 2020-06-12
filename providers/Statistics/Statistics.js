@@ -9,9 +9,7 @@ import statisticServices from '../../providerServices/statisticServices';
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
 import Spinner from "../../components/Spinner/Spinner";
-import DatePicker from '../../components/dateTimePicker/datePicker';
-import { NavigationContainer } from "@react-navigation/native";
-import menuServices from '../../providerServices/menuServices'
+import Filter from './Filter';
 const StatisticStack = createStackNavigator();
 /*StatisticStackScreen  */
 export default ({ navigation }) => (
@@ -47,13 +45,12 @@ const Statistic = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    getData();
+    handleFilter({ TypeId: {Equal:1} });
   }, []);
 
-  const getData = async () => {
-    const res = await statisticServices.list({account:{email: "vietlinh15@coldmail.com",}});
-    console.log(res)
-    
+  const handleFilter = async (props) => {
+    const res = await statisticServices.list(props);
+    setData(res)
   };
 
   return (
@@ -63,23 +60,18 @@ const Statistic = (props) => {
           <Spinner />
         </View>
       ) : null}
-      {/* {console.log(props)} */}
-      <View style={styles.filterBar}>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Theo tháng </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={{
+      <Filter handleFilter={handleFilter} />
+      {data!==null&&<View style={{
         backgroundColor: "white",
         elevation: 3,
       }}>
         <View style={styles.selectTimeView}>
-          {console.log(data)
-          }
+          <Text>
+            Từ {Moment(data.start).format("DD/MM/YYYY")}
+          </Text>
+          <Text>
+            Đến {Moment(data.end).format("DD/MM/YYYY")}
+          </Text>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <Text style={{
@@ -87,10 +79,9 @@ const Statistic = (props) => {
             right: 20,
             fontWeight: "bold",
             fontSize: 20
-          }}>Tổng số1:</Text>
+          }}>Tổng số: {data.count}</Text>
         </View>
-      </View>
-      
+      </View>}
     </View>
   );
 };
@@ -101,7 +92,7 @@ const styles = StyleSheet.create({
   },
   selectTimeView: {
     flexDirection: "row",
-    justifyContent: 'space-between'
+    justifyContent: 'space-around'
   },
   filterBar: {
     flexDirection: "row",
