@@ -207,6 +207,7 @@ export default function EditFood(props) {
 
   return (
     <>
+      {console.log("[TEST] Props in edit menu: ", props.route.params)}
       <ModalSelectFoodGroup
         visible={visibleFoodGroup}
         setVisible={setvisibleFoodGroup}

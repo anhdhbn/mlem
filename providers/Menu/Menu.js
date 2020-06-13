@@ -139,16 +139,23 @@ const Menu = (props) => {
     });
   };
 
-  const pressChangeDish = () => {
+  const pressChangeDish = (data = null) => {
     // props.navigation.navigate("EditFood", {
     //   data: selectedDish,
     //   handleChangeDish: handleChangeDish,
     // });
-    setEditMenuVisible(!editMenuVisible);
-    props.navigation.navigate("EditFood", {
-      data: selectedDish,
-      handleChangeDish: handleChangeDish,
-    });
+    setEditMenuVisible(false);
+    if (data) {
+      props.navigation.navigate("EditFood", {
+        data: data,
+        handleChangeDish: handleChangeDish,
+      });
+    } else {
+      props.navigation.navigate("EditFood", {
+        data: selectedDish,
+        handleChangeDish: handleChangeDish,
+      });
+    }
   };
   useEffect(() => {
     getData();
@@ -180,6 +187,9 @@ const Menu = (props) => {
               <TouchableOpacity
                 style={styles.card}
                 onLongPress={toggleEditMenu(item)}
+                onPress={() => {
+                  pressChangeDish(item);
+                }}
               >
                 <View style={{ flexDirection: "row" }}>
                   {item.image !== null && (
