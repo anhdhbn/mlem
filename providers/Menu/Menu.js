@@ -66,7 +66,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("Menu");
             }}
           ></Icon.Button>
         ),
@@ -79,11 +79,11 @@ export default ({ navigation }) => (
         title: "Tùy chỉnh món ăn",
         headerLeft: () => (
           <Icon.Button
-            name="ios-menu"
+            name="ios-arrow-back"
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("Menu");
             }}
           ></Icon.Button>
         ),

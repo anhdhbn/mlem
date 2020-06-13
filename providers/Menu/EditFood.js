@@ -26,31 +26,32 @@ import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
 const base_url = "http://admin.wepick.vn:20000";
 export default function EditFood(props) {
-  // const [data, setData] = useState(props.route.params.data);
-  const [data, setData] = useState({
-    descreption: null,
-    discountRate: 10,
-    errors: null,
-    foodFoodGroupingMappings: null,
-    foodFoodTypeMappings: null,
-    id: 5,
-    image: {
-      content: null,
-      errors: null,
-      id: 8,
-      mimeType: "application/octet-stream",
-      name:
-        "352332-buffet-lau-an-tha-ga-free-coca-tai-nha-hang-t-house-dai-co-viet.jpg",
-      path: "/food/20200524/ba9ddc69-b8a9-4636-80f1-8a26aa0e1005.jpg",
-      url:
-        "/api/image/download/food/20200524/ba9ddc69-b8a9-4636-80f1-8a26aa0e1005.jpg",
-    },
-    imageId: 8,
-    name: "Lẩu - Buffet",
-    priceEach: 10000,
-    status: { code: "Active", errors: null, id: 1, name: "Đang bán" },
-    statusId: 1,
-  });
+  const [data, setData] = useState(props.route.params.data);
+  const changeFood = props.route.params.handleChangeDish;
+  // const [data, setData] = useState({
+  //   descreption: null,
+  //   discountRate: 10,
+  //   errors: null,
+  //   foodFoodGroupingMappings: null,
+  //   foodFoodTypeMappings: null,
+  //   id: 5,
+  //   image: {
+  //     content: null,
+  //     errors: null,
+  //     id: 8,
+  //     mimeType: "application/octet-stream",
+  //     name:
+  //       "352332-buffet-lau-an-tha-ga-free-coca-tai-nha-hang-t-house-dai-co-viet.jpg",
+  //     path: "/food/20200524/ba9ddc69-b8a9-4636-80f1-8a26aa0e1005.jpg",
+  //     url:
+  //       "/api/image/download/food/20200524/ba9ddc69-b8a9-4636-80f1-8a26aa0e1005.jpg",
+  //   },
+  //   imageId: 8,
+  //   name: "Lẩu - Buffet",
+  //   priceEach: 10000,
+  //   status: { code: "Active", errors: null, id: 1, name: "Đang bán" },
+  //   statusId: 1,
+  // });
 
   const [imageId, setImageId] = useState(data.imageId);
   const [image, setImage] = useState(base_url + data.image.url);
@@ -179,6 +180,7 @@ export default function EditFood(props) {
     }
 
     let params = {
+      id: data.id,
       name: data.name,
       priceEach: priceEach,
       discountRate: discountRate,
@@ -192,9 +194,15 @@ export default function EditFood(props) {
     return params;
   };
 
-  const changeFood = () => {
+  const submit = () => {
     let params = createParams();
     console.log("{INFO] Params: ", params);
+    changeFood(params);
+    props.navigation.navigate("Menu");
+  };
+
+  const cancel = () => {
+    props.navigation.navigate("Menu");
   };
 
   return (
@@ -561,7 +569,7 @@ export default function EditFood(props) {
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
-                  setStatusId(0);
+                  setStatusId(2);
                 }}
               >
                 {data.statusId != 1 ? (
@@ -598,7 +606,7 @@ export default function EditFood(props) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              changeFood();
+              submit();
             }}
             style={{
               width: 146,

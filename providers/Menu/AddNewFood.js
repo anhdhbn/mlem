@@ -10,7 +10,9 @@ import {
   Alert,
 } from "react-native";
 import { FlatList, State } from "react-native-gesture-handler";
-import { Input, Overlay } from "react-native-elements";
+import { Input, Overlay, Avatar } from "react-native-elements";
+import RNFetchBlob from "rn-fetch-blob";
+import { Spinner } from "native-base";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import TickIcon from "../../assets/icon/tick.png";
@@ -19,13 +21,12 @@ import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
 import * as signalR from "@aspnet/signalr";
+
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
-import { Avatar } from "react-native-elements";
-import FormData from "form-data";
+
 import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
-import RNFetchBlob from "rn-fetch-blob";
-import { Spinner } from "native-base";
+
 //Test
 import homeServices from "../../customerServices/homeServices";
 import { TextInput } from "react-native-paper";
@@ -595,7 +596,7 @@ export default function (props) {
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
-                  setStatusId(0);
+                  setStatusId(2);
                 }}
               >
                 {data.statusId != 1 ? (
