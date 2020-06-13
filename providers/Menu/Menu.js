@@ -29,7 +29,7 @@ export default ({ navigation }) => (
     }}
   >
     <MenuStack.Screen
-      name="Menu"
+      name="MenuProvider"
       component={Menu}
       options={{
         title: "Thực Đơn",
@@ -66,7 +66,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.navigate("Menu");
+              navigation.navigate("MenuProvider");
             }}
           ></Icon.Button>
         ),
@@ -83,7 +83,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.navigate("Menu");
+              navigation.navigate("MenuProvider");
             }}
           ></Icon.Button>
         ),
