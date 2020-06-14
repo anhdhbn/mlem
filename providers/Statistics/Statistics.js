@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
+import { TouchableOpacity, FlatList, ScrollView } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
 import Moment from 'moment';
 import { createStackNavigator } from "@react-navigation/stack";
@@ -8,8 +8,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import statisticServices from '../../providerServices/statisticServices';
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
+import ProfileService from '../../customerServices/profileService';
 import Spinner from "../../components/Spinner/Spinner";
 import Filter from './Filter';
+import profileService from "../../customerServices/profileService";
 const StatisticStack = createStackNavigator();
 /*StatisticStackScreen  */
 export default ({ navigation }) => (
@@ -41,15 +43,17 @@ export default ({ navigation }) => (
     />
   </StatisticStack.Navigator>
 );
+
 const Statistic = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    handleFilter({ TypeId: {Equal:1} });
+    handleFilter({ TypeId: { Equal: 1 } });
   }, []);
 
   const handleFilter = async (props) => {
     const res = await statisticServices.list(props);
+    console.log(res);
     setData(res)
   };
 
@@ -61,7 +65,7 @@ const Statistic = (props) => {
         </View>
       ) : null}
       <Filter handleFilter={handleFilter} />
-      {data!==null&&<View style={{
+      {data !== null && <View style={{
         backgroundColor: "white",
         elevation: 3,
       }}>
@@ -81,6 +85,57 @@ const Statistic = (props) => {
             fontSize: 20
           }}>Tổng số: {data.count}</Text>
         </View>
+        {/* <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={data.orders}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                style={styles.card}
+              >
+                {getUserInfor(11)}
+                <View>
+                  <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#8A8F9C",
+                      fontSize: 14,
+                    }}
+                  >
+                
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#8A8F9C",
+                      fontSize: 14,
+                    }}
+                  >
+             
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", top: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#D20000",
+                      fontSize: 20,
+                    }}
+                  >
+                    {item.total}
+                  </Text>
+                  <Image
+                    source={viewMoreIcon}
+                    style={{ height: 15, width: 15, top: 7 }}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        /> */}
       </View>}
     </View>
   );
