@@ -49,6 +49,20 @@ export default function (props) {
     setData(newData);
   };
 
+  const onSubmit = () => {
+    let newData = [];
+    let lengthData = data.length;
+    for (let index = 0; index < lengthData; index++) {
+      if (data[index].isCliked) {
+        newData.push({
+          id: data[index].id,
+          kindOfFood: data[index].kindOfFood,
+        });
+      }
+    }
+    props.setFoodGroupMapping(newData);
+  };
+
   return (
     <View style={{ backgroundColor: "#c3c3c3" }}>
       <Overlay
@@ -129,7 +143,7 @@ export default function (props) {
               alignItems: "center",
             }}
             onPress={() => {
-              props.setFoodGroupMapping(data);
+              onSubmit();
               props.setVisible(false);
             }}
             title="Thêm"

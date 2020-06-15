@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, Image, TextInput, Alert } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -75,7 +75,7 @@ export default ({ navigation }) => (
     <MenuStack.Screen
       name="EditFood"
       component={EditFood}
-      options={{
+      options={({ route }) => ({
         title: "Tùy chỉnh món ăn",
         headerLeft: () => (
           <Icon.Button
@@ -87,7 +87,18 @@ export default ({ navigation }) => (
             }}
           ></Icon.Button>
         ),
-      }}
+        headerRight: () => (
+          <Icon.Button
+            name="trash-bin-outline"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              route.params.handleDeleteDish();
+              navigation.navigate("MenuProvider");
+            }}
+          ></Icon.Button>
+        ),
+      })}
     />
   </MenuStack.Navigator>
 );
@@ -95,6 +106,10 @@ export default ({ navigation }) => (
 const Menu = (props) => {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
   const [selectedDish, setselectedDish] = useState();
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const toggleEditMenu = (props) => {
     return () => {
       !editMenuVisible && setselectedDish(props);
@@ -103,40 +118,85 @@ const Menu = (props) => {
   };
   /* xoá món ăn đang được chọn */
   const handleDelete = async () => {
-    setEditMenuVisible(!editMenuVisible);
-    await menuServices.deleteDish(selectedDish);
+    setIsUploading(true);
+    setEditMenuVisible(false);
+    console.log("[TEST] Delete: ", selectedDish);
+    await menuServices.deleteDish(selectedDish).then(
+      (res) => {
+        setIsUploading(false);
+      },
+      (error) => {
+        setIsUploading(false);
+        Alert.alert(error);
+      }
+    );
     getData();
   };
 
   // Tùy chỉnh món ăn đang được chọn
   const handleChangeDish = async (dish) => {
-    await menuServices.updateDish(dish);
+    setIsUploading(true);
+    await menuServices.updateDish(dish).then(
+      (res) => {
+        setIsUploading(false);
+      },
+      (error) => {
+        setIsUploading(false);
+        Alert.alert(error);
+      }
+    );
     getData();
   };
 
   /* lấy data */
   const [data, setData] = useState([]);
   const getData = async () => {
-    const res = await menuServices.list({});
-    setData(res);
+    setIsLoading(true);
+    const res = await menuServices.list({}).then(
+      (res) => {
+        setData(res);
+        setIsLoading(false);
+      },
+      (error) => {
+        Alert.alert(error);
+        setIsLoading(false);
+      }
+    );
   };
   /* xử lý filter */
   const handleFilter = (props) => {
-    menuServices.list(props).then((res) => {
-      /* console.log('data: ',res) */
-      setData(res);
-    });
+    setIsUploading(true);
+    console.log("[INFO] Params: ", props);
+    menuServices.list(props).then(
+      (res) => {
+        /* console.log('data: ',res) */
+        setData(res);
+        setIsUploading(false);
+      },
+      (error) => {
+        Alert.alert(error);
+        setIsUploading(false);
+      }
+    );
   };
   const handleFilterText = async (props) => {
     console.log(props);
+    setIsUploading(true);
     const params = {
       name: {
         contain: props,
       },
     };
-    menuServices.list(params).then((rs) => {
-      setData(rs);
-    });
+    menuServices.list(params).then(
+      (rs) => {
+        setData(rs);
+        setIsUploading(false);
+      },
+      (error) => {
+        Alert.alert(error);
+        setIsUploading(false);
+      }
+    );
   };
 
   const pressChangeDish = (data = null) => {
@@ -149,11 +209,13 @@ const Menu = (props) => {
       props.navigation.navigate("EditFood", {
         data: data,
         handleChangeDish: handleChangeDish,
+        handleDeleteDish: handleDelete,
       });
     } else {
       props.navigation.navigate("EditFood", {
         data: selectedDish,
         handleChangeDish: handleChangeDish,
+        handleDeleteDish: handleDelete,
       });
     }
   };
@@ -188,6 +250,7 @@ const Menu = (props) => {
                 style={styles.card}
                 onLongPress={toggleEditMenu(item)}
                 onPress={() => {
+                  setselectedDish(item);
                   pressChangeDish(item);
                 }}
               >

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
   TouchableOpacity,
   StyleSheet,
   Image,
-  Button,
   ScrollView,
 } from "react-native";
 
 import { TextInput } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
-import { Input, Overlay, Avatar } from "react-native-elements";
+import { Input, Overlay, Avatar, Button } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
 import { Spinner } from "native-base";
 import RNFetchBlob from "rn-fetch-blob";
 
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
+import menuServices from "../../providerServices/menuServices";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import TickIcon from "../../assets/icon/tick.png";
@@ -24,6 +24,7 @@ import CircleIcon from "../../assets/icon/circle.png";
 import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
+
 const base_url = "http://admin.wepick.vn:20000";
 export default function EditFood(props) {
   const [data, setData] = useState(props.route.params.data);
@@ -56,17 +57,61 @@ export default function EditFood(props) {
   const [imageId, setImageId] = useState(data.imageId);
   const [image, setImage] = useState(base_url + data.image.url);
   const [priceEach, setPriceEach] = useState(data.priceEach);
-  const [discountRate, setDiscountRate] = useState(data.discountRate);
+  const [discountRate, setDiscountRate] = useState(
+    data.discountRate ? data.discountRate : 0
+  );
   const [stateAvatar, setStateAvatar] = useState(false);
   const [size1, setSize1] = useState(false);
   const [size2, setSize2] = useState(false);
   const [size3, setSize3] = useState(false);
-  const [foodGroupMapping, setFoodGroupMapping] = useState(
-    data.foodFoodGroupingMappings
-  );
+  const [foodGroupMapping, setFoodGroupMapping] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isShowedGroupMapping, setIsShowedGroupMapping] = useState(false);
 
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
+
+  const getDetail = async () => {
+    let params = { id: data.id };
+
+    let res = await menuServices.get(params).then((res) => {
+      setIsLoading(false);
+      return res;
+    });
+
+    let indexType = res.foodFoodTypeMappings.length;
+    let foodTypes = res.foodFoodTypeMappings;
+
+    for (let index = 0; index < indexType; index++) {
+      if (foodTypes[index].foodTypeId === 1) {
+        setSize1(true);
+      } else if (foodTypes[index].foodTypeId === 2) {
+        setSize2(true);
+      } else if (foodTypes[index].foodTypeId === 3) {
+        setSize3(true);
+      }
+    }
+
+    let indexGroups = res.foodFoodGroupingMappings.length;
+
+    let foodGroups = res.foodFoodGroupingMappings;
+    let newFoodGroup = [];
+    for (let index = 0; index < indexGroups; index++) {
+      newFoodGroup.push({
+        id: foodGroups[index].foodGrouping.id,
+        isCliked: true,
+        kindOfFood: foodGroups[index].foodGrouping.name,
+      });
+    }
+
+    setFoodGroupMapping(newFoodGroup);
+
+    // console.log(JSON.stringify(res));
+  };
+
+  useEffect(() => {
+    getDetail();
+  }, []);
 
   const increasePrice = () => {
     setPriceEach(priceEach + 1000);
@@ -196,18 +241,19 @@ export default function EditFood(props) {
 
   const submit = () => {
     let params = createParams();
-    console.log("{INFO] Params: ", params);
+    // console.log("{INFO] Params: ", params);
     changeFood(params);
-    props.navigation.navigate("Menu");
+    props.navigation.navigate("MenuProvider");
   };
 
   const cancel = () => {
-    props.navigation.navigate("Menu");
+    props.navigation.navigate("MenuProvider");
   };
 
   return (
     <>
-      {console.log("[TEST] Props in edit menu: ", props.route.params)}
+      {/* {console.log("[TEST] Props in edit menu: ", props.route.params)} */}
+      {/* {console.log("[TEST] ", data)} */}
       <ModalSelectFoodGroup
         visible={visibleFoodGroup}
         setVisible={setvisibleFoodGroup}
@@ -302,45 +348,65 @@ export default function EditFood(props) {
               // padding: 14,
             }}
           >
-            <View>
-              <TouchableOpacity
-                onPress={() => setSize1(!size1)}
-                style={{ flexDirection: "row" }}
+            {isLoading ? (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: 1,
+                }}
               >
-                {!size1 ? (
-                  <Image source={CircleIcon} style={styles.iconstyle} />
-                ) : (
-                  <Image source={TickIcon} style={styles.iconstyle} />
-                )}
-                <Text>Size nhỏ</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => setSize2(!size2)}
-                style={{ flexDirection: "row" }}
-              >
-                {!size2 ? (
-                  <Image source={CircleIcon} style={styles.iconstyle} />
-                ) : (
-                  <Image source={TickIcon} style={styles.iconstyle} />
-                )}
-                <Text>Size vừa</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={() => setSize3(!size3)}
-                style={{ flexDirection: "row" }}
-              >
-                {!size3 ? (
-                  <Image source={CircleIcon} style={styles.iconstyle} />
-                ) : (
-                  <Image source={TickIcon} style={styles.iconstyle} />
-                )}
-                <Text>Size lớn</Text>
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity style={styles.submitBtn}>
+                  <Button
+                    type="clear"
+                    loading={true}
+                    loadingStyle={{ color: "#D20000" }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setSize1(!size1)}
+                    style={{ flexDirection: "row" }}
+                  >
+                    {!size1 ? (
+                      <Image source={CircleIcon} style={styles.iconstyle} />
+                    ) : (
+                      <Image source={TickIcon} style={styles.iconstyle} />
+                    )}
+                    <Text>Size nhỏ</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setSize2(!size2)}
+                    style={{ flexDirection: "row" }}
+                  >
+                    {!size2 ? (
+                      <Image source={CircleIcon} style={styles.iconstyle} />
+                    ) : (
+                      <Image source={TickIcon} style={styles.iconstyle} />
+                    )}
+                    <Text>Size vừa</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setSize3(!size3)}
+                    style={{ flexDirection: "row" }}
+                  >
+                    {!size3 ? (
+                      <Image source={CircleIcon} style={styles.iconstyle} />
+                    ) : (
+                      <Image source={TickIcon} style={styles.iconstyle} />
+                    )}
+                    <Text>Size lớn</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
           </View>
         </View>
 
@@ -355,82 +421,115 @@ export default function EditFood(props) {
               flex: 10,
             }}
           >
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                flex: 7,
-                paddingLeft: 7,
-              }}
-              onPress={() => setvisibleFoodGroup(true)}
-            >
-              {/* {console.log(foodGroupMapping)} */}
-              {foodGroupMapping ? (
-                <FlatList
-                  showsHorizontalScrollIndicator={false}
-                  data={foodGroupMapping}
-                  keyExtractor={(item) => item.id}
-                  renderItem={({ item }) => {
-                    return (
-                      <View style={styles.cardView}>
-                        {item.isCliked ? (
-                          <View
-                            style={{
-                              // Card
-                              borderRadius: 6,
-                              elevation: 3,
-                              backgroundColor: "#fff",
-                              shadowOffset: { width: 1, height: 1 },
-                              shadowColor: "#333",
-                              shadowOpacity: 0.3,
-                              shadowRadius: 2,
-                              marginVertical: 2,
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <Image
-                              source={TickIcon}
-                              style={{
-                                width: 18,
-                                height: 18,
-                                margin: 5,
-                              }}
-                            />
-                            <Text
-                              style={{
-                                color: "#8A8F9C",
-                                fontSize: 16,
-                                margin: 5,
-                              }}
-                            >
-                              {item.kindOfFood}
-                            </Text>
-                          </View>
-                        ) : null}
-                      </View>
-                    );
-                  }}
-                />
-              ) : (
-                <Text>Bấm chọn</Text>
-              )}
-            </TouchableOpacity>
-            {foodGroupMapping === null && (
-              <TouchableOpacity
+            {isLoading ? (
+              <View
                 style={{
-                  right: 15,
-                  position: "absolute",
-                  flex: 3,
-                  marginTop: 13,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: 1,
                 }}
               >
-                <Image
-                  source={ViewMore}
-                  style={{ height: 13, width: 13 }}
+                <TouchableOpacity style={styles.submitBtn}>
+                  <Button
+                    type="clear"
+                    loading={true}
+                    loadingStyle={{ color: "#D20000" }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    flex: 7,
+                    paddingLeft: 7,
+                  }}
                   onPress={() => setvisibleFoodGroup(true)}
-                />
-              </TouchableOpacity>
+                >
+                  {/* {console.log(foodGroupMapping)} */}
+
+                  {/* {setIsShowedGroupMapping(false)} BUG many render */}
+                  {foodGroupMapping ? (
+                    foodGroupMapping.length === 0 ? (
+                      <Text>Bấm chọn</Text>
+                    ) : (
+                      <>
+                        {/* {console.log(
+                        "[TEST] Food group mapping: ",
+                        foodGroupMapping
+                      )} */}
+                        <FlatList
+                          showsHorizontalScrollIndicator={false}
+                          data={foodGroupMapping}
+                          keyExtractor={(item) => item.id}
+                          renderItem={({ item }) => {
+                            return (
+                              <View style={styles.cardView}>
+                                {console.log("Item", item)}
+
+                                <View
+                                  style={{
+                                    // Card
+                                    borderRadius: 6,
+                                    elevation: 3,
+                                    backgroundColor: "#fff",
+                                    shadowOffset: { width: 1, height: 1 },
+                                    shadowColor: "#333",
+                                    shadowOpacity: 0.3,
+                                    shadowRadius: 2,
+                                    marginVertical: 2,
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <Image
+                                    source={TickIcon}
+                                    style={{
+                                      width: 18,
+                                      height: 18,
+                                      margin: 5,
+                                    }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: "#8A8F9C",
+                                      fontSize: 16,
+                                      margin: 5,
+                                    }}
+                                  >
+                                    {item.kindOfFood}
+                                  </Text>
+                                </View>
+                              </View>
+                            );
+                          }}
+                        />
+                      </>
+                    )
+                  ) : (
+                    <Text>Bấm chọn</Text>
+                  )}
+                </TouchableOpacity>
+                {/* Không lỗi */}
+                {foodGroupMapping === null ? (
+                  <TouchableOpacity
+                    style={{
+                      right: 15,
+                      position: "absolute",
+                      flex: 3,
+                      marginTop: 13,
+                    }}
+                  >
+                    <Image
+                      source={ViewMore}
+                      style={{ height: 13, width: 13 }}
+                      onPress={() => setvisibleFoodGroup(true)}
+                    />
+                  </TouchableOpacity>
+                ) : null}
+              </>
             )}
           </View>
         </View>
@@ -593,33 +692,35 @@ export default function EditFood(props) {
             }}
           ></Input>
         </View>
-
-        <View style={styles.btnView}>
-          <TouchableOpacity
-            style={{
-              width: 146,
-              height: 48,
-              backgroundColor: "#C7c7c7",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ top: 10 }}>Huỷ</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              submit();
-            }}
-            style={{
-              width: 146,
-              height: 48,
-              backgroundColor: "#DC0000",
-              alignItems: "center",
-            }}
-          >
-            <Text style={{ top: 10, color: "#ffffff" }}>Thêm</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
+      <View style={styles.btnView}>
+        <TouchableOpacity
+          onPress={() => {
+            cancel();
+          }}
+          style={{
+            width: 146,
+            height: 48,
+            backgroundColor: "#C7c7c7",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ top: 10 }}>Huỷ</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            submit();
+          }}
+          style={{
+            width: 146,
+            height: 48,
+            backgroundColor: "#DC0000",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ top: 10, color: "#ffffff" }}>Xong</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 }
