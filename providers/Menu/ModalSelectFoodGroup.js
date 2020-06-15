@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -30,8 +30,36 @@ export default function (props) {
     { id: "5", kindOfFood: "Đồ uống", isCliked: false },
   ]);
 
+  useEffect(() => {
+    let indexGroups = props.data.length;
+
+    let foodGroups = props.data;
+
+    // console.log("[INFO] Data in props: ", props.data);
+
+    let newData = data;
+
+    for (let index = 0; index < indexGroups; index++) {
+      // console.log("[INFO] Element in data ", foodGroups[index]);
+      valueGroup = foodGroups[index];
+      let tempData = [];
+      for (let index2 = 0; index2 < newData.length; index2++) {
+        // console.log("[INFO] Compare id: ", newData[index2].id);
+        if (newData[index2].id.toString() === valueGroup.id.toString()) {
+          tempData.push(valueGroup);
+        } else {
+          tempData.push(newData[index2]);
+        }
+      }
+      newData = tempData;
+    }
+
+    setData(newData);
+    // console.log("[INFO] Done convert props.data: ", newData);
+  }, [props.data]);
+
   const onselect = (code) => {
-    console.log("[INFO] Code in modal select food: ", code);
+    // console.log("[INFO] Code in modal select food: ", code);
     let lengthData = data.length;
     let newData = [];
     for (let index = 0; index < lengthData; index++) {
@@ -45,7 +73,7 @@ export default function (props) {
         newData.push(data[index]);
       }
     }
-    console.log("[INFO] New data: ", data);
+    // console.log("[INFO] New data: ", data);
     setData(newData);
   };
 
@@ -65,6 +93,7 @@ export default function (props) {
 
   return (
     <View style={{ backgroundColor: "#c3c3c3" }}>
+      {/* {console.log("[TEST] Data for render modal select food: ", data)} */}
       <Overlay
         isVisible={props.visible}
         onBackdropPress={() => props.setVisible(false)}

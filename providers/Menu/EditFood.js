@@ -66,7 +66,6 @@ export default function EditFood(props) {
   const [size3, setSize3] = useState(false);
   const [foodGroupMapping, setFoodGroupMapping] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isShowedGroupMapping, setIsShowedGroupMapping] = useState(false);
 
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
@@ -105,6 +104,7 @@ export default function EditFood(props) {
     }
 
     setFoodGroupMapping(newFoodGroup);
+    console.log("[INFO] Food group mapping: ", foodGroupMapping);
 
     // console.log(JSON.stringify(res));
   };
@@ -216,11 +216,9 @@ export default function EditFood(props) {
     // console.log(foodGroupMapping);
     if (foodGroupMapping) {
       for (let index = 0; index < foodGroupMapping.length; index++) {
-        if (foodGroupMapping[index].isCliked) {
-          foodFoodGroupingMappings.push({
-            foodGroupingId: foodGroupMapping[index].id,
-          });
-        }
+        foodFoodGroupingMappings.push({
+          foodGroupingId: foodGroupMapping[index].id,
+        });
       }
     }
 
@@ -253,8 +251,13 @@ export default function EditFood(props) {
   return (
     <>
       {/* {console.log("[TEST] Props in edit menu: ", props.route.params)} */}
-      {/* {console.log("[TEST] ", data)} */}
+      {console.log(
+        "[TEST] Props food group mapping in EditFood.js: ",
+        foodGroupMapping
+      )}
+
       <ModalSelectFoodGroup
+        data={foodGroupMapping}
         visible={visibleFoodGroup}
         setVisible={setvisibleFoodGroup}
         setFoodGroupMapping={setFoodGroupMapping}
@@ -467,7 +470,7 @@ export default function EditFood(props) {
                           renderItem={({ item }) => {
                             return (
                               <View style={styles.cardView}>
-                                {console.log("Item", item)}
+                                {console.log("Item to render editFood", item)}
 
                                 <View
                                   style={{

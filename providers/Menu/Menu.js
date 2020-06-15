@@ -135,6 +135,7 @@ const Menu = (props) => {
 
   // Tùy chỉnh món ăn đang được chọn
   const handleChangeDish = async (dish) => {
+    console.log("[INFO] Params to change dish: ", dish);
     setIsUploading(true);
     await menuServices.updateDish(dish).then(
       (res) => {
@@ -224,6 +225,9 @@ const Menu = (props) => {
   }, []);
   return (
     <View style={styles.container}>
+      {isUploading
+        ? console.log("[INFO] Updating .....")
+        : console.log("[INFO] Uploaded")}
       <View style={styles.viewInput}>
         <Image
           source={search}
