@@ -23,26 +23,26 @@ export default function (props) {
   // 4	Thịt
   // 5	Đồ uống
   const [emptyTable, setEmptyTable] = useState([]);
-  const getEmptyTable = async()=>{
+  const getEmptyTable = async () => {
     const result = await TableServices.list({});
     let data = [];
-    await result.map((item)=>{
-      if(item.status.id == 1){
-          const tmp = {
-            code : item.code,
-            id : item.id,
-            isCliked: false
-          }
+    await result.map((item) => {
+      if (item.status.id == 2) {
+        const tmp = {
+          code: item.code,
+          id: item.id,
+          isCliked: false
+        }
         data.push(tmp);
       }
     })
     setEmptyTable(data);
   }
-  useEffect(()=>{
+  useEffect(() => {
     getEmptyTable();
-  },[])
+  }, [])
   const onselect = (id) => {
-    console.log("[INFO] Code in modal select food: ", id);
+    /* console.log("[INFO] Code in modal select food: ", id); */
     let lengthData = emptyTable.length;
     let newData = [];
     for (let index = 0; index < lengthData; index++) {
@@ -86,36 +86,47 @@ export default function (props) {
               Chọn nhóm
             </Text>
           </View>
-          <ScrollView>
-            <View style={{ top: 2 }}>
-              <FlatList
-                showsHorizontalScrollIndicator={false}
-                data={emptyTable}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={styles.cardView}>
-                      <TouchableOpacity
-                        style={{ flexDirection: "row" }}
-                        onPress={() => {
-                          onselect(item.id);
-                        }}
-                      >
-                        {!item.isCliked ? (
-                          <Image source={CircleIcon} style={styles.iconstyle} />
-                        ) : (
-                          <Image source={TickIcon} style={styles.iconstyle} />
-                        )}
-                        <Text style={{ color: "#8A8F9C", fontSize: 16 }}>
-                          {item.code}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                }}
-              />
+          {emptyTable.length === 0
+            ? <View style={{
+              ...styles.cardView,
+              padding: 50,
+              justifyContent: 'center',
+              alignContent: 'center',
+              paddingVertical:100
+            }}
+            >
+              <Text> Không còn bàn còn trống </Text>
             </View>
-          </ScrollView>
+            : <ScrollView>
+              <View style={{ top: 2 }}>
+                <FlatList
+                  showsHorizontalScrollIndicator={false}
+                  data={emptyTable}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => {
+                    return (
+                      <View style={styles.cardView}>
+                        <TouchableOpacity
+                          style={{ flexDirection: "row" }}
+                          onPress={() => {
+                            onselect(item.id);
+                          }}
+                        >
+                          {!item.isCliked ? (
+                            <Image source={CircleIcon} style={styles.iconstyle} />
+                          ) : (
+                              <Image source={TickIcon} style={styles.iconstyle} />
+                            )}
+                          <Text style={{ color: "#8A8F9C", fontSize: 16 }}>
+                            {item.code}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  }}
+                />
+              </View>
+            </ScrollView>}
         </View>
         <View style={styles.btnView}>
           <Button

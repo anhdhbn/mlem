@@ -19,40 +19,17 @@ import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
 import ProviderService from '../../providerServices/tableServices';
 import ModalSelectTable from "./ModalSelectTable";
-// const Stack = createStackNavigator();
-
-// export default function StackScreen(props) {
-//   return (
-//     <Stack.Navigator screenOptions={{
-//       headerStyle: {
-//         backgroundColor: '#D20000',
-//       },
-//       headerTitleAlign: 'center',
-//       headerTintColor: '#fff'
-
-//     }}>
-//       <Stack.Screen
-//         name="Home"
-//         component={DetailOrder}
-//         options={{
-//           title: 'Chi tiết đơn hàng',
-//           headerLeft: () => (
-//             <TouchableOpacity onPress={()=>{
-//               props.navigation.navigate('SideBar')
-//             }}>
-//               <Image source={BackICon} style={{height:15,width:15,left:10}} />
-//             </TouchableOpacity>
-//           )
-//         }}
-//       />
-//     </Stack.Navigator>
-//   )
-// }
+import Modal from '../Components/Modal';
+import Toaster from "../Components/Toaster";
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [selectedTable, setSelectedTable] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [approveVisible, setApproveVisible] = useState(false);
+  const [toasterApproveVis, setToasterApproveVis] = useState(false);
+  const [toasterRejectVis, setToasterRejectVis] = useState(false);
+  const [rejectVisible, setRejectVisible] = useState(false);
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
@@ -69,11 +46,62 @@ export default function DetailOrder(props) {
     })
     setSelectedTable(tmp)
   }
+  /*  */
+  const handleApprove = () => {
+    console.log('approve');
+    setToasterApproveVis(true);
+    setApproveVisible(false);
+  }
+  /*  */
+  const handleReject = () => {
+    console.log('reject');
+    setToasterRejectVis(true);
+    setRejectVisible(false);
+  }
   return data ? (
     <SafeAreaView style={styles.container}>
+      {/* Modal sellect table */}
       <ModalSelectTable visible={visible} setVisible={setVisible}
         handleSelectTable={handleSelectTable}
       />
+      {/* modal approve a order */}
+      <Modal data={{
+        visible: approveVisible,
+        setVisible: setApproveVisible,
+        handleSubmit: handleApprove,
+      }}
+        button={{
+          title: 'Xác nhận đơn hàng',
+          titleSubmit: 'Xác nhận',
+          titleCancel: 'Quay lại'
+        }}
+      />
+        <Toaster
+          data={{
+            notification:'Xác nhận đơn hàng thành công',
+            visible:toasterApproveVis,
+            setVisible:setToasterApproveVis
+          }}
+        />
+      {/* modal reject a order */}
+      <Modal data={{
+        visible: rejectVisible,
+        setVisible: setRejectVisible,
+        handleSubmit: handleReject,
+      }}
+        button={{
+          title: 'Từ chối đơn hàng',
+          titleSubmit: 'Xác nhận',
+          titleCancel: 'Quay lại'
+        }}
+      />
+      <Toaster
+          data={{
+            notification:'Từ chối đơn hàng thành công',
+            visible:toasterRejectVis,
+            setVisible:setToasterRejectVis
+          }}
+        />
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >
@@ -217,7 +245,7 @@ export default function DetailOrder(props) {
               width: 100,
               height: 40,
             }}
-            onPress={() => { }}
+            onPress={() => { setRejectVisible(true) }}
           >
             <Text
               style={{
@@ -237,7 +265,7 @@ export default function DetailOrder(props) {
               width: 110,
               height: 40,
             }}
-            onPress={() => { }}
+            onPress={() => { setApproveVisible(true) }}
           >
             <Text
               style={{
