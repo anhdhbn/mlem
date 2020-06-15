@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
+import { TouchableOpacity, FlatList, ScrollView } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
 import Moment from 'moment';
 import { createStackNavigator } from "@react-navigation/stack";
 
+import statisticServices from '../../providerServices/statisticServices';
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
+import ProfileService from '../../customerServices/profileService';
 import Spinner from "../../components/Spinner/Spinner";
-import DatePicker from '../../components/dateTimePicker/datePicker';
-import { NavigationContainer } from "@react-navigation/native";
-
+import Filter from './Filter';
+import profileService from "../../customerServices/profileService";
 const StatisticStack = createStackNavigator();
 /*StatisticStackScreen  */
 export default ({ navigation }) => (
@@ -42,16 +43,18 @@ export default ({ navigation }) => (
     />
   </StatisticStack.Navigator>
 );
+
 const Statistic = (props) => {
-  const [firstDate, setFirstDate] = useState(Moment());
-  const [lastDate, setLastDate] = useState(Moment());
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    getData();
+    handleFilter({ TypeId: { Equal: 1 } });
   }, []);
 
-  const getData = async () => {
+  const handleFilter = async (props) => {
+    const res = await statisticServices.list(props);
+    console.log(res);
+    setData(res)
   };
 
   return (
@@ -61,31 +64,18 @@ const Statistic = (props) => {
           <Spinner />
         </View>
       ) : null}
-      {/* {console.log(props)} */}
-      <View style={styles.filterBar}>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Theo tháng </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={{
+      <Filter handleFilter={handleFilter} />
+      {data !== null && <View style={{
         backgroundColor: "white",
         elevation: 3,
       }}>
         <View style={styles.selectTimeView}>
-          <DatePicker
-            setDate={setFirstDate}
-            date={firstDate}
-            timeVisible={true}
-          />
-          <DatePicker
-            setDate={setLastDate}
-            date={lastDate}
-            timeVisible={true}
-          />
+          <Text>
+            Từ {Moment(data.start).format("DD/MM/YYYY")}
+          </Text>
+          <Text>
+            Đến {Moment(data.end).format("DD/MM/YYYY")}
+          </Text>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <Text style={{
@@ -93,64 +83,60 @@ const Statistic = (props) => {
             right: 20,
             fontWeight: "bold",
             fontSize: 20
-          }}>Tổng số:</Text>
+          }}>Tổng số: {data.count}</Text>
         </View>
-      </View>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        keyExtractor={(item) => item.code}
-        renderItem={({ item }) => {
-          return (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => {
-                onselect(item.code);
-              }}
-            >
-              {/* {console.log("Navigation in Flatlist: ", props.navigation)} */}
-              <View>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  {item.account.displayName}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#8A8F9C",
-                    fontSize: 14,
-                  }}
-                >
-                  {item.account.phone}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#8A8F9C",
-                    fontSize: 14,
-                  }}
-                >
-                  {item.statusId}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", top: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: "Reguler",
-                    color: "#D20000",
-                    fontSize: 20,
-                  }}
-                >
-                  {item.total}
-                </Text>
-                <Image
-                  source={viewMoreIcon}
-                  style={{ height: 15, width: 15, top: 7 }}
-                />
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
+        {/* <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={data.orders}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                style={styles.card}
+              >
+                {getUserInfor(11)}
+                <View>
+                  <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#8A8F9C",
+                      fontSize: 14,
+                    }}
+                  >
+                
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#8A8F9C",
+                      fontSize: 14,
+                    }}
+                  >
+             
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", top: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Reguler",
+                      color: "#D20000",
+                      fontSize: 20,
+                    }}
+                  >
+                    {item.total}
+                  </Text>
+                  <Image
+                    source={viewMoreIcon}
+                    style={{ height: 15, width: 15, top: 7 }}
+                  />
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        /> */}
+      </View>}
     </View>
   );
 };
@@ -161,7 +147,7 @@ const styles = StyleSheet.create({
   },
   selectTimeView: {
     flexDirection: "row",
-    justifyContent: 'space-between'
+    justifyContent: 'space-around'
   },
   filterBar: {
     flexDirection: "row",

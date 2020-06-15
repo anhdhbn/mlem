@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
-import Icon from "react-native-vector-icons/Ionicons";
-
 import { createStackNavigator } from "@react-navigation/stack";
 
+
+import Icon from "react-native-vector-icons/Ionicons";
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
+
 import orderServices from "../../providerServices/orderServices";
 import PaymentDetail from "./PaymentDetail";
 import Spinner from "../../components/Spinner/Spinner";
-
+import Filter from './Filter';
 const PaymentStack = createStackNavigator();
 /*PaymentStackScreen  */
 export default ({ navigation }) => (
@@ -47,11 +48,11 @@ export default ({ navigation }) => (
         title: "Chi tiết đơn hàng",
         headerLeft: () => (
           <Icon.Button
-            name="ios-menu"
+            name="ios-arrow-back"
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.openDrawer();
+              navigation.goBack();
             }}
           ></Icon.Button>
         ),
@@ -59,6 +60,7 @@ export default ({ navigation }) => (
     />
   </PaymentStack.Navigator>
 );
+
 const Payment = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,79 +74,13 @@ const Payment = (props) => {
     let response = await orderServices.listOrdered(params);
     setData(response);
     setIsLoading(false);
-
-    // let lengthDishOrdered = response.length;
-    // for (let index = 0; index < lengthDishOrdered; index++) {
-    //   let dishOrdered = response[index];
-    //   // "errors": null,
-    //   //   "id": 8,
-    //   //   "code": "#1",
-    //   //   "orderDate": "2020-08-19T23:15:30",
-    //   //   "payDate": null,
-    //   //   "accountId": 11,
-    //   //   "numOfTable": 1,
-    //   //   "numOfPerson": 1,
-    //   //   "descreption": "null",
-    //   //   "statusId": 0,
-    //   //   "subTotal": null,
-    //   //   "total": null,
-    // //   "account": {
-    // //     "errors": null,
-    // //     "id": 16,
-    // //     "displayName": null,
-    // //     "email": "test@testinternet.com",
-    // //     "phone": "1234444444",
-    // //     "password": "Uz+TuSYZc+UibjZKsdF7vvPEObsSUJK7Chzo16xyPmA=",
-    // //     "salt": "Q7dAZu05yOhTz8DyeTv+6g==",
-    // //     "passwordRecoveryCode": null,
-    // //     "expiredTimeCode": null,
-    // //     "address": null,
-    // //     "dob": null,
-    // //     "avatar": null,
-    // //     "sexId": null,
-    // //     "statusId": 0,
-    // //     "roleId": 2
-    //   //   "orderContents": [
-    //   //     {
-    //   //         "errors": null,
-    //   //         "id": 8,
-    //   //         "code": "#10",
-    //   //         "orderId": 8,
-    //   //         "foodFoodTypeMappingId": 32,
-    //   //         "quantity": 2,
-    //   //         "statusId": 0,
-    //   //         "amount": null,
-    //   //         "foodFoodTypeMapping": {
-    //   //             "errors": null,
-    //   //             "id": 32,
-    //   //             "foodId": 18,
-    //   //             "foodTypeId": 2,
-    //   //             "food": {
-    //   //                 "errors": null,
-    //   //                 "id": 18,
-    //   //                 "name": "Đồ uống 1",
-    //   //                 "priceEach": 10000.0000,
-    //   //                 "discountRate": 10.0000,
-    //   //                 "imageId": null,
-    //   //                 "statusId": 1,
-    //   //                 "descreption": "Món này được giảm giá",
-    //   //                 "image": null
-    //   //             },
-    //   //             "foodType": {
-    //   //                 "errors": null,
-    //   //                 "id": 2,
-    //   //                 "name": "Size vừa",
-    //   //                 "statusId": 1
-    //   //             }
-    //   //         },
-    //   //         "order": null
-    //   //     }
-    //   // ],
-    //   // "reservations": []
-    //   // console.log("[INFO] dish ordered: ", dishOrdered);
-    // }
   };
-
+/* filter  */
+const handleFilter= (props)=>{
+ orderServices.listOrdered(props).then(res=>{
+   setData(res)
+ });
+ }
   const onselect = (code) => {
     // console.log("On select");
     let orderedData = data.find((item) => item.code === code);
@@ -161,29 +97,7 @@ const Payment = (props) => {
         </View>
       ) : null}
       {/* {console.log(props)} */}
-      <View style={styles.filterBar}>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Sắp Xếp </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Hôm nay </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flexDirection: "row" }}>
-          <Text>Trạng thái </Text>
-          <Image
-            source={dropDownIcon}
-            style={{ height: 15, width: 15, top: 3 }}
-          />
-        </TouchableOpacity>
-      </View>
+      <Filter handleFilter={handleFilter}/>
       <FlatList
         showsHorizontalScrollIndicator={false}
         data={data}
@@ -221,7 +135,7 @@ const Payment = (props) => {
                     fontSize: 14,
                   }}
                 >
-                  {item.statusId}
+                  {item?.status?.name}
                 </Text>
               </View>
               <View style={{ flexDirection: "row", top: 10 }}>
@@ -253,7 +167,8 @@ const styles = StyleSheet.create({
   },
   filterBar: {
     flexDirection: "row",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F5F6F7",
+
     padding: 10,
     width: "100%",
     justifyContent: "space-between",

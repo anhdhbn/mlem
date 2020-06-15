@@ -9,66 +9,36 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-// import { createStackNavigator } from "@react-navigation/stack";
-
 import moment from "moment";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import PhoneIcon from "../../assets/icon/provider/phone.png";
 import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
-
-// const Stack = createStackNavigator();
-
-// export default function StackScreen(props) {
-//   return (
-//     <Stack.Navigator screenOptions={{
-//       headerStyle: {
-//         backgroundColor: '#D20000',
-//       },
-//       headerTitleAlign: 'center',
-//       headerTintColor: '#fff'
-
-//     }}>
-//       <Stack.Screen
-//         name="Home"
-//         component={DetailOrder}
-//         options={{
-//           title: 'Chi tiết đơn hàng',
-//           headerLeft: () => (
-//             <TouchableOpacity onPress={()=>{
-//               props.navigation.navigate('SideBar')
-//             }}>
-//               <Image source={BackICon} style={{height:15,width:15,left:10}} />
-//             </TouchableOpacity>
-//           )
-//         }}
-//       />
-//     </Stack.Navigator>
-//   )
-// }
+import orderServices from "../../providerServices/orderServices";
+import ModalAccept from '../Components/Modal';
+import Toaster from '../Components/Toaster'
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  // const data = {
-  //   customerName: "Dinh Tien Dat",
-  //   customerPhone: "0000000",
-  //   createTime: "12:00-13/04/2000",
-  //   orderTime: "12:00-1/1/2000",
-  //   tables: ["5", "6", "7"],
-  //   menu: [
-  //     { id: "1", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "2", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "3", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "4", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "5", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "6", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "7", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "8", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //     { id: "9", name: "món 1", size: "nhỏ", qty: "1", price: "5000vnd" },
-  //   ],
-  // };
+  const [modalPayVisible, setModalPayVisible] = useState(false);
+  const [modalDelVisible, setModalDelVisible] = useState(false);
+  const [toasterPayVisible, setToasterPayVisible] = useState(false);
+  const [toasterDelVisible, setToasterDelVisible] = useState(false);
+  const handlePay = () => {
+    /* const res = orderServices.payment(data); */
+    /*    return res; */
+    console.log(res);
+    setModalPayVisible(false);
+    setToasterPayVisible(true);
 
+  }
+  const handleDelete = async () => {
+    console.log('delete');
+   /*  const res = await orderServices.deleteOrder(data); */
+    setModalDelVisible(false);
+    setToasterDelVisible(true);
+  }
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
@@ -79,13 +49,51 @@ export default function DetailOrder(props) {
     // console.log(newArrayQuantity.reduce((a, b) => a + b, 0));
   }, []);
   return data ? (
-    <SafeAreaView style={styles.container }>
+    <SafeAreaView style={styles.container}>
+      {/* modal thanh toán */}
+      <ModalAccept data={{
+        visible: modalPayVisible,
+        setVisible: setModalPayVisible,
+        handleSubmit: handlePay,
+      }}
+        button={{
+          title: 'Xác nhận thanh toán',
+          titleSubmit: 'Xác nhận',
+          titleCancel: 'Quay lại'
+        }}
+      />
+      <Toaster
+        data={{
+          notification: 'Thanh toán đơn hàng thành công',
+          visible: toasterPayVisible,
+          setVisible: setToasterPayVisible
+        }}
+      />
+      {/* Modal xoá */}
+      <ModalAccept data={{
+        visible: modalDelVisible,
+        setVisible: setModalDelVisible,
+        handleSubmit: handleDelete
+      }}
+        button={{
+          title: '      Xác nhận xoá        ',
+          titleSubmit: 'Xác nhận',
+          titleCancel: 'Quay lại'
+        }}
+      />
+      <Toaster
+        data={{
+          notification: 'Xoá đơn hàng thành công',
+          visible: toasterDelVisible,
+          setVisible: setToasterDelVisible
+        }}
+      />
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>{data.account.displayName}</Text>
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>+{data.account.phone}</Text>
-            <Text style={{ fontSize:16 }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.account.displayName}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>+{data.account.phone}</Text>
+            <Text style={{ fontSize: 16 }}>
               Mới Tạo lúc {moment(data.createdAt).format("HH:mm") + " - "}
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
@@ -120,19 +128,19 @@ export default function DetailOrder(props) {
 
         </View>
         <View
-            style={{
-              flexDirection: "row",
-              flex: 10,
-              marginTop:5
-            }}
-          >
-            <View style={{ flex: 3,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Tên</Text></View>
-            <View style={{ flex: 2,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Size</Text></View>
-            <View style={{ flex: 2,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Số lượng</Text></View>
-            <View style={{ flex: 3,alignItems:'center'}}><Text style={{ fontWeight:'bold' }}>Thành tiền</Text></View>
-          </View>
+          style={{
+            flexDirection: "row",
+            flex: 10,
+            marginTop: 5
+          }}
+        >
+          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
+          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
+          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
+          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
+        </View>
 
-        <View style={{ height: "50%", flex:10}}>
+        <View style={{ height: "50%", flex: 10 }}>
           <FlatList
             showsHorizontalScrollIndicator={false}
             data={data.orderContents}
@@ -140,22 +148,22 @@ export default function DetailOrder(props) {
             renderItem={({ item }) => {
               return (
                 <View style={styles.cardView}>
-                  <View style={{ flex: 3,alignItems:'center'}}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
-                  <View style={{ flex: 2,alignItems:'center'}}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
-                  <View style={{ flex: 2,alignItems:'center'}}><Text>{item.quantity}</Text></View>
-                  <View style={{ flex: 3,alignItems:'center'}}><Text>
+                  <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
+                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
+                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
+                  <View style={{ flex: 3, alignItems: 'center' }}><Text>
                     {item.foodFoodTypeMapping.foodType.id === 1
                       ? (item.quantity *
-                          item.foodFoodTypeMapping.food.priceEach *
-                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100
+                        item.foodFoodTypeMapping.food.priceEach *
+                        (100 - item.foodFoodTypeMapping.food.discountRate)) /
+                      100
                       : item.foodFoodTypeMapping.foodType.id === 2
-                      ? (item.quantity *
+                        ? (item.quantity *
                           1.2 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
                         100
-                      : (item.quantity *
+                        : (item.quantity *
                           1.5 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
@@ -185,67 +193,68 @@ export default function DetailOrder(props) {
       }}
       >
         <View
-        style={{
-          flexDirection: "row",
-          flex: 10
-        }}
-       >
-          <View style={{ flex:5 ,alignItems:"center"}}>
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>Tổng cộng({totalQuantity} món):</Text>
-          </View>
-          <View style={{ flex:5 ,alignItems:"center"}}>
-            <Text style={{ fontSize:16,fontWeight:'bold' }}>{data.total} vnđ</Text>
-          </View>
-      </View>
-      <View style={styles.btnView}>
-        <TouchableOpacity
           style={{
-            backgroundColor: "#c7c5bf",
-            borderRadius: 8,
-            width: 120,
-            height: 40,
-            alignItems:'center'
+            flexDirection: "row",
+            flex: 10
           }}
-          onPress={() => {}}
         >
-          <Text
+          <View style={{ flex: 5, alignItems: "center" }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
+          </View>
+          <View style={{ flex: 5, alignItems: "center" }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.total} vnđ</Text>
+          </View>
+        </View>
+        <View style={styles.btnView}>
+          <TouchableOpacity
             style={{
-              fontSize: 16,
-              fontWeight: "bold",
-              padding: 8,
-              color: "#000",
+              backgroundColor: "#c7c5bf",
+              borderRadius: 8,
+              width: 120,
+              height: 40,
+              alignItems: 'center'
             }}
+            onPress={() => { setModalDelVisible(true) }}
           >
-            Từ chối
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                padding: 8,
+                color: "#000",
+              }}
+            >
+              Xoá
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#DC0000",
-            borderRadius: 8,
-            width: 120,
-            height: 40,
-            alignItems:'center'
-          }}
-          onPress={() => {}}
-        >
-          <Text
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
-              fontSize: 16,
-              fontWeight: "bold",
-              padding: 8,
-              color: "#fff",
+              backgroundColor: "#DC0000",
+              borderRadius: 8,
+              width: 120,
+              height: 40,
+              alignItems: 'center'
             }}
+            onPress={() => setModalPayVisible(true)}
           >
-            Thanh toán
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                padding: 8,
+                color: "#fff",
+              }}
+
+            >
+              Thanh toán
           </Text>
-        </TouchableOpacity>
-      </View>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   ) : (
-    <Spinner />
-  );
+      <Spinner />
+    );
 }
 const styles = StyleSheet.create({
   container: {
@@ -256,7 +265,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
-    paddingLeft:15,
+    paddingLeft: 15,
     backgroundColor: "#FFFFFF",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
@@ -284,7 +293,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: "#FFFFFF",
     height: 40,
-    paddingTop:10,
+    paddingTop: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -294,12 +303,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-    marginBottom:5
+    marginBottom: 5
   },
   btnView: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingBottom:8
+    paddingBottom: 8
   },
 
 });

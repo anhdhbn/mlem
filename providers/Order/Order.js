@@ -78,7 +78,6 @@ const Order = (props) => {
 /* filter  */
 const handleFilter= (props)=>{
  orderServices.listOrdered(props).then(res=>{
-   console.log(res)
    setData(res)
  });
  }
