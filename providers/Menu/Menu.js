@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, Image, TextInput, Alert } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -13,9 +13,9 @@ import dropDownIcon from "../../assets/icon/drop_down.png";
 import ModalEditMenu from "./ModalEditMenu";
 import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
-import menuServices from '../../providerServices/menuServices'
-import FilterBar from './Filter';
-const base_url = 'http://admin.wepick.vn:20000';
+import menuServices from "../../providerServices/menuServices";
+import FilterBar from "./Filter";
+const base_url = "http://admin.wepick.vn:20000";
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
 export default ({ navigation }) => (
@@ -29,7 +29,7 @@ export default ({ navigation }) => (
     }}
   >
     <MenuStack.Screen
-      name="Menu"
+      name="MenuProvider"
       component={Menu}
       options={{
         title: "Thực Đơn",
@@ -66,7 +66,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("MenuProvider");
             }}
           ></Icon.Button>
         ),
@@ -75,65 +75,153 @@ export default ({ navigation }) => (
     <MenuStack.Screen
       name="EditFood"
       component={EditFood}
-      options={{
+      options={({ route }) => ({
         title: "Tùy chỉnh món ăn",
         headerLeft: () => (
           <Icon.Button
-            name="ios-menu"
+            name="ios-arrow-back"
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("MenuProvider");
             }}
           ></Icon.Button>
         ),
-      }}
+        headerRight: () => (
+          <Icon.Button
+            name="trash-bin-outline"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              route.params.handleDeleteDish();
+              navigation.navigate("MenuProvider");
+            }}
+          ></Icon.Button>
+        ),
+      })}
     />
   </MenuStack.Navigator>
 );
 
 const Menu = (props) => {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
-  const [delDish, setDelDish] = useState()
+  const [selectedDish, setselectedDish] = useState();
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const toggleEditMenu = (props) => {
     return () => {
-      !editMenuVisible && setDelDish(props);
+      !editMenuVisible && setselectedDish(props);
       setEditMenuVisible(!editMenuVisible);
-    }
+    };
   };
   /* xoá món ăn đang được chọn */
   const handleDelete = async () => {
-    setEditMenuVisible(!editMenuVisible);
-    await menuServices.deleteDish(delDish)
+    setIsUploading(true);
+    setEditMenuVisible(false);
+    console.log("[TEST] Delete: ", selectedDish);
+    await menuServices.deleteDish(selectedDish).then(
+      (res) => {
+        setIsUploading(false);
+      },
+      (error) => {
+        setIsUploading(false);
+        Alert.alert(error);
+      }
+    );
     getData();
-  }
+  };
+
+  // Tùy chỉnh món ăn đang được chọn
+  const handleChangeDish = async (dish) => {
+    setIsUploading(true);
+    await menuServices.updateDish(dish).then(
+      (res) => {
+        setIsUploading(false);
+      },
+      (error) => {
+        setIsUploading(false);
+        Alert.alert(error);
+      }
+    );
+    getData();
+  };
+
   /* lấy data */
   const [data, setData] = useState([]);
   const getData = async () => {
-    const res = await menuServices.list({})
-    setData(res)
-  }
+    setIsLoading(true);
+    const res = await menuServices.list({}).then(
+      (res) => {
+        setData(res);
+        setIsLoading(false);
+      },
+      (error) => {
+        Alert.alert(error);
+        setIsLoading(false);
+      }
+    );
+  };
   /* xử lý filter */
   const handleFilter = (props) => {
-    menuServices.list(props).then(res => {
-      /* console.log('data: ',res) */
-      setData(res)
-    });
-  }
+    setIsUploading(true);
+    console.log("[INFO] Params: ", props);
+    menuServices.list(props).then(
+      (res) => {
+        /* console.log('data: ',res) */
+        setData(res);
+        setIsUploading(false);
+      },
+      (error) => {
+        Alert.alert(error);
+        setIsUploading(false);
+      }
+    );
+  };
   const handleFilterText = async (props) => {
+    console.log(props);
+    setIsUploading(true);
     const params = {
       name: {
-        contain: props
+        contain: props,
+      },
+    };
+    menuServices.list(params).then(
+      (rs) => {
+        setData(rs);
+        setIsUploading(false);
+      },
+      (error) => {
+        Alert.alert(error);
+        setIsUploading(false);
       }
-    }
-    menuServices.list(params).then(rs => {
-     setData(rs);
-    })
+    );
+  };
 
-  }
+  const pressChangeDish = (data = null) => {
+    // props.navigation.navigate("EditFood", {
+    //   data: selectedDish,
+    //   handleChangeDish: handleChangeDish,
+    // });
+    setEditMenuVisible(false);
+    if (data) {
+      props.navigation.navigate("EditFood", {
+        data: data,
+        handleChangeDish: handleChangeDish,
+        handleDeleteDish: handleDelete,
+      });
+    } else {
+      props.navigation.navigate("EditFood", {
+        data: selectedDish,
+        handleChangeDish: handleChangeDish,
+        handleDeleteDish: handleDelete,
+      });
+    }
+  };
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.viewInput}>
@@ -144,24 +232,35 @@ const Menu = (props) => {
         <TextInput
           style={styles.input}
           placeholder={"MlemMlem...."}
-          placeholderTextColor='#B21'
-          onChangeText={(e) => { handleFilterText(e) }}
+          placeholderTextColor="#B21"
+          onChangeText={(e) => {
+            handleFilterText(e);
+          }}
         ></TextInput>
       </View>
       <FilterBar handleFilter={handleFilter} />
-      {(data !== []) &&
+      {data !== [] && (
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity style={styles.card} onLongPress={toggleEditMenu(item)}>
+              <TouchableOpacity
+                style={styles.card}
+                onLongPress={toggleEditMenu(item)}
+                onPress={() => {
+                  setselectedDish(item);
+                  pressChangeDish(item);
+                }}
+              >
                 <View style={{ flexDirection: "row" }}>
-                  {item.image !== null && <Image
-                    source={{ uri: `${base_url}${item.image.url}` }}
-                    style={{ width: 77, height: 71 }}
-                  />}
+                  {item.image !== null && (
+                    <Image
+                      source={{ uri: `${base_url}${item.image.url}` }}
+                      style={{ width: 77, height: 71 }}
+                    />
+                  )}
                   <View style={{ padding: 5 }}>
                     <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                       {item.name}
@@ -175,8 +274,8 @@ const Menu = (props) => {
                     >
                       {item.descreption}
                     </Text>
-                    {item.statusId == 1
-                      ? <Text
+                    {item.statusId == 1 ? (
+                      <Text
                         style={{
                           fontFamily: "Reguler",
                           color: "#00B80C",
@@ -185,7 +284,8 @@ const Menu = (props) => {
                       >
                         {item.status.name}
                       </Text>
-                      : <Text
+                    ) : (
+                      <Text
                         style={{
                           fontFamily: "Reguler",
                           color: "#D00000",
@@ -193,7 +293,8 @@ const Menu = (props) => {
                         }}
                       >
                         {item.status.name}
-                      </Text>}
+                      </Text>
+                    )}
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", top: 10 }}>
@@ -214,8 +315,13 @@ const Menu = (props) => {
               </TouchableOpacity>
             );
           }}
-        />}
-      <ModalEditMenu visible={{ editMenuVisible, toggleEditMenu }} data={{ handleDelete }} />
+        />
+      )}
+      <ModalEditMenu
+        visible={{ editMenuVisible, toggleEditMenu }}
+        deleteDish={handleDelete}
+        changeDish={pressChangeDish}
+      />
     </View>
   );
 };
@@ -271,6 +377,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textFilter: {
-    color: '#8A8F9C',
-  }
+    color: "#8A8F9C",
+  },
 });

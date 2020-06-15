@@ -10,7 +10,9 @@ import {
   Alert,
 } from "react-native";
 import { FlatList, State } from "react-native-gesture-handler";
-import { Input, Overlay } from "react-native-elements";
+import { Input, Overlay, Avatar } from "react-native-elements";
+import RNFetchBlob from "rn-fetch-blob";
+import { Spinner } from "native-base";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import TickIcon from "../../assets/icon/tick.png";
@@ -19,13 +21,12 @@ import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
 import * as signalR from "@aspnet/signalr";
+
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
-import { Avatar } from "react-native-elements";
-import FormData from "form-data";
+
 import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
-import RNFetchBlob from "rn-fetch-blob";
-import { Spinner } from "native-base";
+
 //Test
 import homeServices from "../../customerServices/homeServices";
 import { TextInput } from "react-native-paper";
@@ -90,7 +91,7 @@ export default function (props) {
 
   const increaseDiscount = () => {
     if (data.discountRate + 1 <= 100) {
-      setData({ ...data, discountRate: data.discountRate + 1 });
+      setDiscountRate(discountRate + 1);
     }
   };
 
@@ -180,11 +181,13 @@ export default function (props) {
 
     // console.log(foodGroupMapping);
 
-    for (let index = 0; index < foodGroupMapping.length; index++) {
-      if (foodGroupMapping[index].isCliked) {
-        foodFoodGroupingMappings.push({
-          foodGroupingId: foodGroupMapping[index].id,
-        });
+    if (foodGroupMapping) {
+      for (let index = 0; index < foodGroupMapping.length; index++) {
+        if (foodGroupMapping[index].isCliked) {
+          foodFoodGroupingMappings.push({
+            foodGroupingId: foodGroupMapping[index].id,
+          });
+        }
       }
     }
 
@@ -204,26 +207,15 @@ export default function (props) {
 
   const createFood = async () => {
     let params = createParams();
-    // params = {
-    //   name: "Cơm 3",
-    //   priceEach: 2000,
-    //   discountRate: 6,
-    //   imageId: 10071,
-    //   statusId: 1,
-    //   descreption: null,
-    //   foodFoodTypeMappings: [
-    //     { foodTypeId: 1 },
-    //     { foodTypeId: 2 },
-    //     { foodTypeId: 3 },
-    //   ],
-    //   foodFoodGroupingMappings: [
-    //     { foodGroupingId: "1" },
-    //     { foodGroupingId: "2" },
-    //   ],
-    // };
 
-    console.log("{INFO] Params: ", params);
-    let response = await menuServices.createDish(params);
+    // console.log("{INFO] Params: ", params);
+    let response = await menuServices.createDish(params).catch(
+      ((response) => {
+        console.log("[INFO] Response after create food: ", response);
+      })((error) => {
+        console.log("[INFO] Error after create food: ", error);
+      })
+    );
     console.log("[INFO] Response in create Food: ", response);
   };
 
@@ -604,7 +596,7 @@ export default function (props) {
               <TouchableOpacity
                 style={{ flexDirection: "row" }}
                 onPress={() => {
-                  setStatusId(0);
+                  setStatusId(2);
                 }}
               >
                 {data.statusId != 1 ? (

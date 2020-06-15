@@ -7,6 +7,11 @@ const list = (params) =>
     .post("api/food/list", params)
     .then((res) => res.data);
 
+const get = (params) =>
+  requestServices.customAxios
+    .post("api/food/get", params)
+    .then((res) => res.data);
+
 // API Thêm món ăn
 const createDish = (params) =>
   requestServices.customAxios
@@ -37,6 +42,7 @@ const uploadImage = (params) =>
 
 export default {
   list,
+  get,
   createDish,
   updateDish,
   deleteDish,
