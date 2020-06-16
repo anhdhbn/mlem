@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-} from "react-native";
+import { View } from "react-native";
 
 import { Picker } from "native-base";
 
@@ -12,71 +10,100 @@ export default class FilterBar extends Component {
     this.state = {
       valueFilterFood: "0",
       valueFilterStatus: "0",
-      valueFilterInitTime:"0"
+      valueFilterSort: "0",
     };
   }
 
-  onValueFilterStatusChange = async(value) => {
-   await this.setState({
+  onValueFilterStatusChange = async (value) => {
+    await this.setState({
       valueFilterStatus: value,
     });
     let food = null;
-    let status= null;
-    let initTime = this.state.valueFilterInitTime;
-    this.state.valueFilterFood !== "0" ? food = this.state.valueFilterFood : null;
-    this.state.valueFilterStatus !== "0" ? status = this.state.valueFilterStatus : null;
-    const params ={
-      foodGroupingId:{
-        equal: food
+    let status = null;
+    let initTime = this.state.valueFilterSort;
+    this.state.valueFilterFood !== "0"
+      ? (food = this.state.valueFilterFood)
+      : null;
+    this.state.valueFilterStatus !== "0"
+      ? (status = this.state.valueFilterStatus)
+      : null;
+    let params = {
+      foodGroupingId: {
+        equal: food,
       },
-      statusId:{
-        equal:status
+      statusId: {
+        equal: status,
       },
-      orderBy: initTime
-    }
-    this.props.handleFilter(params)
+      orderBy: initTime,
+    };
+    params = this.getParamsSort(params);
+    this.props.handleFilter(params);
   };
 
-  onValueFilterFoodChange = async(value) => {
+  onValueFilterFoodChange = async (value) => {
     await this.setState({
       valueFilterFood: value,
     });
     let food = null;
-    let status= null;
-    let initTime = this.state.valueFilterInitTime;
-    this.state.valueFilterFood !== "0" ? food = this.state.valueFilterFood : null;
-    this.state.valueFilterStatus !== "0" ? status = this.state.valueFilterStatus : null;
-    const params ={
-      foodGroupingId:{
-        equal: food
+    let status = null;
+    let initTime = this.state.valueFilterSort;
+    this.state.valueFilterFood !== "0"
+      ? (food = this.state.valueFilterFood)
+      : null;
+    this.state.valueFilterStatus !== "0"
+      ? (status = this.state.valueFilterStatus)
+      : null;
+    let params = {
+      foodGroupingId: {
+        equal: food,
       },
-      statusId:{
-        equal:status
+      statusId: {
+        equal: status,
       },
-      orderBy: initTime
-    }
-    this.props.handleFilter(params)
+      orderBy: initTime,
+    };
+    params = this.getParamsSort(params);
+    this.props.handleFilter(params);
   };
-  onValueFilterInitTimeChange = async(value) => {
+  onValueFilterSort = async (value) => {
     await this.setState({
-      valueFilterInitTime: value,
+      valueFilterSort: value,
     });
     let food = null;
-    let status= null;
-    let initTime = this.state.valueFilterInitTime;
-    this.state.valueFilterFood !== "0" ? food = this.state.valueFilterFood : null;
-    this.state.valueFilterStatus !== "0" ? status = this.state.valueFilterStatus : null;
-    const params ={
-      foodGroupingId:{
-        equal: food
+    let status = null;
+    let initTime = this.state.valueFilterSort;
+    this.state.valueFilterFood !== "0"
+      ? (food = this.state.valueFilterFood)
+      : null;
+    this.state.valueFilterStatus !== "0"
+      ? (status = this.state.valueFilterStatus)
+      : null;
+    let params = {
+      foodGroupingId: {
+        equal: food,
       },
-      statusId:{
-        equal:status
+      statusId: {
+        equal: status,
       },
-      orderBy: parseInt(initTime)
-    }
-    this.props.handleFilter(params)
+    };
+
+    params = this.getParamsSort(params);
+    this.props.handleFilter(params);
   };
+
+  getParamsSort = (paramsIn) => {
+    paramsOut = paramsIn;
+    if (this.state.valueFilterSort === "0") {
+    } else if (this.state.valueFilterSort === "1") {
+      paramsOut.orderBy = "2";
+      paramsOut.orderType = "0";
+    } else {
+      paramsOut.orderBy = "2";
+      paramsOut.orderType = "1";
+    }
+    return paramsOut;
+  };
+
   render() {
     return (
       <View
@@ -123,11 +150,12 @@ export default class FilterBar extends Component {
               note
               mode="dropdown"
               style={{ width: 140 }}
-              selectedValue={this.state.valueFilterInitTime}
-              onValueChange={this.onValueFilterInitTimeChange}
+              selectedValue={this.state.valueFilterSort}
+              onValueChange={this.onValueFilterSort}
             >
-              <Picker.Item label="Ngày tạo" value="0" />
-              <Picker.Item label="Mới nhất" value="7" />
+              <Picker.Item label="Sắp xếp" value="0" />
+              <Picker.Item label="Giá tăng dần" value="1" />
+              <Picker.Item label="Giá giảm dần" value="2" />
             </Picker>
           </View>
         </View>

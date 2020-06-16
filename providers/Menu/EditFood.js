@@ -17,6 +17,7 @@ import RNFetchBlob from "rn-fetch-blob";
 
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
 import menuServices from "../../providerServices/menuServices";
+import Modal from "../Components/Modal";
 
 import BackICon from "../../assets/icon/provider/back.png";
 import TickIcon from "../../assets/icon/tick.png";
@@ -69,6 +70,7 @@ export default function EditFood(props) {
 
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
+  const [approveVisible, setApproveVisible] = useState(false);
 
   const getDetail = async () => {
     let params = { id: data.id };
@@ -248,9 +250,27 @@ export default function EditFood(props) {
     props.navigation.navigate("MenuProvider");
   };
 
+  const handleApprove = () => {
+    submit();
+    setApproveVisible(false);
+  };
+
   return (
     <>
       {/* {console.log("[TEST] Props in edit menu: ", props.route.params)} */}
+
+      <Modal
+        data={{
+          visible: approveVisible,
+          setVisible: setApproveVisible,
+          handleSubmit: handleApprove,
+        }}
+        button={{
+          title: "Bạn có muốn lưu chỉnh sửa",
+          titleSubmit: "Xác nhận",
+          titleCancel: "Quay lại",
+        }}
+      />
 
       <ModalSelectFoodGroup
         data={foodGroupMapping}
@@ -708,7 +728,7 @@ export default function EditFood(props) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            submit();
+            setApproveVisible(true);
           }}
           style={{
             width: 146,

@@ -90,7 +90,7 @@ export default ({ navigation }) => (
         ),
         headerRight: () => (
           <Icon.Button
-            name="trash-bin-outline"
+            name="trash"
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
@@ -173,7 +173,7 @@ const Menu = (props) => {
   /* xử lý filter */
   const handleFilter = (props) => {
     setIsUploading(true);
-    console.log("[INFO] Params: ", props);
+    console.log("[INFO] Filter params in Menu Provider: ", props);
     menuServices.list(props).then(
       (res) => {
         /* console.log('data: ',res) */
@@ -230,15 +230,13 @@ const Menu = (props) => {
       });
     }
   };
+
   useEffect(() => {
     getData();
   }, []);
+
   return (
     <View style={styles.container}>
-      {isUploading
-        ? console.log("[INFO] Updating .....")
-        : console.log("[INFO] Uploaded")}
-
       <Toaster
         notification={"Đang cập nhật"}
         visible={isUploading}
