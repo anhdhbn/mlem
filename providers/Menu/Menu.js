@@ -237,6 +237,8 @@ const Menu = (props) => {
 
   return (
     <View style={styles.container}>
+      {/* {console.log("Uploading: ", isUploading)}
+      {console.log("Uploaded: ", isUploaded)} */}
       <Toaster
         notification={"Đang cập nhật"}
         visible={isUploading}
