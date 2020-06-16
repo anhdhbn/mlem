@@ -251,10 +251,6 @@ export default function EditFood(props) {
   return (
     <>
       {/* {console.log("[TEST] Props in edit menu: ", props.route.params)} */}
-      {console.log(
-        "[TEST] Props food group mapping in EditFood.js: ",
-        foodGroupMapping
-      )}
 
       <ModalSelectFoodGroup
         data={foodGroupMapping}

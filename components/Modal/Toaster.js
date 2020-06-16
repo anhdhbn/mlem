@@ -1,44 +1,44 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { Overlay } from 'react-native-elements';
+import React, { useState } from "react";
+import { View, Text } from "react-native";
+import { Overlay } from "react-native-elements";
 
 function Toaster(props) {
-
-  const [visible, setVisible] = useState(true);
+  const visible = props.visible;
+  const setVisible = props.setVisible;
 
   React.useEffect(() => {
     setTimeout(() => {
       setVisible(false);
-    }, 2000)
-  },
-  []);
+    }, 2000);
+  }, []);
 
   return (
-
     <View>
-
-      <Overlay isVisible={visible}
+      <Overlay
+        isVisible={visible}
         onBackdropPress={() => setVisible(false)}
         overlayStyle={{
           borderBottomLeftRadius: 8,
           borderBottomRightRadius: 8,
-          backgroundColor: '#5897fc',
-          width: '100%',
+          backgroundColor: "#5897fc",
+          width: "100%",
           top: 0,
-          position :'absolute'
-
+          position: "absolute",
         }}
         backdropStyle={{
-          opacity: 0
+          opacity: 0,
         }}
       >
-        <View style={{
-          height: 25,
-          alignItems:'center'
-        }}>
-          <Text style={{ fontSize:16, color: '#ffffff',fontWeight:'500' }}
-          >{props.notification} !</Text>
-      </View>
+        <View
+          style={{
+            height: 25,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 16, color: "#ffffff", fontWeight: "500" }}>
+            {props.notification} !
+          </Text>
+        </View>
       </Overlay>
     </View>
   );

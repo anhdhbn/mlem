@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import Toaster from "../../components/Modal/Toaster";
 
 import search from "../../assets/icon/search.png";
 import viewMoreIcon from "../../assets/icon/view_more.png";
@@ -108,6 +109,7 @@ const Menu = (props) => {
   const [selectedDish, setselectedDish] = useState();
 
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploaded, setIsUploaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const toggleEditMenu = (props) => {
@@ -124,9 +126,11 @@ const Menu = (props) => {
     await menuServices.deleteDish(selectedDish).then(
       (res) => {
         setIsUploading(false);
+        setIsUploaded(true);
       },
       (error) => {
         setIsUploading(false);
+        setIsUploaded(true);
         Alert.alert(error);
       }
     );
@@ -140,9 +144,11 @@ const Menu = (props) => {
     await menuServices.updateDish(dish).then(
       (res) => {
         setIsUploading(false);
+        setIsUploaded(true);
       },
       (error) => {
         setIsUploading(false);
+        setIsUploaded(true);
         Alert.alert(error);
       }
     );
@@ -173,10 +179,12 @@ const Menu = (props) => {
         /* console.log('data: ',res) */
         setData(res);
         setIsUploading(false);
+        setIsUploaded(true);
       },
       (error) => {
         Alert.alert(error);
         setIsUploading(false);
+        setIsUploaded(true);
       }
     );
   };
@@ -192,10 +200,12 @@ const Menu = (props) => {
       (rs) => {
         setData(rs);
         setIsUploading(false);
+        setIsUploaded(true);
       },
       (error) => {
         Alert.alert(error);
         setIsUploading(false);
+        setIsUploaded(true);
       }
     );
   };
@@ -228,6 +238,19 @@ const Menu = (props) => {
       {isUploading
         ? console.log("[INFO] Updating .....")
         : console.log("[INFO] Uploaded")}
+
+      <Toaster
+        notification={"Đang cập nhật"}
+        visible={isUploading}
+        setVisible={setIsUploading}
+      />
+
+      <Toaster
+        notification={"Cập nhật thành công"}
+        visible={isUploaded}
+        setVisible={setIsUploaded}
+      />
+
       <View style={styles.viewInput}>
         <Image
           source={search}
