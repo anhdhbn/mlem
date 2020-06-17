@@ -136,14 +136,17 @@ android {
         versionCode 1
         versionName "1.0"
     }
-    signingConfigs {
-    release {
-        storeFile file(MY_AWESOME_PROJECT_RELEASE_STORE_FILE)
-        storePassword MY_AWESOME_PROJECT_RELEASE_STORE_PASSWORD
-        keyAlias MY_AWESOME_PROJECT_RELEASE_KEY_ALIAS
-        keyPassword MY_AWESOME_PROJECT_RELEASE_KEY_PASSWORD
-    }
-}
+
+    
+    
+    // signingConfigs {
+    // release {
+    //     storeFile file(MY_AWESOME_PROJECT_RELEASE_STORE_FILE)
+    //     storePassword MY_AWESOME_PROJECT_RELEASE_STORE_PASSWORD
+    //     keyAlias MY_AWESOME_PROJECT_RELEASE_KEY_ALIAS
+    //     keyPassword MY_AWESOME_PROJECT_RELEASE_KEY_PASSWORD
+    //     }
+    // }
     splits {
         abi {
             reset()
@@ -158,6 +161,15 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+        }
+        // Đăng nhập fb cho release
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
         }
     }
     buildTypes {
