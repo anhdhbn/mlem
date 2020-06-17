@@ -23,6 +23,7 @@ import subIcon from "../../assets/icon/-.png";
 import * as signalR from "@aspnet/signalr";
 
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
+import Modal from "../Components/Modal";
 
 import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
@@ -33,7 +34,6 @@ import { TextInput } from "react-native-paper";
 export default function (props) {
   const [data, setData] = useState({
     name: null,
-
     statusId: null,
     descreption: null,
     foodFoodTypeMappings: null,
@@ -53,6 +53,9 @@ export default function (props) {
 
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
+  const [approveVisible, setApproveVisible] = useState(false);
+
+  const [modalName, setModalName] = useState(null);
 
   const [invalidPriceInput, setInvalidPriceInput] = useState(false);
   const [invalidDiscountInput, setInvalidDiscountInput] = useState(false);
@@ -90,7 +93,7 @@ export default function (props) {
   };
 
   const increaseDiscount = () => {
-    if (data.discountRate + 1 <= 100) {
+    if (discountRate + 1 <= 100) {
       setDiscountRate(discountRate + 1);
     }
   };
@@ -104,8 +107,6 @@ export default function (props) {
   const setStatusId = (code) => {
     setData({ ...data, statusId: code });
   };
-
-  const [modalName, setModalName] = useState(null);
 
   const handleChoosePhoto = async () => {
     const options = {
@@ -183,11 +184,9 @@ export default function (props) {
 
     if (foodGroupMapping) {
       for (let index = 0; index < foodGroupMapping.length; index++) {
-        if (foodGroupMapping[index].isCliked) {
-          foodFoodGroupingMappings.push({
-            foodGroupingId: foodGroupMapping[index].id,
-          });
-        }
+        foodFoodGroupingMappings.push({
+          foodGroupingId: foodGroupMapping[index].id,
+        });
       }
     }
 
@@ -205,6 +204,15 @@ export default function (props) {
     return params;
   };
 
+  const cancel = () => {
+    props.navigation.navigate("MenuProvider");
+  };
+
+  const handleApprove = () => {
+    createFood();
+    setApproveVisible(false);
+  };
+
   const createFood = async () => {
     let params = createParams();
 
@@ -216,11 +224,25 @@ export default function (props) {
         console.log("[INFO] Error after create food: ", error);
       })
     );
+    props.navigation.navigate("MenuProvider");
     console.log("[INFO] Response in create Food: ", response);
   };
 
   return (
     <>
+      <Modal
+        data={{
+          visible: approveVisible,
+          setVisible: setApproveVisible,
+          handleSubmit: handleApprove,
+        }}
+        button={{
+          title: "Bạn có muốn lưu chỉnh sửa",
+          titleSubmit: "Xác nhận",
+          titleCancel: "Quay lại",
+        }}
+      />
+
       <TouchableOpacity onPress={testSignalIR}>
         <Text>SignalIR</Text>
       </TouchableOpacity>
@@ -255,6 +277,7 @@ export default function (props) {
       </Overlay>
 
       <ModalSelectFoodGroup
+        data={foodGroupMapping}
         visible={visibleFoodGroup}
         setVisible={setvisibleFoodGroup}
         setFoodGroupMapping={setFoodGroupMapping}
@@ -394,7 +417,7 @@ export default function (props) {
                   renderItem={({ item }) => {
                     return (
                       <View style={styles.cardView}>
-                        {item.isCliked ? (
+                        {
                           <View
                             style={{
                               // Card
@@ -428,7 +451,7 @@ export default function (props) {
                               {item.kindOfFood}
                             </Text>
                           </View>
-                        ) : null}
+                        }
                       </View>
                     );
                   }}
@@ -628,6 +651,7 @@ export default function (props) {
               backgroundColor: "#C7c7c7",
               alignItems: "center",
             }}
+            onPress={() => cancel()}
           >
             <Text style={{ top: 10 }}>Huỷ</Text>
           </TouchableOpacity>
@@ -638,9 +662,9 @@ export default function (props) {
               backgroundColor: "#DC0000",
               alignItems: "center",
             }}
-            onPress={() => createFood()}
+            onPress={() => setApproveVisible(true)}
           >
-            <Text style={{ top: 10, color: "#ffffff" }}>Thêm</Text>
+            <Text style={{ top: 10, color: "#ffffff" }}>Thêm món</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
