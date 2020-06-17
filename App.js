@@ -79,6 +79,7 @@ export default function App({ navigation }) {
             isSignout: false,
             userToken: action.token,
             response: action.response,
+            isLoading: false,
           };
         case "SIGN_OUT":
           return {
@@ -100,10 +101,12 @@ export default function App({ navigation }) {
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
-
+      let userToken = null;
+      let response;
       try {
         userToken = await AsyncStorage.getItem("userToken");
+        console.log("Params to post token: ", { token: userToken });
+        response = await authServices.postTokenFB({ token: userToken });
       } catch (e) {
         // Restoring token failed
       }
@@ -112,7 +115,15 @@ export default function App({ navigation }) {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", token: userToken });
+      // dispatch({ type: "RESTORE_TOKEN", token: userToken });
+      console.log("RESPONSE after post token: ", response);
+      if (userToken) {
+        dispatch({
+          type: "SIGN_IN",
+          token: userToken,
+          response: response,
+        });
+      }
     };
 
     bootstrapAsync();
@@ -128,9 +139,11 @@ export default function App({ navigation }) {
     () => ({
       signIn: async (data, isToken = false) => {
         if (isToken) {
+          await AsyncStorage.setItem("userToken", data);
           let response = await authServices.postTokenFB({ token: data });
           console.log("[INFO] Response after auth with fb: ", response);
           console.log(data);
+
           dispatch({
             type: "SIGN_IN",
             token: data,
@@ -159,7 +172,10 @@ export default function App({ navigation }) {
           return true;
         }
       },
-      signOut: () => dispatch({ type: "SIGN_OUT" }),
+      signOut: () => {
+        AsyncStorage.setItem("userToken", null);
+        dispatch({ type: "SIGN_OUT" });
+      },
     }),
     []
   );
