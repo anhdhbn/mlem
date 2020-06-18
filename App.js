@@ -87,6 +87,7 @@ export default function App({ navigation }) {
             isSignout: true,
             userToken: null,
             response: null,
+            isLoading: false,
           };
       }
     },
@@ -105,8 +106,11 @@ export default function App({ navigation }) {
       let response;
       try {
         userToken = await AsyncStorage.getItem("userToken");
-        console.log("Params to post token: ", { token: userToken });
-        response = await authServices.postTokenFB({ token: userToken });
+        if (userToken) {
+          console.log("Params to post token: ", { token: userToken });
+          response = await authServices.postTokenFB({ token: userToken });
+          console.log("RESPONSE after post token: ", response);
+        }
       } catch (e) {
         // Restoring token failed
       }
@@ -116,12 +120,20 @@ export default function App({ navigation }) {
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       // dispatch({ type: "RESTORE_TOKEN", token: userToken });
-      console.log("RESPONSE after post token: ", response);
+
       if (userToken) {
         dispatch({
           type: "SIGN_IN",
           token: userToken,
           response: response,
+          isLoading: false,
+        });
+      } else {
+        dispatch({
+          type: "RESTORE_TOKEN",
+          token: null,
+          response: null,
+          isLoading: false,
         });
       }
     };
@@ -148,6 +160,7 @@ export default function App({ navigation }) {
             type: "SIGN_IN",
             token: data,
             response: response,
+            isLoading: false,
           });
 
           return true;
@@ -173,7 +186,12 @@ export default function App({ navigation }) {
         }
       },
       signOut: () => {
-        AsyncStorage.setItem("userToken", null);
+        try {
+          AsyncStorage.removeItem("userToken");
+          console.loh("Remove usertoken");
+        } catch (e) {
+          // remove error
+        }
         dispatch({ type: "SIGN_OUT" });
       },
     }),
@@ -222,7 +240,7 @@ export default function App({ navigation }) {
                 component={RecoveryPassStep2}
               />
             </>
-          ) : state.response.roleId == 2 ? (
+          ) : state.response.roleId === 1 ? (
             // User is signed in
             <Stack.Screen
               name="UserHome"
