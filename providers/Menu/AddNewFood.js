@@ -20,7 +20,6 @@ import CircleIcon from "../../assets/icon/circle.png";
 import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
-import * as signalR from "@aspnet/signalr";
 
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
 import Modal from "../Components/Modal";
@@ -59,28 +58,6 @@ export default function (props) {
 
   const [invalidPriceInput, setInvalidPriceInput] = useState(false);
   const [invalidDiscountInput, setInvalidDiscountInput] = useState(false);
-
-  const testSignalIR = () => {
-    try {
-      let connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://376fafd8.ngrok.io/signalr")
-        .build();
-
-      connection.on("sendToProvider", (user, data) => {
-        console.log("[INFO] call back data in signalR: ", user, data);
-      });
-
-      connection
-        .start()
-        .catch((error) => {
-          console.log(error);
-          return Promise.reject();
-        })
-        .then(() => homeServices.createNotification({ content: "dcm" }));
-    } catch (error) {
-      console.log("[INFO] Error in signalR");
-    }
-  };
 
   const increasePrice = () => {
     setPriceEach(priceEach + 1000);
@@ -242,10 +219,6 @@ export default function (props) {
           titleCancel: "Quay lại",
         }}
       />
-
-      <TouchableOpacity onPress={testSignalIR}>
-        <Text>SignalIR</Text>
-      </TouchableOpacity>
 
       <Overlay
         isVisible={visibleChangeName}

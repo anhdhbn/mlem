@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, YellowBox, Text } from "react-native";
 import { Button as ButtonE, Overlay } from "react-native-elements";
+import { FAB } from "react-native-paper";
+import * as signalR from "@aspnet/signalr";
+const BASE_URL = "http://admin.wepick.vn:20000";
 
 import homeServices from "../customerServices/homeServices";
 
 import HeaderImage from "../components/cardList/headerCardList";
 import CardList from "../components/cardList/cardList";
 import NavBar from "../components/cardList/NavBar";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner/Spinner";
 
 import { Fab, Icon, Button } from "native-base";
@@ -56,7 +59,7 @@ export default function (props) {
   const [visibleLoading, setVisibleLoading] = useState(true);
   const [checkProfile, setCheckProfile] = useState(false);
 
-  const [activeFab, setActiveFab] = useState(false);
+  const [activeFab, setActiveFab] = useState(true);
 
   const [listLikedDish, setListLikedDish] = useState(
     props.route.params.response.account_AccountFoodFavorites
@@ -274,8 +277,66 @@ export default function (props) {
     props.navigation.navigate("Profile", { showModal: true });
   };
 
+  const testSignalIR = () => {
+    try {
+      let connection = new signalR.HubConnectionBuilder()
+        .withUrl(BASE_URL + "/signalr")
+        .build();
+
+      connection.on("sendToProvider", (user, data) => {
+        console.log("[INFO] call back data in signalR: ", user, data);
+      });
+
+      connection
+        .start()
+        .catch((error) => {
+          console.log(error);
+          return Promise.reject();
+        })
+        .then(() => homeServices.createNotification({ content: "dcm" }));
+    } catch (error) {
+      console.log("[INFO] Error in signalR: ", error);
+    }
+  };
+
   return (
     <>
+      <FAB
+        style={{
+          position: "absolute",
+          zIndex: 1,
+          margin: 16,
+          right: 0,
+          bottom: 0,
+        }}
+        big
+        icon="plus"
+        onPress={() => {
+          console.log("[INFO] Pressed button SIGNALR");
+          testSignalIR();
+        }}
+      />
+
+      {/* Cái này sẽ là Fabs nhưng khi ấn vào hơi lag và sẽ bị bóng mờ ô vuông */}
+      {/* <Fab
+        active={activeFab}
+        direction="up"
+        containerStyle={{}}
+        style={{ backgroundColor: "#5067FF", zIndex: 1 }}
+        position="bottomRight"
+        onPress={() => setActiveFab(!activeFab)}
+      >
+        <Icon name="share" />
+        <Button style={{ backgroundColor: "#34A34F" }}>
+          <Icon name="logo-whatsapp" />
+        </Button>
+        <Button style={{ backgroundColor: "#3B5998" }}>
+          <Icon name="logo-facebook" />
+        </Button>
+        <Button disabled style={{ backgroundColor: "#DD5144" }}>
+          <Icon name="mail" />
+        </Button>
+      </Fab> */}
       {/* Loading */}
       <Overlay
         fullScreen={true}
@@ -294,26 +355,6 @@ export default function (props) {
         <Spinner />
       </Overlay>
       {/* Check is the first login then update profile */}
-
-      <Fab
-        active={activeFab}
-        direction="up"
-        containerStyle={{}}
-        style={{ backgroundColor: "#5067FF" }}
-        position="bottomRight"
-        onPress={() => setActiveFab(!activeFab)}
-      >
-        <Icon name="share" />
-        <Button style={{ backgroundColor: "#34A34F" }}>
-          <Icon name="logo-whatsapp" />
-        </Button>
-        <Button style={{ backgroundColor: "#3B5998" }}>
-          <Icon name="logo-facebook" />
-        </Button>
-        <Button disabled style={{ backgroundColor: "#DD5144" }}>
-          <Icon name="mail" />
-        </Button>
-      </Fab>
 
       <Overlay
         isVisible={visible}
