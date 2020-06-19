@@ -175,6 +175,14 @@ class SignIn extends Component {
       const userInfo = await GoogleSignin.signIn();
       console.log("[INFO] User info: ", userInfo);
       this.setState({ userInfo });
+      let params = {
+        Id: userInfo.user.id,
+        Email: userInfo.user.email,
+        DisplayName: userInfo.user.name,
+      };
+      this.setLoading(true);
+      await this.props.signIn(params, "gg");
+      this.setLoading(false);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -246,7 +254,7 @@ class SignIn extends Component {
                       data.accessToken.toString()
                     );
                     this.setLoading(true);
-                    await this.props.signIn(data.accessToken.toString(), true);
+                    await this.props.signIn(data.accessToken.toString(), "fb");
                     this.setLoading(false);
                   });
                 }

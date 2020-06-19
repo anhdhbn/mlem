@@ -102,13 +102,26 @@ export default function App({ navigation }) {
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken = null;
+      let typeToken = null;
       let response;
       try {
-        userToken = await AsyncStorage.getItem("userToken");
-        if (userToken) {
+        typeToken = await AsyncStorage.getItem("typeToken");
+        if (typeToken === "fb") {
+          userToken = await AsyncStorage.getItem("userToken");
           console.log("Params to post token: ", { token: userToken });
           response = await authServices.postTokenFB({ token: userToken });
+          console.log("RESPONSE after post token: ", response);
+        } else if (typeToken === "gg") {
+          let Id = await AsyncStorage.getItem("Id", data.Id);
+          let DisplayName = await AsyncStorage.getItem(
+            "DisplayName",
+            data.DisplayName
+          );
+          let Email = await AsyncStorage.getItem("Email", data.Email);
+          let params = { Id: Id, DisplayName: DisplayName, Email: Email };
+
+          console.log("Params to post token: ", params);
+          response = await authServices.postTokenFB(params);
           console.log("RESPONSE after post token: ", response);
         }
       } catch (e) {
@@ -149,8 +162,9 @@ export default function App({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data, isToken = false) => {
-        if (isToken) {
+      signIn: async (data, typeData = null) => {
+        if (typeData === "fb") {
+          await AsyncStorage.setItem("typeToken", "fb");
           await AsyncStorage.setItem("userToken", data);
           let response = await authServices.postTokenFB({ token: data });
           console.log("[INFO] Response after auth with fb: ", response);
@@ -159,6 +173,23 @@ export default function App({ navigation }) {
           dispatch({
             type: "SIGN_IN",
             token: data,
+            response: response,
+            isLoading: false,
+          });
+
+          return true;
+        } else if (typeData === "gg") {
+          await AsyncStorage.setItem("typeToken", "gg");
+          await AsyncStorage.setItem("Id", data.Id);
+          await AsyncStorage.setItem("DisplayName", data.DisplayName);
+          await AsyncStorage.setItem("Email", data.Email);
+          let response = await authServices.postTokenGG(data);
+          console.log("[INFO] Response after auth with gg: ", response);
+          console.log(data);
+
+          dispatch({
+            type: "SIGN_IN",
+            token: data.Id,
             response: response,
             isLoading: false,
           });
@@ -188,7 +219,7 @@ export default function App({ navigation }) {
       signOut: () => {
         try {
           AsyncStorage.removeItem("userToken");
-          console.loh("Remove usertoken");
+          console.log("Remove usertoken");
         } catch (e) {
           // remove error
         }
