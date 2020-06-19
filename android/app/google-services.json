@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "718294054848",
+    "firebase_url": "https://mlem-1592493824003.firebaseio.com",
+    "project_id": "mlem-1592493824003",
+    "storage_bucket": "mlem-1592493824003.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718294054848:android:5a62e0ad7bf6bdb2213a25",
+        "android_client_info": {
+          "package_name": "com.promlem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718294054848-a0kmignbtein6870a6rqlbeha9io3btq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCWhaNv66_0_5d-tl_ypkhk1Z-onT4ab0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718294054848-a0kmignbtein6870a6rqlbeha9io3btq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
