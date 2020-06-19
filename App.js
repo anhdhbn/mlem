@@ -240,7 +240,7 @@ export default function App({ navigation }) {
                 component={RecoveryPassStep2}
               />
             </>
-          ) : state.response.roleId === "1" ? (
+          ) : state.response.roleId === 1 ? (
             // User is signed in
             <Stack.Screen
               name="UserHome"
