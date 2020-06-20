@@ -103,26 +103,31 @@ export default function App({ navigation }) {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
       let typeToken = null;
-      let response;
+      let response = null;
       try {
         typeToken = await AsyncStorage.getItem("typeToken");
+        console.log("[INFO] Type token to login: ", typeToken);
         if (typeToken === "fb") {
           userToken = await AsyncStorage.getItem("userToken");
-          console.log("Params to post token: ", { token: userToken });
-          response = await authServices.postTokenFB({ token: userToken });
-          console.log("RESPONSE after post token: ", response);
+          // console.log("Params to post token: ", { token: userToken });
+          let params = { token: userToken };
+          console.log("Params");
+          response = await authServices.postTokenFB(params);
+          console.log("RESPONSE after re-post token to fb: ", response);
         } else if (typeToken === "gg") {
-          let Id = await AsyncStorage.getItem("Id", data.Id);
-          let DisplayName = await AsyncStorage.getItem(
-            "DisplayName",
-            data.DisplayName
+          console.log(
+            "[INFO] Reload type token google ==========================="
           );
-          let Email = await AsyncStorage.getItem("Email", data.Email);
+          let Id = await AsyncStorage.getItem("Id");
+          // console.log("[INFO] Id ", Id);
+          let DisplayName = await AsyncStorage.getItem("DisplayName");
+          // console.log("[INFO] DisplayName ", DisplayName);
+          let Email = await AsyncStorage.getItem("Email");
           let params = { Id: Id, DisplayName: DisplayName, Email: Email };
 
-          console.log("Params to post token: ", params);
-          response = await authServices.postTokenFB(params);
-          console.log("RESPONSE after post token: ", response);
+          // console.log("Params to post token: ", params);
+          response = await authServices.postTokenGG(params);
+          // console.log("RESPONSE after post token: ", response);
         }
       } catch (e) {
         // Restoring token failed
@@ -134,8 +139,9 @@ export default function App({ navigation }) {
       // screen will be unmounted and thrown away.
       // dispatch({ type: "RESTORE_TOKEN", token: userToken });
 
-      if (typeToken) {
+      if (typeToken && response) {
         console.log("[INFO] Reuse token type : ", typeToken);
+        console.log(response);
         dispatch({
           type: "SIGN_IN",
           token: "userToken",
@@ -185,8 +191,8 @@ export default function App({ navigation }) {
           await AsyncStorage.setItem("DisplayName", data.DisplayName);
           await AsyncStorage.setItem("Email", data.Email);
           let response = await authServices.postTokenGG(data);
-          console.log("[INFO] Response after auth with gg: ", response);
-          console.log(data);
+          // console.log("[INFO] Response after auth with gg: ", response);
+          // console.log(data);
 
           dispatch({
             type: "SIGN_IN",

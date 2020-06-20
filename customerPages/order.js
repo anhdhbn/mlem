@@ -20,7 +20,7 @@ import TableOff from "../components/order/tableOff";
 
 import Snackbar from "../components/common/snackbarUpdating";
 import Spinner from "../components/Spinner/Spinner";
-import Modal from "../components/Modal/Modal"
+import Modal from "../components/Modal/Modal";
 export default class order extends Component {
   constructor(props) {
     super(props);
@@ -47,9 +47,25 @@ export default class order extends Component {
       totalPrice: 0,
       totalPromoPrice: 0,
 
-      modalConfirmVisible :false
+      modalConfirmVisible: false,
     };
   }
+
+  resetOrder = () => {
+    let date = moment();
+    let time = moment().format("HH:mm");
+    this.setDate(date);
+    this.setTime(time);
+    this.getNumTableAvailable(date);
+    this.setState({
+      numOfTable: 0,
+      numOfPeople: 0,
+      totalPrice: 0,
+      totalPromoPrice: 0,
+      descreption: null,
+      listDish: [],
+    });
+  };
 
   componentDidMount = () => {
     let date = moment();
@@ -292,7 +308,6 @@ export default class order extends Component {
       });
     }
 
-
     // Check numOfTable
     if (this.state.numOfTable === 0) {
       this.createAlert("Vui lòng chọn số bàn cần đặt");
@@ -321,11 +336,21 @@ export default class order extends Component {
       total: this.state.totalPrice,
       subTotal: this.state.totalPromoPrice,
     };
-
     console.log("[INFO] Params to create order: ", JSON.stringify(params));
-
-    let response = await orderServices.createOrder(params);
-    // console.log("[INFO] Reponse in createOrder: ", response);
+    let response = await orderServices.createOrder(params).then(
+      (res) => {
+        console.log("Đặt bàn thành công");
+        this.createAlert("Đặt bàn thành công");
+        this.resetOrder();
+        return res;
+      },
+      (err) => {
+        console.log("Đặt bàn thất bại", err);
+        this.createAlert("Đặt bàn thất bại");
+        return null;
+      }
+    );
+    console.log("[INFO] Reponse in createOrder: ", response);
   };
 
   createAlert = (textAlert) => {
@@ -352,25 +377,27 @@ export default class order extends Component {
   };
 
   _onDismissSnackBar = () => {
-    this.setState({ visibleAlert: false });
+    this.setAlert(false);
   };
 
   formatPrice(price) {
-    if(price != null){
-        return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ"
-    }
-    else return "";
+    if (price != null) {
+      return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ";
+    } else return "";
   }
   handleCancel = () => {
-    this.setState({modalConfirmVisible : false})
-  }
+    this.setState({ modalConfirmVisible: false });
+  };
   submitOrder = () => {
-      this.setState({modalConfirmVisible : false})
-    }
+    this.setState({ modalConfirmVisible: false });
+    this.createOrder();
+  };
 
   render() {
     return (
       <>
+        {console.log("[INFO] Visible Alert: ", this.state.visibleAlert)}
+        {console.log("[INFO] Text Alert: ", this.state.textAlert)}
         <Snackbar
           visible={this.state.visibleAlert}
           _onDismissSnackBar={this._onDismissSnackBar}
@@ -378,6 +405,7 @@ export default class order extends Component {
           duration={5000}
           text={this.state.textAlert}
         />
+
         <Header title="Đặt Bàn" hideButtonBack={true} />
         {this.state.tableAvailable !== null ? (
           <>
@@ -396,7 +424,7 @@ export default class order extends Component {
                     fontSize: 16,
                     fontWeight: "bold",
                     padding: 5,
-                    paddingLeft : 20,
+                    paddingLeft: 20,
                     color: "#76c963",
                   }}
                 >
@@ -411,7 +439,14 @@ export default class order extends Component {
               </View>
             </View>
             <View>
-              <Text style={{ fontSize: 14,  padding: 4, paddingLeft:20, color:'#8A8F9C' }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  padding: 4,
+                  paddingLeft: 20,
+                  color: "#8A8F9C",
+                }}
+              >
                 Thời gian
               </Text>
             </View>
@@ -433,7 +468,14 @@ export default class order extends Component {
           <>
             <ScrollView style={{ backgroundColor: "#F5F6F7" }}>
               <View>
-                <Text style={{ fontSize: 14, padding: 8 ,paddingLeft:20, color:'#8A8F9C'}}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    padding: 8,
+                    paddingLeft: 20,
+                    color: "#8A8F9C",
+                  }}
+                >
                   Số bàn và số lượng người đặt
                 </Text>
               </View>
@@ -447,22 +489,29 @@ export default class order extends Component {
                 numOfPeople={this.state.numOfPeople}
               />
               <View>
-                <Text style={{ fontSize: 14, padding: 8,paddingLeft:20, color:'#8A8F9C' }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    padding: 8,
+                    paddingLeft: 20,
+                    color: "#8A8F9C",
+                  }}
+                >
                   Chọn món
                 </Text>
               </View>
 
-              {this.state.listDish.length > 0 ? (
-                this.state.listDish.map((dish) => (
-                  <OrderItem
-                    dish={dish}
-                    addNumOfDish={this.addNumOfDish}
-                    subNumOfDish={this.subNumOfDish}
-                  />
-                ))
-              ) : null}
+              {this.state.listDish.length > 0
+                ? this.state.listDish.map((dish) => (
+                    <OrderItem
+                      dish={dish}
+                      addNumOfDish={this.addNumOfDish}
+                      subNumOfDish={this.subNumOfDish}
+                    />
+                  ))
+                : null}
 
-            <View
+              <View
                 style={{
                   backgroundColor: "#FFFFFF",
                   height: 45,
@@ -480,9 +529,7 @@ export default class order extends Component {
                     });
                   }}
                 >
-                  <Text
-                    style={{ fontSize: 16, color: "#232A2F" }}
-                  >
+                  <Text style={{ fontSize: 16, color: "#232A2F" }}>
                     + Thêm món
                   </Text>
                 </TouchableOpacity>
@@ -497,86 +544,99 @@ export default class order extends Component {
               >
                 <Image
                   source={require("../assets/icon/note.png")}
-                  style={{ width: 15, height: 15, marginTop: 12, marginLeft: 8 }}
+                  style={{
+                    width: 15,
+                    height: 15,
+                    marginTop: 12,
+                    marginLeft: 8,
+                  }}
                 />
                 <TextInput
-                  style={{ width: 400, fontSize: 16}}
+                  style={{ width: 400, fontSize: 16 }}
                   placeholder="Ghi chú"
                 />
               </View>
             </ScrollView>
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                backgroundColor: "#fff",
-                height: 60,
-                padding: 10,
-                marginBottom: 5,
-                marginTop: 10,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 10,
-                },
-                shadowOpacity: 0.53,
-                shadowRadius: 13.97,
+            {this.state.listDish.length != 0 ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  position: "relative",
+                  backgroundColor: "#fff",
+                  height: 60,
+                  padding: 10,
+                  marginBottom: 5,
+                  marginTop: 10,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.53,
+                  shadowRadius: 13.97,
 
-                elevation: 21,
-              }}
-            >
-            <Image source={require('../assets/icon/mm.png')} style={{ width:42,height:42,paddingLeft:8 }} />
-              <View style={{ paddingLeft: 10,justifyContent:'center' }}>
-                {this.state.totalPromoPrice !== this.state.totalPrice ? (
-                  <>
-                    <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                      {this.state.totalPromoPrice}đ
-                    </Text>
-                    <Text
-                      style={{
-                        textDecorationLine: "line-through",
-                        color: "grey",
-                      }}
-                    >
-                      {this.state.totalPrice}đ
-                    </Text>
-                  </>
-                ) : (
+                  elevation: 21,
+                }}
+              >
+                <Image
+                  source={require("../assets/icon/mm.png")}
+                  style={{ width: 42, height: 42, paddingLeft: 8 }}
+                />
+                <View style={{ paddingLeft: 10, justifyContent: "center" }}>
+                  {this.state.totalPromoPrice !== this.state.totalPrice ? (
+                    <>
+                      <Text style={{ fontSize: 19, fontWeight: "bold" }}>
+                        {this.state.totalPromoPrice}đ
+                      </Text>
+                      <Text
+                        style={{
+                          textDecorationLine: "line-through",
+                          color: "grey",
+                        }}
+                      >
+                        {this.state.totalPrice}đ
+                      </Text>
+                    </>
+                  ) : (
                     <View>
-                      <Text style={{}}>{this.formatPrice(this.state.totalPrice)}</Text>
+                      <Text style={{}}>
+                        {this.formatPrice(this.state.totalPrice)}
+                      </Text>
                     </View>
-                )}
-              </View>
-              <View style={{ position: "absolute", right: 20 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#DC0000",
-                    borderRadius: 8,
-                    width: 70,
-                    height: 40,
-                    marginTop: 9,
-                  }}
-
-                  onPress={()=>{this.setState({modalConfirmVisible : true})}}
-                >
-                  <Text
+                  )}
+                </View>
+                <View style={{ position: "absolute", right: 20 }}>
+                  <TouchableOpacity
                     style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      padding: 8,
-                      paddingLeft: 20,
-                      color: "#fff",
+                      backgroundColor: "#DC0000",
+                      borderRadius: 8,
+                      width: 70,
+                      height: 40,
+                      marginTop: 9,
+                    }}
+                    onPress={() => {
+                      this.setState({ modalConfirmVisible: true });
                     }}
                   >
-                    Đặt
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        padding: 8,
+                        paddingLeft: 20,
+                        color: "#fff",
+                      }}
+                    >
+                      Đặt
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+            ) : null}
           </>
         ) : this.state.tableAvailable === 0 ? (
           <TableOff />
-          ) : null}
+        ) : null}
         <Modal
           modalConfirmVisible={this.state.modalConfirmVisible}
           title="Bạn có muốn gửi đơn?"
@@ -586,7 +646,6 @@ export default class order extends Component {
           handleSubmit={this.submitOrder}
         />
       </>
-
     );
   }
 }

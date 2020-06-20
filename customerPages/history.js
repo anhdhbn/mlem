@@ -19,8 +19,6 @@ import ItemHistoryCard from "../components/history/itemHistoryCard";
 import historyServices from "../customerServices/historyServices";
 import moment from "moment";
 
-import * as signalR from "@aspnet/signalr";
-
 import Spinner from "../components/Spinner/Spinner";
 
 export default class History extends Component {
@@ -138,31 +136,11 @@ export default class History extends Component {
     this.setIsLoading(false);
   };
 
-  testSignalIR = () => {
-    try {
-      let connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://e96278dd.ngrok.io/signalr")
-        .build();
-
-      connection.on("send", (data) => {
-        console.log("[INFO] call back data in signalR: ", data);
-      });
-
-      connection.start().then(() => connection.send("abc", "Hello"));
-    } catch (error) {
-      console.log("[INFO] Error in signalR");
-    }
-  };
-
   render() {
     return (
       <View>
         <Header title="Nhật ký" />
         <FilterBar renderOrdered={this.renderOrdered} />
-
-        <TouchableOpacity onPress={this.testSignalIR}>
-          <Text>SignalIR</Text>
-        </TouchableOpacity>
 
         {this.state.isLoading ? (
           <View>
