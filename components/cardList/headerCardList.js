@@ -16,26 +16,37 @@ export default function (props) {
   return (
     <>
       <SliderSwiper />
+
       <View style={styles.header}>
-        <View style={{ justifyContent: "center", flexDirection: "row" }}>
-          <View style={styles.viewInput}>
-            <Image
-              source={search}
-              style={{ width: 15, height: 15, marginLeft: 10, marginTop: 12 }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={"MlemMlem"}
-              placeholderTextColor="#B21"
-              onChangeText={(text) => {
-                props.searchDish(text).then((data) => {
-                  setResponseSearch(data);
-                  console.log("[INFO] Response after search: ", data);
-                });
-              }}
-            ></TextInput>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigateSearchPage();
+          }}
+        >
+          <View style={{ justifyContent: "center", flexDirection: "row" }}>
+            <View style={styles.viewInput}>
+              <Image
+                source={search}
+                style={{ width: 15, height: 15, marginLeft: 10, marginTop: 12 }}
+              />
+              {/* <TextInput
+                style={styles.input}
+                placeholder={"MlemMlem"}
+                placeholderTextColor="#B21"
+                onPress={() => {
+                  props.navigateSearchPage();
+                }}
+                // onChangeText={(text) => {
+                //   props.searchDish(text).then((data) => {
+                //     setResponseSearch(data);
+                //     console.log("[INFO] Response after search: ", data);
+                //   });
+                // }}
+              ></TextInput> */}
+              <Text style={styles.input}>Mlem Mlem</Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -44,6 +55,8 @@ const styles = StyleSheet.create({
   header: {
     position: "absolute",
     flexDirection: "row",
+    alignItems: "center",
+    alignContent: "center",
   },
   image: {
     position: "absolute",
@@ -69,9 +82,11 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   input: {
+    textAlignVertical: "center",
+    paddingLeft: 10,
     height: 40,
     borderRadius: 10,
     width: 350,
-    backgroundColor: "#c4c1c0",
+    color: "#B21",
   },
 });

@@ -112,9 +112,21 @@ export default function (props) {
     }
   }, []);
 
+  const createLikedDish = (data) => {
+    if (data) {
+      let lengthData = data.length;
+      let newLikedDish = [];
+      for (let index = 0; index < lengthData; index++) {
+        newLikedDish.push({ foodId: data[index].id });
+      }
+      setListLikedDish(newLikedDish);
+    }
+  };
+
   const fetchFavourite = () => {
     getListFoods(-3).then((data) => {
       setListFavourite(data);
+      createLikedDish(data);
       setIsLoadingFavourite(false);
     });
   };
@@ -185,13 +197,13 @@ export default function (props) {
   const searchDish = async (name) => {
     let params = {
       name: {
-        equal: name,
+        contain: name,
       },
     };
 
     var currentSec = new Date().getSeconds();
     if (currentSec != delaySearch) {
-      // console.log("[INFO] params to search: ", params);
+      // console.log("[INFO] params to search dish: ", params);
       setDelayDearch(currentSec);
       let response = await homeServices.list(params);
 
@@ -258,8 +270,8 @@ export default function (props) {
       ? props.navigation.navigate("Detail", {
           listDishs: cardData,
           listFavourite: listLikedDish,
-          setListLikedDish: setListLikedDish,
           fetchFavourite: fetchFavourite,
+          setListLikedDish: setListLikedDish,
           titleHeader: titleHeader,
         })
       : null;
@@ -297,6 +309,20 @@ export default function (props) {
     } catch (error) {
       console.log("[INFO] Error in signalR: ", error);
     }
+  };
+
+  const navigateSearchPage = () => {
+    props.navigation.navigate("Search", {
+      setListLikedDish: setListLikedDish,
+      fetchFavourite: fetchFavourite,
+      navigateHomePage: navigateHomePage,
+      searchDish: searchDish,
+      listFavourite: listLikedDish,
+    });
+  };
+
+  const navigateHomePage = () => {
+    props.navigation.navigate("Home");
   };
 
   return (
@@ -373,7 +399,7 @@ export default function (props) {
 
       {/* {console.log("Start Rendering")} */}
       <ScrollView style={styles.home}>
-        <HeaderImage searchDish={searchDish} />
+        <HeaderImage navigateSearchPage={navigateSearchPage} />
         <NavBar
           onPressAll={() => onPressDetail(listAllDish, "Tất cả")}
           onPressLau={() => onPressDetail(listLau, "Lẩu - Buffet")}

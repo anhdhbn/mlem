@@ -34,6 +34,13 @@ export default class Detail extends Component {
     };
   }
 
+  componentDidMount = () => {
+    console.log(
+      "[INFO] List Favourite: ",
+      this.props.route.params.listFavourite
+    );
+  };
+
   handClickIcon = async (newDish) => {
     // console.log("[INFO] CLick icon in favouriteDish.js");
     // let newListFavouriteDishs = this.state.listFavouriteDishs.map((dish) =>
@@ -43,15 +50,16 @@ export default class Detail extends Component {
     console.log("[INFO] Clicked dish: ", newDish);
     let newListFavourite = [];
     let isAdded = false;
-    for (let index = 0; index < this.state.listFavourite.length; index++) {
-      if (this.state.listFavourite[index].foodId === newDish.id) {
-        isAdded = true;
-        continue;
-      } else {
-        newListFavourite.push(this.state.listFavourite[index]);
+    if (this.state.listFavourite) {
+      for (let index = 0; index < this.state.listFavourite.length; index++) {
+        if (this.state.listFavourite[index].foodId === newDish.id) {
+          isAdded = true;
+          continue;
+        } else {
+          newListFavourite.push(this.state.listFavourite[index]);
+        }
       }
     }
-
     if (isAdded === false) {
       newListFavourite.push({ foodId: newDish.id });
     }
@@ -62,6 +70,7 @@ export default class Detail extends Component {
 
     this.setIsUpdating(true);
     let params = { account_AccountFoodFavorites: newListFavourite };
+    console.log("Params to update new food: ", JSON.stringify(params));
     let response = await homeServices.updateLikedFood(params);
     this.setIsUpdating(false);
     this.props.route.params.setListLikedDish(

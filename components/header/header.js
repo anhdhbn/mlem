@@ -32,7 +32,7 @@ export default function Header(props) {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Home")}
             activeOpacity={0.5}
             style={styles.button}
           >
@@ -43,7 +43,13 @@ export default function Header(props) {
           </TouchableOpacity>
         )}
         <Text style={styles.title}>{props.title}</Text>
-        <TouchableOpacity activeOpacity={0.5} style={styles.button}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate("Profile");
+          }}
+        >
           <Image
             source={require("../../assets/icon/settings.png")}
             style={styles.icon_button}

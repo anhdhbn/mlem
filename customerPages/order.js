@@ -396,8 +396,8 @@ export default class order extends Component {
   render() {
     return (
       <>
-        {console.log("[INFO] Visible Alert: ", this.state.visibleAlert)}
-        {console.log("[INFO] Text Alert: ", this.state.textAlert)}
+        {/* {console.log("[INFO] Visible Alert: ", this.state.visibleAlert)}
+        {console.log("[INFO] Text Alert: ", this.state.textAlert)} */}
         <Snackbar
           visible={this.state.visibleAlert}
           _onDismissSnackBar={this._onDismissSnackBar}

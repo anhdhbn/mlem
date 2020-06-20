@@ -13,11 +13,13 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import HomePage from "./home";
 import Detail from "./detail";
+import Search from "./search";
 
 import Order from "./order";
 import SelectDish from "./selectDish";
 
 import History from "./history";
+
 import Profile from "./profile";
 
 YellowBox.ignoreWarnings([
@@ -39,6 +41,7 @@ function HomeStackScreen(props) {
         initialParams={{ response: props.route.params.response }}
       />
       <HomeStack.Screen name="Detail" component={Detail} />
+      <HomeStack.Screen name="Search" component={Search} />
     </HomeStack.Navigator>
   );
 }
