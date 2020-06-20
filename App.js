@@ -135,6 +135,7 @@ export default function App({ navigation }) {
       // dispatch({ type: "RESTORE_TOKEN", token: userToken });
 
       if (typeToken) {
+        console.log("[INFO] Reuse token type : ", typeToken);
         dispatch({
           type: "SIGN_IN",
           token: "userToken",
@@ -219,6 +220,7 @@ export default function App({ navigation }) {
       signOut: () => {
         try {
           AsyncStorage.removeItem("userToken");
+          AsyncStorage.removeItem("typeToken");
           console.log("Remove usertoken");
         } catch (e) {
           // remove error
@@ -271,7 +273,7 @@ export default function App({ navigation }) {
                 component={RecoveryPassStep2}
               />
             </>
-          ) : state.response.roleId === 1 ? (
+          ) : state.response.roleId === 2 ? (
             // User is signed in
             <Stack.Screen
               name="UserHome"
