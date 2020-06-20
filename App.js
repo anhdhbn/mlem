@@ -134,10 +134,10 @@ export default function App({ navigation }) {
       // screen will be unmounted and thrown away.
       // dispatch({ type: "RESTORE_TOKEN", token: userToken });
 
-      if (userToken) {
+      if (typeToken) {
         dispatch({
           type: "SIGN_IN",
-          token: userToken,
+          token: "userToken",
           response: response,
           isLoading: false,
         });
