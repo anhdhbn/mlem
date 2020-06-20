@@ -31,31 +31,43 @@ export default function (props) {
   ]);
 
   useEffect(() => {
-    let indexGroups = props.data.length;
+    // console.log("Props data in ModalSelectFoodGroups: ", props.data);
+    if (props.data) {
+      // console.log("Bắt đầu xử lý props");
+      let indexGroups = props.data.length;
 
-    let foodGroups = props.data;
+      let foodGroups = props.data;
 
-    // console.log("[INFO] Data in props: ", props.data);
+      // console.log("[INFO] Data in props: ", props.data);
 
-    let newData = data;
+      let newData = data;
 
-    for (let index = 0; index < indexGroups; index++) {
-      // console.log("[INFO] Element in data ", foodGroups[index]);
-      valueGroup = foodGroups[index];
-      let tempData = [];
-      for (let index2 = 0; index2 < newData.length; index2++) {
-        // console.log("[INFO] Compare id: ", newData[index2].id);
-        if (newData[index2].id.toString() === valueGroup.id.toString()) {
-          tempData.push(valueGroup);
-        } else {
-          tempData.push(newData[index2]);
+      for (let index = 0; index < indexGroups; index++) {
+        // console.log("[INFO] Element in data ", foodGroups[index]);
+        valueGroup = foodGroups[index];
+        let tempData = [];
+        for (let index2 = 0; index2 < newData.length; index2++) {
+          // console.log(
+          //   "[INFO] Compare id: ",
+          //   newData[index2].id.toString(),
+          //   "vs",
+          //   valueGroup.id.toString(),
+          //   "=> ",
+          //   newData[index2].id.toString() === valueGroup.id.toString()
+          // );
+          if (newData[index2].id.toString() === valueGroup.id.toString()) {
+            tempData.push({ ...valueGroup, isCliked: true });
+          } else {
+            tempData.push(newData[index2]);
+          }
         }
+        newData = tempData;
       }
-      newData = tempData;
-    }
 
-    setData(newData);
-    // console.log("[INFO] Done convert props.data: ", newData);
+      setData(newData);
+      // console.log("[INFO] New data in ModalSelectFoodGroups", newData);
+      // console.log("[INFO] Done convert props.data: ", newData);
+    }
   }, [props.data]);
 
   const onselect = (code) => {
@@ -75,6 +87,7 @@ export default function (props) {
     }
     // console.log("[INFO] New data: ", data);
     setData(newData);
+    // console.log("[INFO] New data in ModalSelectFoodGroups", newData);
   };
 
   const onSubmit = () => {

@@ -1,0 +1,1 @@
+keytool -keystore "D:\projects\mlem\android\app\debug.keystore" -list -v

@@ -79,6 +79,7 @@ export default function App({ navigation }) {
             isSignout: false,
             userToken: action.token,
             response: action.response,
+            isLoading: false,
           };
         case "SIGN_OUT":
           return {
@@ -86,6 +87,7 @@ export default function App({ navigation }) {
             isSignout: true,
             userToken: null,
             response: null,
+            isLoading: false,
           };
       }
     },
@@ -100,10 +102,33 @@ export default function App({ navigation }) {
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
-
+      let typeToken = null;
+      let response = null;
       try {
-        userToken = await AsyncStorage.getItem("userToken");
+        typeToken = await AsyncStorage.getItem("typeToken");
+        console.log("[INFO] Type token to login: ", typeToken);
+        if (typeToken === "fb") {
+          userToken = await AsyncStorage.getItem("userToken");
+          // console.log("Params to post token: ", { token: userToken });
+          let params = { token: userToken };
+          console.log("Params");
+          response = await authServices.postTokenFB(params);
+          console.log("RESPONSE after re-post token to fb: ", response);
+        } else if (typeToken === "gg") {
+          console.log(
+            "[INFO] Reload type token google ==========================="
+          );
+          let Id = await AsyncStorage.getItem("Id");
+          // console.log("[INFO] Id ", Id);
+          let DisplayName = await AsyncStorage.getItem("DisplayName");
+          // console.log("[INFO] DisplayName ", DisplayName);
+          let Email = await AsyncStorage.getItem("Email");
+          let params = { Id: Id, DisplayName: DisplayName, Email: Email };
+
+          // console.log("Params to post token: ", params);
+          response = await authServices.postTokenGG(params);
+          // console.log("RESPONSE after post token: ", response);
+        }
       } catch (e) {
         // Restoring token failed
       }
@@ -112,7 +137,25 @@ export default function App({ navigation }) {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", token: userToken });
+      // dispatch({ type: "RESTORE_TOKEN", token: userToken });
+
+      if (typeToken && response) {
+        console.log("[INFO] Reuse token type : ", typeToken);
+        console.log(response);
+        dispatch({
+          type: "SIGN_IN",
+          token: "userToken",
+          response: response,
+          isLoading: false,
+        });
+      } else {
+        dispatch({
+          type: "RESTORE_TOKEN",
+          token: null,
+          response: null,
+          isLoading: false,
+        });
+      }
     };
 
     bootstrapAsync();
@@ -126,15 +169,36 @@ export default function App({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data, isToken = false) => {
-        if (isToken) {
+      signIn: async (data, typeData = null) => {
+        if (typeData === "fb") {
+          await AsyncStorage.setItem("typeToken", "fb");
+          await AsyncStorage.setItem("userToken", data);
           let response = await authServices.postTokenFB({ token: data });
           console.log("[INFO] Response after auth with fb: ", response);
           console.log(data);
+
           dispatch({
             type: "SIGN_IN",
             token: data,
             response: response,
+            isLoading: false,
+          });
+
+          return true;
+        } else if (typeData === "gg") {
+          await AsyncStorage.setItem("typeToken", "gg");
+          await AsyncStorage.setItem("Id", data.Id);
+          await AsyncStorage.setItem("DisplayName", data.DisplayName);
+          await AsyncStorage.setItem("Email", data.Email);
+          let response = await authServices.postTokenGG(data);
+          // console.log("[INFO] Response after auth with gg: ", response);
+          // console.log(data);
+
+          dispatch({
+            type: "SIGN_IN",
+            token: data.Id,
+            response: response,
+            isLoading: false,
           });
 
           return true;
@@ -159,7 +223,16 @@ export default function App({ navigation }) {
           return true;
         }
       },
-      signOut: () => dispatch({ type: "SIGN_OUT" }),
+      signOut: () => {
+        try {
+          AsyncStorage.removeItem("userToken");
+          AsyncStorage.removeItem("typeToken");
+          console.log("Remove usertoken");
+        } catch (e) {
+          // remove error
+        }
+        dispatch({ type: "SIGN_OUT" });
+      },
     }),
     []
   );
@@ -206,7 +279,7 @@ export default function App({ navigation }) {
                 component={RecoveryPassStep2}
               />
             </>
-          ) : state.response.roleId == 2 ? (
+          ) : state.response.roleId === 2 ? (
             // User is signed in
             <Stack.Screen
               name="UserHome"

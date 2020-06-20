@@ -112,6 +112,9 @@ const Menu = (props) => {
   const [isUploaded, setIsUploaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [filterText, setFilterText] = useState(null);
+  const [filterParams, setFilterParams] = useState(null);
+
   const toggleEditMenu = (props) => {
     return () => {
       !editMenuVisible && setselectedDish(props);
@@ -122,7 +125,7 @@ const Menu = (props) => {
   const handleDelete = async () => {
     setIsUploading(true);
     setEditMenuVisible(false);
-    console.log("[TEST] Delete: ", selectedDish);
+    // console.log("[TEST] Delete: ", selectedDish);
     await menuServices.deleteDish(selectedDish).then(
       (res) => {
         setIsUploading(false);
@@ -139,7 +142,7 @@ const Menu = (props) => {
 
   // Tùy chỉnh món ăn đang được chọn
   const handleChangeDish = async (dish) => {
-    console.log("[INFO] Params to change dish: ", dish);
+    // console.log("[INFO] Params to change dish: ", dish);
     setIsUploading(true);
     await menuServices.updateDish(dish).then(
       (res) => {
@@ -171,10 +174,14 @@ const Menu = (props) => {
     );
   };
   /* xử lý filter */
-  const handleFilter = (props) => {
+  const handleFilter = async (props) => {
     setIsUploading(true);
-    console.log("[INFO] Filter params in Menu Provider: ", props);
-    menuServices.list(props).then(
+    setFilterParams(params);
+    // Thêm filter text
+    // tự động thêm bằng biến filterText được sửa mỗi khi bấm vào thanh tìm kiếm.
+    params = addFilterText(props);
+    // console.log("[INFO] Filter params in Menu Provider: ", params);
+    await menuServices.list(params).then(
       (res) => {
         /* console.log('data: ',res) */
         setData(res);
@@ -188,17 +195,38 @@ const Menu = (props) => {
       }
     );
   };
+
+  const addFilterText = (paramsIn, text = null) => {
+    // console.log("[INFO] Filter text before add: ", filterText);
+    if (paramsIn) {
+      text
+        ? (paramsIn.name = { contain: text })
+        : (paramsIn.name = { contain: filterText });
+    } else {
+      let paramsIn = {
+        name: {
+          contain: text,
+        },
+      };
+      return paramsIn;
+    }
+
+    return paramsIn;
+  };
+
   const handleFilterText = async (props) => {
-    console.log(props);
+    props === "" ? setFilterText(null) : setFilterText(props);
+
     setIsUploading(true);
-    const params = {
-      name: {
-        contain: props,
-      },
-    };
-    menuServices.list(params).then(
+    props === ""
+      ? (params = addFilterText(filterParams, null))
+      : (params = addFilterText(filterParams, props));
+
+    // console.log("[INFO] Filter params in Menu Provider: ", params);
+    await menuServices.list(params).then(
       (rs) => {
         setData(rs);
+        // console.log("Response after search: ", rs);
         setIsUploading(false);
         setIsUploaded(true);
       },
@@ -257,7 +285,7 @@ const Menu = (props) => {
           style={{ width: 13, height: 13, marginLeft: 10, top: 15 }}
         />
         <TextInput
-          style={styles.input}
+          style={{ flex: 1 }}
           placeholder={"MlemMlem...."}
           placeholderTextColor="#B21"
           onChangeText={(e) => {

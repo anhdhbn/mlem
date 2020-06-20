@@ -8,7 +8,16 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
+
 import { LoginButton, AccessToken } from "react-native-fbsdk";
+
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-community/google-signin";
+
+GoogleSignin.configure();
 
 import { Button } from "react-native-elements";
 
@@ -160,6 +169,33 @@ class SignIn extends Component {
     this.setIsWrong(false);
   };
 
+  signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log("[INFO] User info: ", userInfo);
+      this.setState({ userInfo });
+      let params = {
+        Id: userInfo.user.id,
+        Email: userInfo.user.email,
+        DisplayName: userInfo.user.name,
+      };
+      this.setLoading(true);
+      await this.props.signIn(params, "gg");
+      this.setLoading(false);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+
   render() {
     return (
       <LinearGradient colors={["#C9463D", "#26071A"]} style={styles.linear}>
@@ -218,7 +254,7 @@ class SignIn extends Component {
                       data.accessToken.toString()
                     );
                     this.setLoading(true);
-                    await this.props.signIn(data.accessToken.toString(), true);
+                    await this.props.signIn(data.accessToken.toString(), "fb");
                     this.setLoading(false);
                   });
                 }
@@ -227,7 +263,7 @@ class SignIn extends Component {
             />
           </View>
         </View>
-        <View style={{ alignItems: "center", marginTop: 10 }}>
+        {/* <View style={{ alignItems: "center", marginTop: 10 }}>
           <TouchableOpacity style={styles.ggWay}>
             <Image
               source={require("../../assets/icon/gg.png")}
@@ -237,6 +273,14 @@ class SignIn extends Component {
               Tiếp tục với Google
             </Text>
           </TouchableOpacity>
+        </View> */}
+        <View style={{ alignItems: "center", marginTop: 10 }}>
+          <GoogleSigninButton
+            style={{ width: 192, height: 55 }}
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={this.signIn}
+          />
         </View>
         <View style={{ alignItems: "center" }}>
           <View style={{ flexDirection: "row" }}>

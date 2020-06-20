@@ -30,6 +30,11 @@ const postTokenFB = (params) =>
     .post(`api/account/login/facebook`, params)
     .then((res) => res.data);
 
+const postTokenGG = (params) =>
+  requestServices.customAxios
+    .post(`api/account/login/google`, params)
+    .then((res) => res.data);
+
 export default {
   login,
   forgotPassword,
@@ -40,4 +45,5 @@ export default {
   // logout,
   createUser,
   postTokenFB,
+  postTokenGG,
 };

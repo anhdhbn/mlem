@@ -1,1 +1,1 @@
-keytool -exportcert -alias my-release-key.keystore -keystore my-release-key.keystore | openssl sha1 -binary | openssl base64
+keytool -exportcert -alias my-key-alias -keystore ".\android\app\my-upload-key.keystore" | openssl sha1 -binary | openssl base64

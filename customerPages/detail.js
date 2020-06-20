@@ -81,9 +81,11 @@ export default class Detail extends Component {
   };
 
   checkLikedFood = (id2Check) => {
-    for (let index = 0; index < this.state.listFavourite.length; index++) {
-      if (this.state.listFavourite[index].foodId === id2Check) {
-        return true;
+    if (this.state.listFavourite) {
+      for (let index = 0; index < this.state.listFavourite.length; index++) {
+        if (this.state.listFavourite[index].foodId === id2Check) {
+          return true;
+        }
       }
     }
     return false;
