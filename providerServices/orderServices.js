@@ -9,14 +9,16 @@ const listOrdered = (params) =>
 // Them reservation là list bàn đặt [1, 2, 4]
 const approveOrdered = (params) =>
   requestServices.customAxios
-    .post(`​/api​/order​/approve`, params)
-    .then((res) => res.data);
+  .post("api/order/approve", params)
+  .then((res) => res.data)
+
 
 // API Xác nhận và từ chối đơn đặt hàng
 const rejectOrdered = (params) =>
   requestServices.customAxios
     .post(`/api/order/reject`, params)
-    .then((res) => res.data);
+    .then((res) => res.data)
+    .catch(err=>err)
 
 // API danh sach bàn và trạng thái
 const listReservation = (params) =>
@@ -30,8 +32,9 @@ const payment = (params) =>{
 }
 const deleteOrder = (params) =>{
   requestServices.customAxios
-  .post(`/api/order/done`,params)
+  .post("api/order/delete",params)
   .then((res)=> res.data)
+  .catch((err)=>err)
 }
 export default {
   listOrdered,

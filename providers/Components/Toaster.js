@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { Overlay } from 'react-native-elements';
 
@@ -10,17 +10,14 @@ function Toaster(props) {
   } = props.data
 /*   const [visible, setVisible] = useState(true); */
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
-      visible ===true && setVisible(false);
-    }, 2000)
-  },
-    []);
+      setVisible(false);
+    }, 1500)
+  },[visible]);
 
   return (
-
     <View>
-
       <Overlay isVisible={visible}
         onBackdropPress={() => setVisible(false)}
         overlayStyle={{

@@ -10,11 +10,9 @@ import {
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { Overlay, Button } from "react-native-elements";
 
-import search from "../../assets/icon/search.png";
-import dropDownIcon from "../../assets/icon/drop_down.png";
 import TickIcon from "../../assets/icon/tick.png";
 import CircleIcon from "../../assets/icon/circle.png";
-import TableServices from '../../providerServices/tableServices';
+import OrderSerives from '../../providerServices/orderServices';
 export default function (props) {
   //   Id	Name
   // 1	Lẩu - Buffet
@@ -22,15 +20,19 @@ export default function (props) {
   // 3	Rau củ
   // 4	Thịt
   // 5	Đồ uống
+  const orderDate = props.orderDate;
   const [emptyTable, setEmptyTable] = useState([]);
   const getEmptyTable = async () => {
-    const result = await TableServices.list({});
+    const result = await OrderSerives.listReservation({
+      date:{
+        equal:orderDate
+      }
+    });
     let data = [];
     await result.map((item) => {
       if (item.status.id == 2) {
         const tmp = {
-          code: item.code,
-          id: item.id,
+          ...item,
           isCliked: false
         }
         data.push(tmp);
@@ -48,8 +50,7 @@ export default function (props) {
     for (let index = 0; index < lengthData; index++) {
       if (emptyTable[index].id === id) {
         newData.push({
-          id: id,
-          code: emptyTable[index].code,
+          ...emptyTable[index],
           isCliked: !emptyTable[index].isCliked,
         });
       } else {
@@ -118,7 +119,7 @@ export default function (props) {
                               <Image source={TickIcon} style={styles.iconstyle} />
                             )}
                           <Text style={{ color: "#8A8F9C", fontSize: 16 }}>
-                            {item.code}
+                            {item.table.code}
                           </Text>
                         </TouchableOpacity>
                       </View>

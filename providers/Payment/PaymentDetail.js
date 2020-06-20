@@ -17,27 +17,32 @@ import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
 import orderServices from "../../providerServices/orderServices";
 import ModalAccept from '../Components/Modal';
-import Toaster from '../Components/Toaster'
+
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [modalPayVisible, setModalPayVisible] = useState(false);
   const [modalDelVisible, setModalDelVisible] = useState(false);
-  const [toasterPayVisible, setToasterPayVisible] = useState(false);
-  const [toasterDelVisible, setToasterDelVisible] = useState(false);
+  const {
+    toasterPayVisible,
+    setToasterPayVisible,
+    toasterDelVisible,
+    setToasterDelVisible
+  }=props.route.params.toasterVisible
   const handlePay = () => {
-    /* const res = orderServices.payment(data); */
+    const res = orderServices.payment(data);
     /*    return res; */
-    console.log(res);
+
     setModalPayVisible(false);
     setToasterPayVisible(true);
-
+    return props.navigation.navigate("Payment")
   }
-  const handleDelete = async () => {
-    console.log('delete');
-   /*  const res = await orderServices.deleteOrder(data); */
+  const handleDelete =  async() => {
+    //console.log('delete');
+      //const res = await orderServices.deleteOrder(data)
     setModalDelVisible(false);
     setToasterDelVisible(true);
+    return props.navigation.navigate("Payment")
   }
   useEffect(() => {
     // console.log(props.route.params.data);
@@ -62,13 +67,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-      <Toaster
-        data={{
-          notification: 'Thanh toán đơn hàng thành công',
-          visible: toasterPayVisible,
-          setVisible: setToasterPayVisible
-        }}
-      />
+     
       {/* Modal xoá */}
       <ModalAccept data={{
         visible: modalDelVisible,
@@ -79,13 +78,6 @@ export default function DetailOrder(props) {
           title: '      Xác nhận xoá        ',
           titleSubmit: 'Xác nhận',
           titleCancel: 'Quay lại'
-        }}
-      />
-      <Toaster
-        data={{
-          notification: 'Xoá đơn hàng thành công',
-          visible: toasterDelVisible,
-          setVisible: setToasterDelVisible
         }}
       />
       <ScrollView >
@@ -122,147 +114,163 @@ export default function DetailOrder(props) {
               Số Lượng {data.numOfTable} bàn - {data.numOfPerson} người
             </Text>
           </View>
-          <View style={{ marginLeft: 5 }}>
+          <View style={{
+            marginLeft: 5,
+            flexDirection: 'row'
+          }}>
             <Text>Chọn bàn: {"\n\n"}</Text>
+            <View style={{ maxWidth: 150, overflow: 'hidden' }}>
+              {data.reservations.length <= 3
+                ?
+                <View style={{ flexDirection: 'row' }}>
+                  {data.reservations.map((item, index) => index < data.reservations.length - 1
+                    ? <Text>{item.table.code}, </Text>
+                    : <Text>{item.table.code}</Text>
+                  )}
+                </View>
+                : <Text>
+                  {data.reservations[0].table.code}, {data.reservations[1].table.code}, {data.reservations[2].table.code},...
+                </Text>}
+                </View>
+            </View>
+
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 10,
+              marginTop: 5
+            }}
+          >
+            <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
+            <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
+            <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
+            <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
           </View>
 
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 10,
-            marginTop: 5
-          }}
-        >
-          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
-          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
-          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
-          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
-        </View>
-
-        <View style={{ height: "50%", flex: 10 }}>
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            data={data.orderContents}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => {
-              return (
-                <View style={styles.cardView}>
-                  <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
-                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
-                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
-                  <View style={{ flex: 3, alignItems: 'center' }}><Text>
-                    {item.foodFoodTypeMapping.foodType.id === 1
-                      ? (item.quantity *
-                        item.foodFoodTypeMapping.food.priceEach *
-                        (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                      100
-                      : item.foodFoodTypeMapping.foodType.id === 2
+          <View style={{ height: "50%", flex: 10 }}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              data={data.orderContents}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => {
+                return (
+                  <View style={styles.cardView}>
+                    <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
+                    <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
+                    <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
+                    <View style={{ flex: 3, alignItems: 'center' }}><Text>
+                      {item.foodFoodTypeMapping.foodType.id === 1
                         ? (item.quantity *
-                          1.2 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
                         100
-                        : (item.quantity *
-                          1.5 *
-                          item.foodFoodTypeMapping.food.priceEach *
-                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100}
-                  </Text></View>
+                        : item.foodFoodTypeMapping.foodType.id === 2
+                          ? (item.quantity *
+                            1.2 *
+                            item.foodFoodTypeMapping.food.priceEach *
+                            (100 - item.foodFoodTypeMapping.food.discountRate)) /
+                          100
+                          : (item.quantity *
+                            1.5 *
+                            item.foodFoodTypeMapping.food.priceEach *
+                            (100 - item.foodFoodTypeMapping.food.discountRate)) /
+                          100}
+                    </Text></View>
 
-                </View>
-              );
-            }}
-          />
-        </View>
+                  </View>
+                );
+              }}
+            />
+          </View>
       </ScrollView>
-      <View style={{
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        height: 80,
-        bottom: 0,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.51,
-        shadowRadius: 13.16,
+        <View style={{
+          backgroundColor: '#ffffff',
+          borderRadius: 10,
+          height: 80,
+          bottom: 0,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowOpacity: 0.51,
+          shadowRadius: 13.16,
 
-        elevation: 20,
-      }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 10
-          }}
+          elevation: 20,
+        }}
         >
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
-          </View>
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.total} vnđ</Text>
-          </View>
-        </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity
+          <View
             style={{
-              backgroundColor: "#c7c5bf",
-              borderRadius: 8,
-              width: 120,
-              height: 40,
-              alignItems: 'center'
+              flexDirection: "row",
+              flex: 10
             }}
-            onPress={() => { setModalDelVisible(true) }}
           >
-            <Text
+            <View style={{ flex: 5, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
+            </View>
+            <View style={{ flex: 5, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.total} vnđ</Text>
+            </View>
+          </View>
+          <View style={styles.btnView}>
+            <TouchableOpacity
               style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#000",
+                backgroundColor: "#c7c5bf",
+                borderRadius: 8,
+                width: 120,
+                height: 40,
+                alignItems: 'center'
               }}
+              onPress={() => { setModalDelVisible(true) }}
             >
-              Xoá
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  padding: 8,
+                  color: "#000",
+                }}
+              >
+                Xoá
           </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#DC0000",
-              borderRadius: 8,
-              width: 120,
-              height: 40,
-              alignItems: 'center'
-            }}
-            onPress={() => setModalPayVisible(true)}
-          >
-            <Text
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#fff",
+                backgroundColor: "#DC0000",
+                borderRadius: 8,
+                width: 120,
+                height: 40,
+                alignItems: 'center'
               }}
+              onPress={() => setModalPayVisible(true)}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  padding: 8,
+                  color: "#fff",
+                }}
 
-            >
-              Thanh toán
+              >
+                Thanh toán
           </Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
     </SafeAreaView>
   ) : (
       <Spinner />
     );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+        container: {
+        flex: 1,
     backgroundColor: "#F5F6F7",
   },
   customerInfoView: {
-    flexDirection: "row",
+        flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
     paddingLeft: 15,
@@ -274,12 +282,12 @@ const styles = StyleSheet.create({
 
   },
   orderInfoView: {
-    backgroundColor: "#FFFFFF",
+        backgroundColor: "#FFFFFF",
     top: 10,
     marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
+        width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
@@ -288,7 +296,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardView: {
-    marginTop: 10,
+        marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "#FFFFFF",
@@ -296,7 +304,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
+        width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
@@ -306,7 +314,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   btnView: {
-    flexDirection: "row",
+        flexDirection: "row",
     justifyContent: "space-around",
     paddingBottom: 8
   },

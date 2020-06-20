@@ -12,6 +12,7 @@ import orderServices from "../../providerServices/orderServices";
 import DetailOrder from "./DetailOrder";
 import Spinner from "../../components/Spinner/Spinner";
 import Filter from './Filter';
+import Toaster from "../Components/Toaster";
 const OrderStack = createStackNavigator();
 /*OrderStackScreen  */
 export default ({ navigation }) => (
@@ -25,7 +26,7 @@ export default ({ navigation }) => (
     }}
   >
     <OrderStack.Screen
-      name="Home"
+      name="HomeOrder"
       component={Order}
       options={{
         title: "Đơn Đặt Hàng",
@@ -52,7 +53,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("HomeOrder");
             }}
           ></Icon.Button>
         ),
@@ -64,10 +65,12 @@ export default ({ navigation }) => (
 const Order = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [toasterApproveVis, setToasterApproveVis] = useState(false);
+  const [toasterRejectVis, setToasterRejectVis] = useState(false);
   useEffect(() => {
     getData();
-  }, []);
-
+  }, [toasterApproveVis, toasterRejectVis]);
+  
   const getData = async () => {
     setIsLoading(true);
     let params = {};
@@ -75,17 +78,23 @@ const Order = (props) => {
     setData(response);
     setIsLoading(false);
   };
-/* filter  */
-const handleFilter= (props)=>{
- orderServices.listOrdered(props).then(res=>{
-   setData(res)
- });
- }
+  /* filter  */
+  const handleFilter = (props) => {
+    orderServices.listOrdered(props).then(res => {
+      setData(res)
+    });
+  }
   const onselect = (code) => {
     // console.log("On select");
     let orderedData = data.find((item) => item.code === code);
     props.navigation.navigate("DetailOrder", {
       data: orderedData,
+      toasterVisible: {
+        toasterRejectVis,
+        setToasterRejectVis,
+        toasterApproveVis,
+        setToasterApproveVis
+      }
     });
   };
 
@@ -97,7 +106,21 @@ const handleFilter= (props)=>{
         </View>
       ) : null}
       {/* {console.log(props)} */}
-      <Filter handleFilter={handleFilter}/>
+      <Toaster
+        data={{
+          notification: 'Xác nhận đơn hàng thành công',
+          visible: toasterApproveVis,
+          setVisible: setToasterApproveVis
+        }}
+      />
+      <Toaster
+        data={{
+          notification: 'Từ chối đơn hàng thành công',
+          visible: toasterRejectVis,
+          setVisible: setToasterRejectVis
+        }}
+      />
+      <Filter handleFilter={handleFilter} />
       <FlatList
         showsHorizontalScrollIndicator={false}
         data={data}

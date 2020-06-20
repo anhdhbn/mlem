@@ -5,31 +5,35 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Button,
   ScrollView,
   SafeAreaView,
 } from "react-native";
-// import { createStackNavigator } from "@react-navigation/stack";
 
 import moment from "moment";
-
-import BackICon from "../../assets/icon/provider/back.png";
-import PhoneIcon from "../../assets/icon/provider/phone.png";
 import { FlatList } from "react-native-gesture-handler";
+
+import PhoneIcon from "../../assets/icon/provider/phone.png";
 import Spinner from "../../components/Spinner/Spinner";
-import ProviderService from '../../providerServices/tableServices';
+
+import OrderServices from '../../providerServices/orderServices'
 import ModalSelectTable from "./ModalSelectTable";
 import Modal from '../Components/Modal';
 import Toaster from "../Components/Toaster";
+import Order from "./Order";
+import Call from "react-native-phone-call"
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [selectedTable, setSelectedTable] = useState([]);
   const [visible, setVisible] = useState(false);
   const [approveVisible, setApproveVisible] = useState(false);
-  const [toasterApproveVis, setToasterApproveVis] = useState(false);
-  const [toasterRejectVis, setToasterRejectVis] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
+  const {
+    toasterRejectVis,
+    setToasterRejectVis,
+    toasterApproveVis,
+    setToasterApproveVis
+  }= props.route.params.toasterVisible
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
@@ -37,32 +41,58 @@ export default function DetailOrder(props) {
       return item.quantity;
     });
   }, []);
+  
   const handleSelectTable = async (props) => {
     let tmp = [];
     await props.map((item) => {
       if (item.isCliked === true) {
-        tmp.push(item);
+        tmp.push({
+          ...item,
+          orderId:data.id
+        });
       }
     })
     setSelectedTable(tmp)
   }
   /*  */
-  const handleApprove = () => {
-    console.log('approve');
-    setToasterApproveVis(true);
-    setApproveVisible(false);
+  const handleCall = ()=>{
+    
+    const args = {
+      number: '111', // String value with the number to call
+      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+    }
+     
+    Call(args).catch(console.error)
   }
   /*  */
-  const handleReject = () => {
-    console.log('reject');
+  const handleApprove = async() => {
+    const submitData = {
+      ...data,
+      reservations:[...selectedTable]
+    }
+    /* const res = submitData */
+  const res = await OrderServices.approveOrdered(submitData); 
+  console.log(JSON.stringify(res))
+    setToasterApproveVis(true);
+    setApproveVisible(false);
+    return props.navigation.navigate("HomeOrder");
+  }
+  /*  */
+  const handleReject = async() => {
+    const submitData = {
+      ...data,
+      reservations:[...selectedTable]
+    }
+    const res = await  OrderServices.rejectOrdered(submitData);
     setToasterRejectVis(true);
     setRejectVisible(false);
+    return props.navigation.navigate("HomeOrder");
   }
   return data ? (
     <SafeAreaView style={styles.container}>
       {/* Modal sellect table */}
       <ModalSelectTable visible={visible} setVisible={setVisible}
-        handleSelectTable={handleSelectTable}
+        handleSelectTable={handleSelectTable} orderDate ={moment(data.orderDate)}
       />
       {/* modal approve a order */}
       <Modal data={{
@@ -76,13 +106,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-        <Toaster
-          data={{
-            notification:'Xác nhận đơn hàng thành công',
-            visible:toasterApproveVis,
-            setVisible:setToasterApproveVis
-          }}
-        />
+        
       {/* modal reject a order */}
       <Modal data={{
         visible: rejectVisible,
@@ -95,13 +119,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-      <Toaster
-          data={{
-            notification:'Từ chối đơn hàng thành công',
-            visible:toasterRejectVis,
-            setVisible:setToasterRejectVis
-          }}
-        />
+      
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >
@@ -112,7 +130,9 @@ export default function DetailOrder(props) {
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleCall}
+          >
             <Image
               source={PhoneIcon}
               style={{ width: 34, height: 34, top: 10, right: 5 }}
@@ -148,12 +168,12 @@ export default function DetailOrder(props) {
                 ?
                 <View style={{ flexDirection: 'row' }}>
                   {selectedTable.map((item, index) => index < selectedTable.length - 1
-                    ? <Text>{item.code}, </Text>
-                    : <Text>{item.code}</Text>
+                    ? <Text>{item.table.code}, </Text>
+                    : <Text>{item.table.code}</Text>
                   )}
                 </View>
                 : <Text>
-                  {selectedTable[0].code}, {selectedTable[1].code}, {selectedTable[2].code},...
+                  {selectedTable[0].table.code}, {selectedTable[1].table.code}, {selectedTable[2].table.code},...
                 </Text>}
             </View>
           </TouchableOpacity>
