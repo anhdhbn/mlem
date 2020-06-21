@@ -35,6 +35,11 @@ const postTokenGG = (params) =>
     .post(`api/account/login/google`, params)
     .then((res) => res.data);
 
+const changePassword = (params) =>
+  requestServices.customAxios
+    .post(`api/account/change-password`, params)
+    .then((res) => res.data);
+
 export default {
   login,
   forgotPassword,
@@ -46,4 +51,5 @@ export default {
   createUser,
   postTokenFB,
   postTokenGG,
+  changePassword,
 };
