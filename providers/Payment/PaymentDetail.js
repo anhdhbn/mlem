@@ -28,21 +28,29 @@ export default function DetailOrder(props) {
     setToasterPayVisible,
     toasterDelVisible,
     setToasterDelVisible
-  }=props.route.params.toasterVisible
-  const handlePay = () => {
-    const res = orderServices.payment(data);
-    /*    return res; */
+  } = props.route.params.toasterVisible
+  const handlePay = async () => {
 
+    props.navigation.navigate("PaymentScreen");
     setModalPayVisible(false);
-    setToasterPayVisible(true);
-    return props.navigation.navigate("Payment")
+    const res = await orderServices.payment(data);
+    res.errors !== null
+      ?
+      setToasterPayVisible({ status: true, title: res.errors.statusId })
+      :
+      setToasterPayVisible({ status: true, title: null })
   }
-  const handleDelete =  async() => {
+  const handleDelete = async () => {
     //console.log('delete');
-      //const res = await orderServices.deleteOrder(data)
+    props.navigation.navigate("PaymentScreen")
     setModalDelVisible(false);
-    setToasterDelVisible(true);
-    return props.navigation.navigate("Payment")
+    const res = await orderServices.deleteOrder(data);
+    res.errors !== null
+      ?
+      setToasterDelVisible({ status: true, title: res.errors.id })
+      :
+      setToasterDelVisible({ status: true, title: null })
+
   }
   useEffect(() => {
     // console.log(props.route.params.data);
@@ -67,7 +75,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-     
+
       {/* Modal xoá */}
       <ModalAccept data={{
         visible: modalDelVisible,
@@ -131,146 +139,146 @@ export default function DetailOrder(props) {
                 : <Text>
                   {data.reservations[0].table.code}, {data.reservations[1].table.code}, {data.reservations[2].table.code},...
                 </Text>}
-                </View>
             </View>
-
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 10,
-              marginTop: 5
-            }}
-          >
-            <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
-            <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
-            <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
-            <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
           </View>
 
-          <View style={{ height: "50%", flex: 10 }}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              data={data.orderContents}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => {
-                return (
-                  <View style={styles.cardView}>
-                    <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
-                    <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
-                    <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
-                    <View style={{ flex: 3, alignItems: 'center' }}><Text>
-                      {item.foodFoodTypeMapping.foodType.id === 1
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 10,
+            marginTop: 5
+          }}
+        >
+          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
+          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
+          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
+          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
+        </View>
+
+        <View style={{ height: "50%", flex: 10 }}>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={data.orderContents}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => {
+              return (
+                <View style={styles.cardView}>
+                  <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
+                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
+                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
+                  <View style={{ flex: 3, alignItems: 'center' }}><Text>
+                    {item.foodFoodTypeMapping.foodType.id === 1
+                      ? (item.quantity *
+                        item.foodFoodTypeMapping.food.priceEach *
+                        (100 - item.foodFoodTypeMapping.food.discountRate)) /
+                      100
+                      : item.foodFoodTypeMapping.foodType.id === 2
                         ? (item.quantity *
+                          1.2 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
                         100
-                        : item.foodFoodTypeMapping.foodType.id === 2
-                          ? (item.quantity *
-                            1.2 *
-                            item.foodFoodTypeMapping.food.priceEach *
-                            (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                          100
-                          : (item.quantity *
-                            1.5 *
-                            item.foodFoodTypeMapping.food.priceEach *
-                            (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                          100}
-                    </Text></View>
+                        : (item.quantity *
+                          1.5 *
+                          item.foodFoodTypeMapping.food.priceEach *
+                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
+                        100}
+                  </Text></View>
 
-                  </View>
-                );
-              }}
-            />
-          </View>
-      </ScrollView>
-        <View style={{
-          backgroundColor: '#ffffff',
-          borderRadius: 10,
-          height: 80,
-          bottom: 0,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 10,
-          },
-          shadowOpacity: 0.51,
-          shadowRadius: 13.16,
-
-          elevation: 20,
-        }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 10
+                </View>
+              );
             }}
-          >
-            <View style={{ flex: 5, alignItems: "center" }}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
-            </View>
-            <View style={{ flex: 5, alignItems: "center" }}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.total} vnđ</Text>
-            </View>
-          </View>
-          <View style={styles.btnView}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#c7c5bf",
-                borderRadius: 8,
-                width: 120,
-                height: 40,
-                alignItems: 'center'
-              }}
-              onPress={() => { setModalDelVisible(true) }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  padding: 8,
-                  color: "#000",
-                }}
-              >
-                Xoá
-          </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#DC0000",
-                borderRadius: 8,
-                width: 120,
-                height: 40,
-                alignItems: 'center'
-              }}
-              onPress={() => setModalPayVisible(true)}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  padding: 8,
-                  color: "#fff",
-                }}
+          />
+        </View>
+      </ScrollView>
+      <View style={{
+        backgroundColor: '#ffffff',
+        borderRadius: 10,
+        height: 80,
+        bottom: 0,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 10,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 13.16,
 
-              >
-                Thanh toán
-          </Text>
-            </TouchableOpacity>
+        elevation: 20,
+      }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 10
+          }}
+        >
+          <View style={{ flex: 5, alignItems: "center" }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
+          </View>
+          <View style={{ flex: 5, alignItems: "center" }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.total} vnđ</Text>
           </View>
         </View>
+        <View style={styles.btnView}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#c7c5bf",
+              borderRadius: 8,
+              width: 120,
+              height: 40,
+              alignItems: 'center'
+            }}
+            onPress={() => { setModalDelVisible(true) }}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                padding: 8,
+                color: "#000",
+              }}
+            >
+              Xoá
+          </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#DC0000",
+              borderRadius: 8,
+              width: 120,
+              height: 40,
+              alignItems: 'center'
+            }}
+            onPress={() => setModalPayVisible(true)}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                padding: 8,
+                color: "#fff",
+              }}
+
+            >
+              Thanh toán
+          </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   ) : (
       <Spinner />
     );
 }
 const styles = StyleSheet.create({
-        container: {
-        flex: 1,
+  container: {
+    flex: 1,
     backgroundColor: "#F5F6F7",
   },
   customerInfoView: {
-        flexDirection: "row",
+    flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
     paddingLeft: 15,
@@ -282,12 +290,12 @@ const styles = StyleSheet.create({
 
   },
   orderInfoView: {
-        backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFFFFF",
     top: 10,
     marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: {
-        width: 0,
+      width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
@@ -296,7 +304,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardView: {
-        marginTop: 10,
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "#FFFFFF",
@@ -304,7 +312,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     shadowColor: "#000",
     shadowOffset: {
-        width: 0,
+      width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
@@ -314,7 +322,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   btnView: {
-        flexDirection: "row",
+    flexDirection: "row",
     justifyContent: "space-around",
     paddingBottom: 8
   },

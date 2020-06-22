@@ -33,7 +33,7 @@ export default function DetailOrder(props) {
     setToasterRejectVis,
     toasterApproveVis,
     setToasterApproveVis
-  }= props.route.params.toasterVisible
+  } = props.route.params.toasterVisible
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
@@ -41,58 +41,66 @@ export default function DetailOrder(props) {
       return item.quantity;
     });
   }, []);
-  
+
   const handleSelectTable = async (props) => {
     let tmp = [];
     await props.map((item) => {
       if (item.isCliked === true) {
         tmp.push({
           ...item,
-          orderId:data.id
+          orderId: data.id
         });
       }
     })
     setSelectedTable(tmp)
   }
   /*  */
-  const handleCall = ()=>{
-    
+  const handleCall = () => {
+
     const args = {
       number: '111', // String value with the number to call
       prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
     }
-     
+
     Call(args).catch(console.error)
   }
   /*  */
-  const handleApprove = async() => {
+  const handleApprove = async () => {
     const submitData = {
       ...data,
-      reservations:[...selectedTable]
+      reservations: [...selectedTable]
     }
     /* const res = submitData */
-  const res = await OrderServices.approveOrdered(submitData); 
-  console.log(JSON.stringify(res))
-    setToasterApproveVis(true);
     setApproveVisible(false);
-    return props.navigation.navigate("HomeOrder");
+    props.navigation.navigate("HomeOrder");
+    const res = await OrderServices.approveOrdered(submitData);
+    /* console.log(JSON.stringify(res)) */
+    res.errors!==null 
+    ?
+    setToasterApproveVis({ status: true, title: res.errors.statusId })
+    :
+    setToasterApproveVis({ status: true, title:null})
   }
   /*  */
-  const handleReject = async() => {
+  const handleReject = async () => {
     const submitData = {
       ...data,
-      reservations:[...selectedTable]
+      reservations: [...selectedTable]
     }
-    const res = await  OrderServices.rejectOrdered(submitData);
-    setToasterRejectVis(true);
     setRejectVisible(false);
-    return props.navigation.navigate("HomeOrder");
+    props.navigation.navigate("HomeOrder");
+    const res = await OrderServices.rejectOrdered(submitData);
+    res.errors!==null 
+    ?
+    setToasterRejectVis({ status: true, title: res.errors.statusId })
+    :
+    setToasterRejectVis({ status: true, title: null })
   }
   return data ? (
     <SafeAreaView style={styles.container}>
       {/* Modal sellect table */}
       <ModalSelectTable visible={visible} setVisible={setVisible}
-        handleSelectTable={handleSelectTable} orderDate ={moment(data.orderDate)}
+        handleSelectTable={handleSelectTable} orderDate={moment(data.orderDate)}
       />
       {/* modal approve a order */}
       <Modal data={{
@@ -106,7 +114,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-        
+
       {/* modal reject a order */}
       <Modal data={{
         visible: rejectVisible,
@@ -119,7 +127,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-      
+
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >

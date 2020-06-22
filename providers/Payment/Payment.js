@@ -26,7 +26,7 @@ export default ({ navigation }) => (
     }}
   >
     <PaymentStack.Screen
-      name="Payment"
+      name="PaymentScreen"
       component={Payment}
       options={{
         title: "Đơn Đặt Hàng",
@@ -53,7 +53,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.navigate("Payment")
+              navigation.navigate("PaymentScreen")
             }}
           ></Icon.Button>
         ),
@@ -65,11 +65,11 @@ export default ({ navigation }) => (
 const Payment = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [toasterPayVisible, setToasterPayVisible] = useState(false);
-  const [toasterDelVisible, setToasterDelVisible] = useState(false);
+  const [toasterPayVisible, setToasterPayVisible] = useState({status:false,title:''});
+  const [toasterDelVisible, setToasterDelVisible] = useState({status:false,title:''});
   useEffect(() => {
     getData();
-  }, [toasterPayVisible,toasterDelVisible]);
+  }, [toasterPayVisible.status,toasterDelVisible.status]);
 
   const getData = async () => {
     setIsLoading(true);

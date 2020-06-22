@@ -25,17 +25,16 @@ const listReservation = (params) =>
   requestServices.customAxios
     .post(`/api/order/list-reservation`, params)
     .then((res) => res.data);
-const payment = (params) =>{
+const payment = (params) =>
   requestServices.customAxios
-  .post(`/api/order/done`,params)
-  .then((res)=> res.data)
-}
-const deleteOrder = (params) =>{
+  .post("api/order/done", params)
+  .then((res) => res.data)
+
+const deleteOrder = (params) =>
   requestServices.customAxios
   .post("api/order/delete",params)
   .then((res)=> res.data)
-  .catch((err)=>err)
-}
+
 export default {
   listOrdered,
   approveOrdered,

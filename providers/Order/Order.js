@@ -65,11 +65,11 @@ export default ({ navigation }) => (
 const Order = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [toasterApproveVis, setToasterApproveVis] = useState(false);
-  const [toasterRejectVis, setToasterRejectVis] = useState(false);
+  const [toasterApproveVis, setToasterApproveVis] = useState({status:false,title:''});
+  const [toasterRejectVis, setToasterRejectVis] = useState({status:false,title:''});
   useEffect(() => {
     getData();
-  }, [toasterApproveVis, toasterRejectVis]);
+  }, [toasterApproveVis.status,toasterRejectVis.status ]);
   
   const getData = async () => {
     setIsLoading(true);
