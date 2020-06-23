@@ -179,7 +179,9 @@ export default class order extends Component {
   };
 
   calculatePrice = () => {
+    // Giá chưa sale
     var tp = 0;
+    // Giá dẫ sale
     var tpp = 0;
     if (this.state.listDish) {
       this.state.listDish.map((dishOrdered) => {

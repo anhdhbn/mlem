@@ -15,6 +15,8 @@ import {
 import ItemUserProfile from "./itemUserProfile";
 import AsyncStorage from "@react-native-community/async-storage";
 import authServices from "../../customerServices/authServices";
+import { Input, Overlay } from "react-native-elements";
+import Snackbar from "../../components/common/snackbarUpdating";
 
 export default class SettingProfile extends Component {
   constructor(props) {
@@ -63,6 +65,7 @@ export default class SettingProfile extends Component {
     } catch (error) {}
 
     if (typeToken === null) {
+      this.setVisibleModalChangePass(true);
     } else {
       console.log("[INFO] Type token: ", typeToken);
       if (typeToken == "gg") {
@@ -96,19 +99,26 @@ export default class SettingProfile extends Component {
   createParams() {
     return {
       // id: this.props.id,
-      confirmPassword: this.state.modal.oldPassword.toString(),
-      password: this.state.modal.oldPassword.toString(),
-      confirmPassword: this.state.modal.oldPassword.toString(),
+      oldPassword: this.state.modal.oldPassword.toString(),
+      password: this.state.modal.newPassword.toString(),
+      confirmPassword: this.state.modal.confirmPassword.toString(),
     };
   }
 
-  _onsubmitModal = () => {
+  _onsubmitModal = async () => {
     this.hideModalChangePass();
     let params = this.createParams();
     console.log("[INFO] Params to update password: ", params);
     this.createAlert("Đang cập nhật");
-    console.log("Code tiếp phần push params lên đi=========================");
-    // await authServices.changePassword(params);
+
+    await authServices.changePassword(params).then(
+      (res) => {
+        this.createAlert("Cập nhật mật khẩu thành công");
+      },
+      (err) => {
+        this.createAlert("Cập nhật mật khẩu thất bại");
+      }
+    );
   };
 
   render() {
@@ -243,3 +253,28 @@ export default class SettingProfile extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  modalItemTitle: {
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingLeft: 10,
+    color: "#8A8F9C",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingLeft: 8,
+  },
+  seeAll: {
+    marginTop: 8,
+    marginRight: 10,
+  },
+  foodname: {
+    fontSize: 11,
+  },
+  price: {
+    fontSize: 9,
+    color: "#009FFF",
+  },
+});

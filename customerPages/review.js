@@ -181,7 +181,7 @@ export default (props) => {
               color: "#8A8F9C",
             }}
           >
-            Đánh giá
+            Đánh giá món ăn này
           </Text>
         </View>
         <View
@@ -203,14 +203,14 @@ export default (props) => {
             <Rating
               ratingCount={5}
               imageSize={30}
-              defaultRating={1}
+              defaultRating={0}
               showRating={false}
               onFinishRating={ratingCompleted}
             />
           </View>
           <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
             <TextInput
-              label="Đánh giá của bạn"
+              label="Đánh giá của bạn (Tùy chọn)"
               value={comment}
               onChangeText={(text) => setComment(text)}
             />
