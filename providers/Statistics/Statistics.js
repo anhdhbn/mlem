@@ -53,7 +53,6 @@ const Statistic = (props) => {
 
   const handleFilter = async (props) => {
     const res = await statisticServices.list(props);
-    console.log(res);
     setData(res)
   };
 
@@ -85,7 +84,7 @@ const Statistic = (props) => {
             fontSize: 20
           }}>Tổng số: {data.count}</Text>
         </View>
-        {/* <FlatList
+        <FlatList
           showsHorizontalScrollIndicator={false}
           data={data.orders}
           keyExtractor={(item) => item.id}
@@ -94,9 +93,9 @@ const Statistic = (props) => {
               <TouchableOpacity
                 style={styles.card}
               >
-                {getUserInfor(11)}
                 <View>
                   <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                    {item.account.displayName}
                   </Text>
                   <Text
                     style={{
@@ -105,7 +104,7 @@ const Statistic = (props) => {
                       fontSize: 14,
                     }}
                   >
-                
+                  {item.account.phone}
                   </Text>
                   <Text
                     style={{
@@ -114,8 +113,8 @@ const Statistic = (props) => {
                       fontSize: 14,
                     }}
                   >
-             
-                  </Text>
+                  {Moment(item.account.orderDate).format('hh:mm')}-{Moment(item.account.orderDate).format('DD/MM/YYYY')}
+                  </Text> 
                 </View>
                 <View style={{ flexDirection: "row", top: 10 }}>
                   <Text
@@ -135,7 +134,7 @@ const Statistic = (props) => {
               </TouchableOpacity>
             );
           }}
-        /> */}
+        />
       </View>}
     </View>
   );

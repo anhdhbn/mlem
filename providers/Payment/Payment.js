@@ -12,6 +12,7 @@ import orderServices from "../../providerServices/orderServices";
 import PaymentDetail from "./PaymentDetail";
 import Spinner from "../../components/Spinner/Spinner";
 import Filter from './Filter';
+import Toaster from '../Components/Toaster'
 const PaymentStack = createStackNavigator();
 /*PaymentStackScreen  */
 export default ({ navigation }) => (
@@ -25,7 +26,7 @@ export default ({ navigation }) => (
     }}
   >
     <PaymentStack.Screen
-      name="Payment"
+      name="PaymentScreen"
       component={Payment}
       options={{
         title: "Đơn Đặt Hàng",
@@ -52,7 +53,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("PaymentScreen")
             }}
           ></Icon.Button>
         ),
@@ -64,9 +65,11 @@ export default ({ navigation }) => (
 const Payment = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [toasterPayVisible, setToasterPayVisible] = useState({status:false,title:''});
+  const [toasterDelVisible, setToasterDelVisible] = useState({status:false,title:''});
   useEffect(() => {
     getData();
-  }, []);
+  }, [toasterPayVisible.status,toasterDelVisible.status]);
 
   const getData = async () => {
     setIsLoading(true);
@@ -75,17 +78,23 @@ const Payment = (props) => {
     setData(response);
     setIsLoading(false);
   };
-/* filter  */
-const handleFilter= (props)=>{
- orderServices.listOrdered(props).then(res=>{
-   setData(res)
- });
- }
+  /* filter  */
+  const handleFilter = (props) => {
+    orderServices.listOrdered(props).then(res => {
+      setData(res)
+    });
+  }
   const onselect = (code) => {
     // console.log("On select");
     let orderedData = data.find((item) => item.code === code);
     props.navigation.navigate("PaymentDetail", {
       data: orderedData,
+      toasterVisible: {
+        toasterPayVisible,
+        setToasterPayVisible,
+        toasterDelVisible,
+        setToasterDelVisible
+      }
     });
   };
 
@@ -97,7 +106,21 @@ const handleFilter= (props)=>{
         </View>
       ) : null}
       {/* {console.log(props)} */}
-      <Filter handleFilter={handleFilter}/>
+      <Toaster
+        data={{
+          notification: 'Thanh toán đơn hàng thành công',
+          visible: toasterPayVisible,
+          setVisible: setToasterPayVisible
+        }}
+      />
+      <Toaster
+        data={{
+          notification: 'Xoá đơn hàng thành công',
+          visible: toasterDelVisible,
+          setVisible: setToasterDelVisible
+        }}
+      />
+      <Filter handleFilter={handleFilter} />
       <FlatList
         showsHorizontalScrollIndicator={false}
         data={data}

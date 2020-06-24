@@ -17,27 +17,40 @@ import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
 import orderServices from "../../providerServices/orderServices";
 import ModalAccept from '../Components/Modal';
-import Toaster from '../Components/Toaster'
+
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [modalPayVisible, setModalPayVisible] = useState(false);
   const [modalDelVisible, setModalDelVisible] = useState(false);
-  const [toasterPayVisible, setToasterPayVisible] = useState(false);
-  const [toasterDelVisible, setToasterDelVisible] = useState(false);
-  const handlePay = () => {
-    /* const res = orderServices.payment(data); */
-    /*    return res; */
-    console.log(res);
-    setModalPayVisible(false);
-    setToasterPayVisible(true);
+  const {
+    toasterPayVisible,
+    setToasterPayVisible,
+    toasterDelVisible,
+    setToasterDelVisible
+  } = props.route.params.toasterVisible
+  const handlePay = async () => {
 
+    props.navigation.navigate("PaymentScreen");
+    setModalPayVisible(false);
+    const res = await orderServices.payment(data);
+    res.errors !== null
+      ?
+      setToasterPayVisible({ status: true, title: res.errors.statusId })
+      :
+      setToasterPayVisible({ status: true, title: null })
   }
   const handleDelete = async () => {
-    console.log('delete');
-   /*  const res = await orderServices.deleteOrder(data); */
+    //console.log('delete');
+    props.navigation.navigate("PaymentScreen")
     setModalDelVisible(false);
-    setToasterDelVisible(true);
+    const res = await orderServices.deleteOrder(data);
+    res.errors !== null
+      ?
+      setToasterDelVisible({ status: true, title: res.errors.id })
+      :
+      setToasterDelVisible({ status: true, title: null })
+
   }
   useEffect(() => {
     // console.log(props.route.params.data);
@@ -62,13 +75,7 @@ export default function DetailOrder(props) {
           titleCancel: 'Quay lại'
         }}
       />
-      <Toaster
-        data={{
-          notification: 'Thanh toán đơn hàng thành công',
-          visible: toasterPayVisible,
-          setVisible: setToasterPayVisible
-        }}
-      />
+
       {/* Modal xoá */}
       <ModalAccept data={{
         visible: modalDelVisible,
@@ -79,13 +86,6 @@ export default function DetailOrder(props) {
           title: '      Xác nhận xoá        ',
           titleSubmit: 'Xác nhận',
           titleCancel: 'Quay lại'
-        }}
-      />
-      <Toaster
-        data={{
-          notification: 'Xoá đơn hàng thành công',
-          visible: toasterDelVisible,
-          setVisible: setToasterDelVisible
         }}
       />
       <ScrollView >
@@ -122,8 +122,24 @@ export default function DetailOrder(props) {
               Số Lượng {data.numOfTable} bàn - {data.numOfPerson} người
             </Text>
           </View>
-          <View style={{ marginLeft: 5 }}>
+          <View style={{
+            marginLeft: 5,
+            flexDirection: 'row'
+          }}>
             <Text>Chọn bàn: {"\n\n"}</Text>
+            <View style={{ maxWidth: 150, overflow: 'hidden' }}>
+              {data.reservations.length <= 3
+                ?
+                <View style={{ flexDirection: 'row' }}>
+                  {data.reservations.map((item, index) => index < data.reservations.length - 1
+                    ? <Text>{item.table.code}, </Text>
+                    : <Text>{item.table.code}</Text>
+                  )}
+                </View>
+                : <Text>
+                  {data.reservations[0].table.code}, {data.reservations[1].table.code}, {data.reservations[2].table.code},...
+                </Text>}
+            </View>
           </View>
 
         </View>

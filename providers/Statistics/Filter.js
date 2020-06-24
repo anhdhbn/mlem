@@ -34,8 +34,8 @@ export default class FilterBar extends Component {
               selectedValue={this.state.valueFilterStatus}
               onValueChange={this.onValueFilterStatusChange}
             >
-              <Picker.Item label="Theo tháng" value="1" />
-              <Picker.Item label="Theo năm" value="2" />
+              <Picker.Item label="Theo tháng" value="2" />
+              <Picker.Item label="Theo năm" value="1" />
             </Picker>
       </View>
     );
