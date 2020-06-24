@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image, TextInput } from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -7,6 +7,7 @@ import * as signalR from "@aspnet/signalr";
 const BASE_URL = "http://admin.wepick.vn:20000";
 
 import TickIcon from "../../assets/icon/tick.png";
+import NotifyServices from "../../providerServices/notifyServices";
 const NotificationStack = createStackNavigator();
 /*  NotificationStackScreen*/
 export default ({ navigation }) => (
@@ -39,7 +40,7 @@ export default ({ navigation }) => (
   </NotificationStack.Navigator>
 );
 const Notification = (props) => {
-  const data = [
+  const [data, setData] = useState([
     {
       image: "https://reactnative.dev/img/tiny_logo.png",
       tableNum: "001",
@@ -58,11 +59,16 @@ const Notification = (props) => {
       buzzTime: "1 phút trước",
       id: "3",
     },
-  ];
+  ]);
 
   useEffect(() => {
     testSignalIR();
   });
+
+  getNotify = async () => {
+    let res = NotifyServices.list({});
+    console.log("[INFO] Data after get ")
+  };
 
   const testSignalIR = () => {
     console.log("[INFO] Called SignalR");
