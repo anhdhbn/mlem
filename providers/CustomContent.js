@@ -51,15 +51,6 @@ export default function CustomContent(props) {
         />
         <DrawerItem
           icon={({ color, size }) => (
-            <Icon name="table" color={color} size={size + 4} />
-          )}
-          label="Bàn"
-          onPress={() => {
-            props.navigation.navigate("Table");
-          }}
-        />
-        <DrawerItem
-          icon={({ color, size }) => (
             <Icon name="credit-card" color={color} size={size} />
           )}
           label="Thanh toán"

@@ -6,10 +6,13 @@ import MenuStackScreen from "./Menu/Menu";
 import NotificationStackScreen from "./Notification/Notification";
 import StatisticStackScreen from './Statistics/Statistics';
 import PaymentStackScreen from './Payment/Payment';
+import CustomContent from "./CustomContent";
+
 export default function () {
   const drawer = createDrawerNavigator();
   return (
-    <drawer.Navigator initialRouteName="Home">
+    <drawer.Navigator initialRouteName="Home"
+    drawerContent={(props) => <CustomContent {...props} />}>
       <drawer.Screen name="Home" component={OrderStackScreen} />
       <drawer.Screen name="Menu" component={MenuStackScreen} />
       <drawer.Screen name="Payment" component={PaymentStackScreen} />
