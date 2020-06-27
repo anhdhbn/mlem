@@ -32,7 +32,13 @@ export default class History extends Component {
   }
 
   setHistory = (newHistory) => {
-    this.setState({ history: newHistory });
+    let length = newHistory.length;
+    let history = [];
+    for (let index = length - 1; index >= 0; index--) {
+      history.push(newHistory[index]);
+      // console.log("PUSH: ", newHistory[index].createdAt);
+    }
+    this.setState({ history: history });
   };
 
   setIsLoading = (value) => {
@@ -49,13 +55,13 @@ export default class History extends Component {
     this.setIsLoading(true);
     // console.log("[INFO] Params in getListOrder(): ", params);
     let response = await historyServices.list(params);
-    let length = response.length;
-    for (let index = 0; index < length; index++) {
-      console.log("[INFO] Response in history: ", response[index].total);
-    }
+    //let length = response.length;
+    // for (let index = 0; index < length; index++) {
+    //   console.log("[INFO] Response in history: ", response[index].total);
+    // }
 
     this.setIsLoading(false);
-    this.setState({ history: response });
+    this.setHistory(response);
   };
 
   renderOrdered = (codeTime, codeStatus, pickedDate = null) => {
@@ -154,7 +160,7 @@ export default class History extends Component {
                   key={item.code}
                   id={item.code}
                   orderTime={item.createdAt}
-                  dmy={item.orderDate}
+                  dmy={item.createdAt}
                   price={item.total}
                   // // Gia goc
                   // subPrice={item.subTotal}

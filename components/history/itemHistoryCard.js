@@ -13,6 +13,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
+import formatPrice from "../formatPrice";
+
 export default class ItemHistoryCard extends Component {
   constructor(props) {
     super(props);
@@ -21,13 +23,6 @@ export default class ItemHistoryCard extends Component {
     //   nameScreen: "",
     // };
   }
-
-  formatPrice(price) {
-    if(price != null){
-        return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ"
-    }
-    else return "";
-}
 
   render() {
     return (
@@ -46,31 +41,38 @@ export default class ItemHistoryCard extends Component {
         }}
       >
         <View style={{ flex: 1, flexDirection: "column" }}>
-          <Text
-            style={{
-              marginLeft: 7,
-              marginVertical: 5,
-              fontSize: 18,
-              color: "#232A2F",
-            }}
-          >
-          {moment(this.props.dmy).format("DD/MM/YYYY")}
-          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={{
+                marginLeft: 7,
+                marginVertical: 5,
+                paddingLeft: 8,
+                fontSize: 18,
+                color: "#232A2F",
+              }}
+            >
+              {moment(this.props.dmy).format("HH:mm") + " -"}
+            </Text>
+            <Text></Text>
+            <Text
+              style={{
+                marginLeft: 7,
+                marginVertical: 5,
+                fontSize: 18,
+                color: "#232A2F",
+              }}
+            >
+              {moment(this.props.dmy).format("DD/MM/YYYY")}
+            </Text>
+          </View>
+
           <Text
             style={{
               marginLeft: 7,
               marginVertical: 5,
               fontSize: 16,
-              color: "#232A2F",
-            }}
-          >
-          {moment(this.props.dmy).format("HH:mm")}
-          </Text>
-          <Text
-            style={{
-              marginLeft: 7,
-              marginVertical: 5,
-              fontSize: 14,
+              marginTop: 10,
+              paddingLeft: 8,
               color: "#8A8F9C",
             }}
           >
@@ -82,7 +84,8 @@ export default class ItemHistoryCard extends Component {
             style={{
               marginRight: 7,
               marginVertical: 5,
-              fontSize: 14,
+              paddingRight: 9,
+              fontSize: 16,
               color: "#8A8F9C",
               textAlign: "right",
             }}
@@ -100,14 +103,16 @@ export default class ItemHistoryCard extends Component {
           <Text
             style={{
               marginRight: 7,
-              marginTop: 30,
+              marginTop: 10,
               marginVertical: 5,
               fontSize: 20,
+              paddingRight: 9,
+              fontWeight: "bold",
               color: "#232A2F",
               textAlign: "right",
             }}
           >
-            {this.formatPrice(this.props.price)}
+            {formatPrice(this.props.price)}
           </Text>
         </View>
       </View>

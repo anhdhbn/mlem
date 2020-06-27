@@ -84,7 +84,7 @@ export default class FilterBar extends Component {
           <Picker
             note
             mode="dropdown"
-            style={{ width: 120 }}
+            style={{ width: 120, paddingLeft: 9, marginLeft: 8 }}
             selectedValue={this.state.valueFilterTime}
             onValueChange={this.onValueFilterTimeChange}
           >
