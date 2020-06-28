@@ -16,7 +16,7 @@ export default function (props) {
         backgroundColor: "#fff",
         height: 40,
         paddingRight: 40,
-        paddingLeft:20,
+        paddingLeft: 20,
         flexDirection: "row",
         position: "relative",
       }}
@@ -26,14 +26,14 @@ export default function (props) {
           <TouchableOpacity>
             <Image
               source={require("../../assets/icon/-.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => props.subTable()}>
             <Image
               source={require("../../assets/icon/-.png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
         )}

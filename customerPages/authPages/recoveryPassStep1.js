@@ -145,7 +145,7 @@ export default class recoveryPassStep1 extends Component {
               </Text>
             </View>
           </View>
-          <View style={{ alignItems: "center", marginTop: 40 }}>
+          <View style={{ alignItems: "center", marginTop: 80 }}>
             <Text style={styles.mlem}>Mlem Mlem</Text>
           </View>
 
@@ -164,7 +164,7 @@ export default class recoveryPassStep1 extends Component {
                 <TextInput
                   style={styles.textInput}
                   onChangeText={this.handleEmail}
-                  placeholder="email"
+                  placeholder="Email"
                   placeholderTextColor="#c2bbba"
                 />
               </View>
@@ -195,7 +195,7 @@ export default class recoveryPassStep1 extends Component {
               marginTop: 10,
               flex: 1,
               justifyContent: "flex-end",
-              marginBottom: 50,
+              marginBottom: 90,
               alignItems: "center",
             }}
           >
