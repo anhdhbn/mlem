@@ -18,8 +18,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import OrderServices from '../../providerServices/orderServices'
 import ModalSelectTable from "./ModalSelectTable";
 import Modal from '../Components/Modal';
-import Toaster from "../Components/Toaster";
-import Order from "./Order";
+import formatPrice from '../../components/formatPrice';
 import Call from "react-native-phone-call"
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
@@ -29,15 +28,15 @@ export default function DetailOrder(props) {
   const [approveVisible, setApproveVisible] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
   const {
-    toasterRejectVis,
-    setToasterRejectVis,
-    toasterApproveVis,
-    setToasterApproveVis
+    createAlert,
+    onDismissError,
+    isError
+
   } = props.route.params.toasterVisible
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
-    let newArrayQuantity = props.route.params.data.orderContents.map((item) => {
+    props.route.params.data.orderContents.map((item) => {
       return item.quantity;
     });
   }, []);
@@ -73,13 +72,18 @@ export default function DetailOrder(props) {
     /* const res = submitData */
     setApproveVisible(false);
     props.navigation.navigate("HomeOrder");
-    const res = await OrderServices.approveOrdered(submitData);
+    OrderServices.approveOrdered(submitData).then(res => {
+      createAlert('Xác nhận đơn hàng thành công')
+    }
+    ).catch(err => {
+      createAlert(err.data.errors.statusId)
+    })
     /* console.log(JSON.stringify(res)) */
-    res.errors!==null 
-    ?
-    setToasterApproveVis({ status: true, title: res.errors.statusId })
-    :
-    setToasterApproveVis({ status: true, title:null})
+    /* res.errors !== null
+      ?
+      setToasterApproveVis({ status: true, title: res.errors.statusId })
+      :
+      setToasterApproveVis({ status: true, title: null }) */
   }
   /*  */
   const handleReject = async () => {
@@ -89,12 +93,19 @@ export default function DetailOrder(props) {
     }
     setRejectVisible(false);
     props.navigation.navigate("HomeOrder");
-    const res = await OrderServices.rejectOrdered(submitData);
-    res.errors!==null 
-    ?
-    setToasterRejectVis({ status: true, title: res.errors.statusId })
-    :
-    setToasterRejectVis({ status: true, title: null })
+    await OrderServices.rejectOrdered(submitData)
+      .then(res => {
+        createAlert('Từ chối đơn hàng thành công')
+      }
+      ).catch(err => {
+        createAlert(err.data.errors.statusId)
+      })
+    /* ;
+    res.errors !== null
+      ?
+      setToasterRejectVis({ status: true, title: res.errors.statusId })
+      :
+      setToasterRejectVis({ status: true, title: null }) */
   }
   return data ? (
     <SafeAreaView style={styles.container}>
@@ -168,7 +179,7 @@ export default function DetailOrder(props) {
             marginLeft: 5,
             flexDirection: 'row'
           }}
-            onPress={() => { setVisible(true) }}
+            onPress={() => { data.status.id =='2'&& setVisible(true) }}
           >
             <Text>Chọn bàn: {"\n\n"}</Text>
             <View style={{ maxWidth: 150, overflow: 'hidden' }}>
@@ -213,21 +224,21 @@ export default function DetailOrder(props) {
                   <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
                   <View style={{ flex: 3, alignItems: 'center' }}><Text>
                     {item.foodFoodTypeMapping.foodType.id === 1
-                      ? (item.quantity *
+                      ? formatPrice((item.quantity *
                         item.foodFoodTypeMapping.food.priceEach *
                         (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                      100
+                        100)
                       : item.foodFoodTypeMapping.foodType.id === 2
-                        ? (item.quantity *
+                        ? formatPrice((item.quantity *
                           1.2 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100
-                        : (item.quantity *
+                          100)
+                        : formatPrice((item.quantity *
                           1.5 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100}
+                          100)}
                   </Text></View>
 
                 </View>
@@ -236,78 +247,107 @@ export default function DetailOrder(props) {
           />
         </View>
       </ScrollView>
-      <View style={{
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        height: 80,
-        bottom: 0,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.51,
-        shadowRadius: 13.16,
+      {data.status.id == '2'
+        ? <View style={{
+          backgroundColor: '#ffffff',
+          borderRadius: 10,
+          height: 80,
+          bottom: 0,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowOpacity: 0.51,
+          shadowRadius: 13.16,
 
-        elevation: 20,
-      }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 10
-          }}
+          elevation: 20,
+        }}
         >
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16 }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 10
+            }}
+          >
+            <View style={{ flex: 5, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
+            </View>
+            <View style={{ flex: 5, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
+            </View>
           </View>
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16 }}>{data.total}</Text>
+          <View style={styles.btnView}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#c7c5bf",
+                borderRadius: 8,
+                width: 100,
+                height: 40,
+              }}
+              onPress={() => { setRejectVisible(true) }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  padding: 8,
+                  paddingLeft: 20,
+                  color: "#000",
+                }}
+              >
+                Từ chối
+          </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#DC0000",
+                borderRadius: 8,
+                width: 110,
+                height: 40,
+              }}
+              onPress={() => { setApproveVisible(true) }}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  padding: 8,
+                  paddingLeft: 20,
+                  color: "#fff",
+                }}
+              >
+                Xác nhận
+          </Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity
+        : <View style={{
+          backgroundColor: '#ffffff',
+          borderRadius: 10,
+          height: 50,
+          bottom: 0,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowOpacity: 0.51,
+          shadowRadius: 13.16,
+          elevation: 20,
+
+        }}
+        >
+          <View
             style={{
-              backgroundColor: "#c7c5bf",
-              borderRadius: 8,
-              width: 100,
-              height: 40,
+              flex: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              left:'20%'
             }}
-            onPress={() => { setRejectVisible(true) }}
           >
-            <Text
-              style={{
-                fontSize: 16,
-                padding: 8,
-                paddingLeft: 20,
-                color: "#000",
-              }}
-            >
-              Từ chối
-          </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#DC0000",
-              borderRadius: 8,
-              width: 110,
-              height: 40,
-            }}
-            onPress={() => { setApproveVisible(true) }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                padding: 8,
-                paddingLeft: 20,
-                color: "#fff",
-              }}
-            >
-              Xác nhận
-          </Text>
-          </TouchableOpacity>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món): {formatPrice(data.total)}</Text>
+          </View>
         </View>
-      </View>
+      }
     </SafeAreaView>
   ) : (
       <Spinner />

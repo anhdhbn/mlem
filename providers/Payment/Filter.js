@@ -23,7 +23,10 @@ export default class FilterBar extends Component {
     let params = {};
     if (this.state.valueFilterTime == "0") {
       params = {
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: { 
+          equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null,
+          in: this.state.valueFilterStatus == 0 ? [3,4,5] :null
+        },
       };
       await this.props.handleFilter(params)
       return (res);
@@ -35,7 +38,10 @@ export default class FilterBar extends Component {
           greater: dateStart,
           less: dateEnd,
         },
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {statusId: { 
+          equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null,
+          in: this.state.valueFilterStatus == 0 ? [3,4,5]:null
+        }},
       };
       await this.props.handleFilter(params)
     } else if (this.state.valueFilterTime == '2') {
@@ -46,7 +52,10 @@ export default class FilterBar extends Component {
           greater: dateStart,
           less: dateEnd,
         },
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {statusId: { 
+          equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null,
+          in: this.state.valueFilterStatus == 0 ? [3,4,5]:null
+        }},
       };
       await this.props.handleFilter(params)
     } else if (this.state.valueFilterTime == '3') {
@@ -55,7 +64,10 @@ export default class FilterBar extends Component {
         createdAt: {
           equal: this.state.date
         },
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {statusId: { 
+          equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null,
+          in: this.state.valueFilterStatus == 0 ? [3,4,5]:null
+        } },
       };
       await this.props.handleFilter(params)
     }
@@ -145,8 +157,6 @@ export default class FilterBar extends Component {
               onValueChange={this.onValueFilterStatusChange}
             >
               <Picker.Item label="Trạng thái" value="0" />
-              <Picker.Item label="Tạo mới" value="1" />
-              <Picker.Item label="Đã gửi" value="2" />
               <Picker.Item label="Đã xác nhận" value="3" />
               <Picker.Item label="Đã từ chối" value="4" />
               <Picker.Item label="Đã thanh toán" value="5" />

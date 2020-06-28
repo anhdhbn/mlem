@@ -7,12 +7,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
-
 import orderServices from "../../providerServices/orderServices";
 import PaymentDetail from "./PaymentDetail";
 import Spinner from "../../components/Spinner/Spinner";
 import Filter from './Filter';
-import Toaster from '../Components/Toaster'
+import Snackbar from "../../components/common/snackbarUpdating";
+import formatPrice from '../../components/formatPrice';
 const PaymentStack = createStackNavigator();
 /*PaymentStackScreen  */
 export default ({ navigation }) => (
@@ -65,15 +65,28 @@ export default ({ navigation }) => (
 const Payment = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [toasterPayVisible, setToasterPayVisible] = useState({status:false,title:''});
-  const [toasterDelVisible, setToasterDelVisible] = useState({status:false,title:''});
+  // Alert
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(null);
+
+  const onDismissError = () => {
+    setIsError(false);
+  };
+
+  const createAlert = async (textAlert) => {
+    // console.log("Create alert");
+    await setError(textAlert);
+    setIsError(true);
+  };
   useEffect(() => {
-    getData();
-  }, [toasterPayVisible.status,toasterDelVisible.status]);
+     getData();
+  }, [isError===true]);
 
   const getData = async () => {
     setIsLoading(true);
-    let params = {};
+    let params = {statusId:{
+      in:[3,4,5]
+    }};
     let response = await orderServices.listOrdered(params);
     setData(response);
     setIsLoading(false);
@@ -90,10 +103,9 @@ const Payment = (props) => {
     props.navigation.navigate("PaymentDetail", {
       data: orderedData,
       toasterVisible: {
-        toasterPayVisible,
-        setToasterPayVisible,
-        toasterDelVisible,
-        setToasterDelVisible
+        isError,
+        onDismissError,
+        createAlert
       }
     });
   };
@@ -106,19 +118,11 @@ const Payment = (props) => {
         </View>
       ) : null}
       {/* {console.log(props)} */}
-      <Toaster
-        data={{
-          notification: 'Thanh toán đơn hàng thành công',
-          visible: toasterPayVisible,
-          setVisible: setToasterPayVisible
-        }}
-      />
-      <Toaster
-        data={{
-          notification: 'Xoá đơn hàng thành công',
-          visible: toasterDelVisible,
-          setVisible: setToasterDelVisible
-        }}
+      <Snackbar
+        visible={isError}
+        _onDismissSnackBar={onDismissError}
+        actionText={"HIDE"}
+        text={error}
       />
       <Filter handleFilter={handleFilter} />
       <FlatList
@@ -169,7 +173,7 @@ const Payment = (props) => {
                     fontSize: 20,
                   }}
                 >
-                  {item.total}
+                  {formatPrice(item.total)}
                 </Text>
                 <Image
                   source={viewMoreIcon}

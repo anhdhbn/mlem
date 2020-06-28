@@ -145,8 +145,7 @@ export default class FilterBar extends Component {
               onValueChange={this.onValueFilterStatusChange}
             >
               <Picker.Item label="Trạng thái" value="0" />
-              <Picker.Item label="Tạo mới" value="1" />
-              <Picker.Item label="Đã gửi" value="2" />
+              <Picker.Item label="Đã đặt" value="2" />
               <Picker.Item label="Đã xác nhận" value="3" />
               <Picker.Item label="Đã từ chối" value="4" />
               <Picker.Item label="Đã thanh toán" value="5" />

@@ -17,39 +17,44 @@ import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
 import orderServices from "../../providerServices/orderServices";
 import ModalAccept from '../Components/Modal';
-
+import formatPrice from '../../components/formatPrice';
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [modalPayVisible, setModalPayVisible] = useState(false);
   const [modalDelVisible, setModalDelVisible] = useState(false);
   const {
-    toasterPayVisible,
-    setToasterPayVisible,
-    toasterDelVisible,
-    setToasterDelVisible
+    isError,
+    onDismissError,
+    createAlert
   } = props.route.params.toasterVisible
   const handlePay = async () => {
 
     props.navigation.navigate("PaymentScreen");
     setModalPayVisible(false);
-    const res = await orderServices.payment(data);
-    res.errors !== null
-      ?
-      setToasterPayVisible({ status: true, title: res.errors.statusId })
-      :
-      setToasterPayVisible({ status: true, title: null })
+    const res = await orderServices.payment(data)
+      .then(res => {
+        createAlert('Xác nhận đơn hàng thành công')
+      }
+      ).catch(err => {
+        // console.log(err.data.errors.statusId);
+        createAlert(err.data.errors.statusId)
+      })
+
   }
   const handleDelete = async () => {
     //console.log('delete');
     props.navigation.navigate("PaymentScreen")
     setModalDelVisible(false);
-    const res = await orderServices.deleteOrder(data);
-    res.errors !== null
-      ?
-      setToasterDelVisible({ status: true, title: res.errors.id })
-      :
-      setToasterDelVisible({ status: true, title: null })
+    const res = await orderServices.deleteOrder(data)
+      .then(res => {
+        createAlert('Xác nhận đơn hàng thành công')
+      }
+      ).catch(err => {
+        // console.log(err.data.errors.statusId);
+
+        createAlert(err.data.errors.statusId)
+      })
 
   }
   useEffect(() => {
@@ -169,21 +174,21 @@ export default function DetailOrder(props) {
                   <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
                   <View style={{ flex: 3, alignItems: 'center' }}><Text>
                     {item.foodFoodTypeMapping.foodType.id === 1
-                      ? (item.quantity *
+                      ? formatPrice((item.quantity *
                         item.foodFoodTypeMapping.food.priceEach *
                         (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                      100
+                      100)
                       : item.foodFoodTypeMapping.foodType.id === 2
-                        ? (item.quantity *
+                        ? formatPrice((item.quantity *
                           1.2 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100
-                        : (item.quantity *
+                        100)
+                        : formatPrice((item.quantity *
                           1.5 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100}
+                        100)}
                   </Text></View>
 
                 </View>
@@ -192,7 +197,8 @@ export default function DetailOrder(props) {
           />
         </View>
       </ScrollView>
-      <View style={{
+      {data.status.id=='3'
+      ?<View style={{
         backgroundColor: '#ffffff',
         borderRadius: 10,
         height: 80,
@@ -218,7 +224,7 @@ export default function DetailOrder(props) {
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
           </View>
           <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.total} vnđ</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
           </View>
         </View>
         <View style={styles.btnView}>
@@ -267,6 +273,33 @@ export default function DetailOrder(props) {
           </TouchableOpacity>
         </View>
       </View>
+      :<View style={{
+        backgroundColor: '#ffffff',
+        borderRadius: 10,
+        height: 50,
+        bottom: 0,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 10,
+        },
+        shadowOpacity: 0.51,
+        shadowRadius: 13.16,
+        elevation: 20,
+
+      }}
+      >
+        <View
+          style={{
+            flex: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            left:'20%'
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món): {formatPrice(data.total)}</Text>
+        </View>
+      </View>}
     </SafeAreaView>
   ) : (
       <Spinner />

@@ -13,6 +13,8 @@ import DetailOrder from "./DetailOrder";
 import Spinner from "../../components/Spinner/Spinner";
 import Filter from './Filter';
 import Toaster from "../Components/Toaster";
+import Snackbar from "../../components/common/snackbarUpdating";
+import formatPrice from '../../components/formatPrice';
 const OrderStack = createStackNavigator();
 /*OrderStackScreen  */
 export default ({ navigation }) => (
@@ -65,11 +67,23 @@ export default ({ navigation }) => (
 const Order = (props) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [toasterApproveVis, setToasterApproveVis] = useState({status:false,title:''});
-  const [toasterRejectVis, setToasterRejectVis] = useState({status:false,title:''});
+  
+  // Alert
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(null);
+
+  const onDismissError = () => {
+    setIsError(false);
+  };
+
+  const createAlert = async (textAlert) => {
+    // console.log("Create alert");
+    await setError(textAlert);
+    setIsError(true);
+  };
   useEffect(() => {
-    getData();
-  }, [toasterApproveVis.status,toasterRejectVis.status ]);
+     getData();
+  }, [isError]);
   
   const getData = async () => {
     setIsLoading(true);
@@ -90,10 +104,9 @@ const Order = (props) => {
     props.navigation.navigate("DetailOrder", {
       data: orderedData,
       toasterVisible: {
-        toasterRejectVis,
-        setToasterRejectVis,
-        toasterApproveVis,
-        setToasterApproveVis
+        isError,
+        onDismissError,
+        createAlert
       }
     });
   };
@@ -106,20 +119,19 @@ const Order = (props) => {
         </View>
       ) : null}
       {/* {console.log(props)} */}
-      <Toaster
-        data={{
-          notification: 'Xác nhận đơn hàng thành công',
-          visible: toasterApproveVis,
-          setVisible: setToasterApproveVis
-        }}
+      <Snackbar
+        visible={isError}
+        _onDismissSnackBar={onDismissError}
+        actionText={"HIDE"}
+        text={error}
       />
-      <Toaster
+      {/* <Toaster
         data={{
           notification: 'Từ chối đơn hàng thành công',
           visible: toasterRejectVis,
           setVisible: setToasterRejectVis
         }}
-      />
+      /> */}
       <Filter handleFilter={handleFilter} />
       <FlatList
         showsHorizontalScrollIndicator={false}
@@ -169,7 +181,7 @@ const Order = (props) => {
                     fontSize: 20,
                   }}
                 >
-                  {item.total}
+                  {formatPrice(item.total)}
                 </Text>
                 <Image
                   source={viewMoreIcon}

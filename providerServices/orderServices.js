@@ -18,7 +18,6 @@ const rejectOrdered = (params) =>
   requestServices.customAxios
     .post(`/api/order/reject`, params)
     .then((res) => res.data)
-    .catch(err=>err)
 
 // API danh sach bàn và trạng thái
 const listReservation = (params) =>
