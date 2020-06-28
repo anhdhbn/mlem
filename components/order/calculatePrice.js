@@ -9,8 +9,10 @@ import {
   Text,
 } from "react-native";
 
+import formatPrice from "../formatPrice";
+
 export default function (props) {
-  return (
+  return props.totalPrice !== 0 ? (
     <View
       style={{
         bottom: 0,
@@ -26,15 +28,14 @@ export default function (props) {
           height: 45,
           marginBottom: 10,
           marginTop: 5,
-
         }}
       >
         <View style={{ paddingLeft: 10 }}>
           <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-            {props.totalPromoPrice}đ
+            {formatPrice(props.totalPromoPrice)}
           </Text>
           <Text style={{ textDecorationLine: "line-through", color: "grey" }}>
-            {props.totalPrice}đ
+            {formatPrice(props.totalPrice)}
           </Text>
         </View>
         <View style={{ position: "absolute", right: 20 }}>
@@ -47,7 +48,7 @@ export default function (props) {
               borderRadius: 8,
               width: 60,
               height: 40,
-              marginTop:5
+              marginTop: 5,
             }}
           >
             <Text
@@ -65,5 +66,5 @@ export default function (props) {
         </View>
       </View>
     </View>
-  );
+  ) : null;
 }
