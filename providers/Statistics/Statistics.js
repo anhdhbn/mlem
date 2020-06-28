@@ -4,14 +4,12 @@ import { TouchableOpacity, FlatList, ScrollView } from "react-native-gesture-han
 import Icon from "react-native-vector-icons/Ionicons";
 import Moment from 'moment';
 import { createStackNavigator } from "@react-navigation/stack";
-
 import statisticServices from '../../providerServices/statisticServices';
 import viewMoreIcon from "../../assets/icon/view_more.png";
-import dropDownIcon from "../../assets/icon/drop_down.png";
-import ProfileService from '../../customerServices/profileService';
 import Spinner from "../../components/Spinner/Spinner";
 import Filter from './Filter';
-import profileService from "../../customerServices/profileService";
+import StatisticDetail from './StatisticDetail';
+import formatPrice from '../../components/formatPrice';
 const StatisticStack = createStackNavigator();
 /*StatisticStackScreen  */
 export default ({ navigation }) => (
@@ -25,7 +23,7 @@ export default ({ navigation }) => (
     }}
   >
     <StatisticStack.Screen
-      name="Statistic"
+      name="StatisticPage"
       component={Statistic}
       options={{
         title: "Thống kê",
@@ -41,6 +39,23 @@ export default ({ navigation }) => (
         ),
       }}
     />
+    <StatisticStack.Screen
+      name="StatisticDetail"
+      component={StatisticDetail}
+      options={{
+        title: "Chi tiết đơn hàng",
+        headerLeft: () => (
+          <Icon.Button
+            name="ios-arrow-back"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+              navigation.navigate("StatisticPage");
+            }}
+          ></Icon.Button>
+        ),
+      }}
+    />
   </StatisticStack.Navigator>
 );
 
@@ -50,7 +65,13 @@ const Statistic = (props) => {
   useEffect(() => {
     handleFilter({ TypeId: { Equal: 1 } });
   }, []);
-
+  const onselect = (code) => {
+    // console.log("On select");
+    let orderedData = data.orders.find((item) => item.code === code);
+    props.navigation.navigate("StatisticDetail", {
+      data: orderedData,
+    });
+  };
   const handleFilter = async (props) => {
     const res = await statisticServices.list(props);
     setData(res)
@@ -65,24 +86,35 @@ const Statistic = (props) => {
       ) : null}
       <Filter handleFilter={handleFilter} />
       {data !== null && <View style={{
-        backgroundColor: "white",
-        elevation: 3,
       }}>
-        <View style={styles.selectTimeView}>
-          <Text>
-            Từ {Moment(data.start).format("DD/MM/YYYY")}
-          </Text>
-          <Text>
-            Đến {Moment(data.end).format("DD/MM/YYYY")}
-          </Text>
-        </View>
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text style={{
-            alignItems: 'flex-end',
-            right: 20,
-            fontWeight: "bold",
-            fontSize: 20
-          }}>Tổng số: {data.count}</Text>
+        <View style={{
+          backgroundColor: 'white',
+          elevation: 5,
+        }}>
+          <View style={styles.selectTimeView}>
+            <Text style={{
+              fontFamily: "Reguler",
+              color: "#8A8F9C",
+              fontSize: 14,
+            }}>
+              Từ {Moment(data.start).format("DD/MM/YYYY")}
+            </Text>
+            <Text style={{
+              fontFamily: "Reguler",
+              color: "#8A8F9C",
+              fontSize: 14,
+            }}>
+              Đến {Moment(data.end).format("DD/MM/YYYY")}
+            </Text>
+          </View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <Text style={{
+              alignItems: 'flex-end',
+              right: 50,
+              fontWeight: "bold",
+              fontSize: 16
+            }}>Tổng số: {data.count}</Text>
+          </View>
         </View>
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -92,6 +124,9 @@ const Statistic = (props) => {
             return (
               <TouchableOpacity
                 style={styles.card}
+                onPress={() => {
+                  onselect(item.code)
+                }}
               >
                 <View>
                   <Text style={{ fontWeight: "bold", fontSize: 16 }}>
@@ -104,7 +139,7 @@ const Statistic = (props) => {
                       fontSize: 14,
                     }}
                   >
-                  {item.account.phone}
+                    {item.account.phone}
                   </Text>
                   <Text
                     style={{
@@ -113,8 +148,8 @@ const Statistic = (props) => {
                       fontSize: 14,
                     }}
                   >
-                  {Moment(item.account.orderDate).format('hh:mm')}-{Moment(item.account.orderDate).format('DD/MM/YYYY')}
-                  </Text> 
+                    {Moment(item.account.orderDate).format('hh:mm')}-{Moment(item.account.orderDate).format('DD/MM/YYYY')}
+                  </Text>
                 </View>
                 <View style={{ flexDirection: "row", top: 10 }}>
                   <Text
@@ -124,7 +159,7 @@ const Statistic = (props) => {
                       fontSize: 20,
                     }}
                   >
-                    {item.total}
+                    {formatPrice(item.total)}
                   </Text>
                   <Image
                     source={viewMoreIcon}
@@ -146,12 +181,14 @@ const styles = StyleSheet.create({
   },
   selectTimeView: {
     flexDirection: "row",
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    marginVertical: 3
   },
   filterBar: {
     flexDirection: "row",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FFFFFF",
     padding: 10,
+    top: 5,
     width: "100%",
     justifyContent: "space-between",
     shadowColor: "#000",

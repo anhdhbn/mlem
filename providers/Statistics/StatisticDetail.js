@@ -5,105 +5,56 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Button,
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import moment from "moment";
 
-import BackICon from "../../assets/icon/provider/back.png";
-import PhoneIcon from "../../assets/icon/provider/phone.png";
+import moment from "moment";
 import { FlatList } from "react-native-gesture-handler";
+
+import PhoneIcon from "../../assets/icon/provider/phone.png";
 import Spinner from "../../components/Spinner/Spinner";
-import orderServices from "../../providerServices/orderServices";
-import ModalAccept from '../Components/Modal';
+
+import OrderServices from '../../providerServices/orderServices'
+import Modal from '../Components/Modal';
 import formatPrice from '../../components/formatPrice';
+import Call from "react-native-phone-call"
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
-  const [totalQuantity, setTotalQuantity] = useState(0);
-  const [modalPayVisible, setModalPayVisible] = useState(false);
-  const [modalDelVisible, setModalDelVisible] = useState(false);
-  const {
-    isError,
-    onDismissError,
-    createAlert
-  } = props.route.params.toasterVisible
-  const handlePay = async () => {
-
-    props.navigation.navigate("PaymentScreen");
-    setModalPayVisible(false);
-    const res = await orderServices.payment(data)
-      .then(res => {
-        createAlert('Xác nhận đơn hàng thành công')
-      }
-      ).catch(err => {
-        // console.log(err.data.errors.statusId);
-        createAlert(err.data.errors.statusId)
-      })
-
-  }
-  const handleDelete = async () => {
-    //console.log('delete');
-    props.navigation.navigate("PaymentScreen")
-    setModalDelVisible(false);
-    const res = await orderServices.deleteOrder(data)
-      .then(res => {
-        createAlert('Xác nhận đơn hàng thành công')
-      }
-      ).catch(err => {
-        // console.log(err.data.errors.statusId);
-
-        createAlert(err.data.errors.statusId)
-      })
-
-  }
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
-    let newArrayQuantity = props.route.params.data.orderContents.map((item) => {
+    props.route.params.data.orderContents.map((item) => {
       return item.quantity;
     });
-    setTotalQuantity(newArrayQuantity.reduce((a, b) => a + b, 0));
-    // console.log(newArrayQuantity.reduce((a, b) => a + b, 0));
   }, []);
+  const handleCall = () => {
+
+    const args = {
+      number: '111', // String value with the number to call
+      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
+    }
+
+    Call(args).catch(console.error)
+  }
+  /*  */
+
   return data ? (
     <SafeAreaView style={styles.container}>
-      {/* modal thanh toán */}
-      <ModalAccept data={{
-        visible: modalPayVisible,
-        setVisible: setModalPayVisible,
-        handleSubmit: handlePay,
-      }}
-        button={{
-          title: 'Xác nhận thanh toán',
-          titleSubmit: 'Xác nhận',
-          titleCancel: 'Quay lại'
-        }}
-      />
 
-      {/* Modal xoá */}
-      <ModalAccept data={{
-        visible: modalDelVisible,
-        setVisible: setModalDelVisible,
-        handleSubmit: handleDelete
-      }}
-        button={{
-          title: '      Xác nhận xoá        ',
-          titleSubmit: 'Xác nhận',
-          titleCancel: 'Quay lại'
-        }}
-      />
       <ScrollView >
         <View style={styles.customerInfoView}>
           <View >
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.account.displayName}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>+{data.account.phone}</Text>
-            <Text style={{ fontSize: 16 }}>
-              Mới Tạo lúc {moment(data.createdAt).format("HH:mm") + " - "}
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{data.account.displayName}</Text>
+            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>+{data.account.phone}</Text>
+            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              {data?.status?.name} {moment(data.createdAt).format("HH:mm") + " - "}
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleCall}
+          >
             <Image
               source={PhoneIcon}
               style={{ width: 34, height: 34, top: 10, right: 5 }}
@@ -146,7 +97,6 @@ export default function DetailOrder(props) {
                 </Text>}
             </View>
           </View>
-
         </View>
         <View
           style={{
@@ -177,18 +127,18 @@ export default function DetailOrder(props) {
                       ? formatPrice((item.quantity *
                         item.foodFoodTypeMapping.food.priceEach *
                         (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                      100)
+                        100)
                       : item.foodFoodTypeMapping.foodType.id === 2
                         ? formatPrice((item.quantity *
                           1.2 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100)
+                          100)
                         : formatPrice((item.quantity *
                           1.5 *
                           item.foodFoodTypeMapping.food.priceEach *
                           (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100)}
+                          100)}
                   </Text></View>
 
                 </View>
@@ -197,83 +147,7 @@ export default function DetailOrder(props) {
           />
         </View>
       </ScrollView>
-      {data.status.id=='3'
-      ?<View style={{
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        height: 80,
-        bottom: 0,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.51,
-        shadowRadius: 13.16,
-
-        elevation: 20,
-      }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 10
-          }}
-        >
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
-          </View>
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
-          </View>
-        </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#c7c5bf",
-              borderRadius: 8,
-              width: 120,
-              height: 40,
-              alignItems: 'center'
-            }}
-            onPress={() => { setModalDelVisible(true) }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#000",
-              }}
-            >
-              Xoá
-          </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#DC0000",
-              borderRadius: 8,
-              width: 120,
-              height: 40,
-              alignItems: 'center'
-            }}
-            onPress={() => setModalPayVisible(true)}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#fff",
-              }}
-
-            >
-              Thanh toán
-          </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      :<View style={{
+      <View style={{
         backgroundColor: '#ffffff',
         borderRadius: 10,
         height: 50,
@@ -301,7 +175,8 @@ export default function DetailOrder(props) {
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
 
         </View>
-      </View>}
+      </View>
+
     </SafeAreaView>
   ) : (
       <Spinner />
