@@ -62,6 +62,7 @@ export default function (props) {
 
   const [invalidPriceInput, setInvalidPriceInput] = useState(false);
   const [invalidDiscountInput, setInvalidDiscountInput] = useState(false);
+  const [visibleAvaModal, setVisibleAvaModal] = useState(false);
 
   const increasePrice = () => {
     setPriceEach(priceEach + 1000);
@@ -89,12 +90,14 @@ export default function (props) {
     setData({ ...data, statusId: code });
   };
 
-  const handleChoosePhoto = async () => {
-    ImagePicker.openCamera({
+  const handleChoosePhoto = async (func) => {
+    setVisibleAvaModal(true);
+    func({
       width: 300,
       height: 400,
       cropping: true
     }).then(image => {
+      setVisibleAvaModal(false);
       const names = image.path.split("/");
       const name = names[names.length - 1]
       postImageWithUrl(image.path, name)
@@ -132,9 +135,8 @@ export default function (props) {
       //   "[INFO] Uri image: ",
       //   "http://admin.wepick.vn:20000" + data.url
       // );
-
       setImageId(data.id);
-      setImage(`${host}data.url`);
+      setImage(`${host}${data.url}`);
 
       setStateAvatar(false);
     })
@@ -294,7 +296,7 @@ export default function (props) {
               //   console.log("[INFO] Press accessoryPress");
               // }}
               onPress={() => {
-                handleChoosePhoto();
+                setVisibleAvaModal(true);
               }}
               containerStyle={{ marginVertical: 20 }}
             />
@@ -645,6 +647,32 @@ export default function (props) {
             <Text style={{ top: 10, color: "#ffffff" }}>Thêm món</Text>
           </TouchableOpacity>
         </View>
+
+        <Overlay visible={visibleAvaModal}
+        onBackdropPress={()=>{setApproveVisible(false)}}
+        >
+          <View style={{ alignItems:'center' }}>
+                <Text style={{ fontSize:18,color:'red' }}>Chinh sua avatar</Text>
+            </View>
+          <View style={{ height:100,width:300,justifyContent:'center' }}>
+            
+            <View style={{ height: 40 }}>
+            <TouchableOpacity
+             onPress={()=> handleChoosePhoto(ImagePicker.openCamera)}
+            >
+              {/* <Image source={require('../assets/icon/')}/> */}
+              <Text style={{ fontSize:16 }}> Chup anh </Text>
+            </TouchableOpacity>
+            </View>
+            <View style={{ marginTop:10 }}>
+            <TouchableOpacity
+              onPress={()=> handleChoosePhoto(ImagePicker.openPicker)}
+            >
+              <Text style={{ fontSize:16 }}> Chon anh </Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+        </Overlay>
       </ScrollView>
     </>
   );

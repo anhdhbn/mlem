@@ -55,6 +55,7 @@ export default class Profile extends Component {
         },
       },
       // Modal
+      visibleAvaModal : false,
       visible: props.route.params.showModal ? true : false,
       isLoading: false,
       error: null,
@@ -211,16 +212,8 @@ export default class Profile extends Component {
     });
   };
 
-  _changeAvatar = async () => {
-    console.log("[INFO] _changeAvatar() called.");
-    // More info on all the options is below in the API Reference... just some common use cases shown here
-
-    /**
-     * The first arg is the options object for customization (it can also be null or omitted for default options),
-     * The second arg is the callback which sends object: response (more info in the API Reference)
-     */
-    
-    ImagePicker.openCamera({
+  hanlderAvatar = async (func)=>{
+    func({
       width: 300,
       height: 300,
       cropping: true
@@ -233,12 +226,46 @@ export default class Profile extends Component {
       const name = names[names.length - 1]
 
       this.setState({ isLoading: true });
-
+      this.setState({
+        visibleAvaModal:false
+      })
       await this.postImageWithUrl(image.path, name)
       // this.state.modal.imageId = imageId
       this._onsubmitModal();
+      
     });
+  }
 
+  _changeAvatar = () => {
+    // console.log("[INFO] _changeAvatar() called.");
+    // // More info on all the options is below in the API Reference... just some common use cases shown here
+    this.setState({
+      visibleAvaModal:true
+    })
+    // /**
+    //  * The first arg is the options object for customization (it can also be null or omitted for default options),
+    //  * The second arg is the callback which sends object: response (more info in the API Reference)
+    //  */
+    
+    // ImagePicker.openCamera({
+    //   width: 300,
+    //   height: 300,
+    //   cropping: true
+    // }).then( async image => {
+    //   // console.log(image.path)
+    //   // const source = "data:image/jpeg;base64," + image.data;
+    //   this._hideModal();
+
+    //   const names = image.path.split("/");
+    //   const name = names[names.length - 1]
+
+    //   this.setState({ isLoading: true });
+
+    //   await this.postImageWithUrl(image.path, name)
+    //   // this.state.modal.imageId = imageId
+    //   this._onsubmitModal();
+    // });
+    
     // ImagePicker.showImagePicker(this.state.options, (response) => {
     //   // Not try (return 999999 line :)
     //   // console.log("[INFO] Response in image picker = ", response);
@@ -479,6 +506,31 @@ export default class Profile extends Component {
           </View> */}
           </Overlay>
         </ScrollView>
+        <Overlay visible={this.state.visibleAvaModal}
+        onBackdropPress={()=>{this.setState({visibleAvaModal: false})}}
+        >
+          <View style={{ alignItems:'center' }}>
+                <Text style={{ fontSize:18,color:'red' }}>Chinh sua avatar</Text>
+            </View>
+          <View style={{ height:100,width:300,justifyContent:'center' }}>
+            
+            <View style={{ height: 40 }}>
+            <TouchableOpacity
+             onPress={()=> this.hanlderAvatar(ImagePicker.openCamera)}
+            >
+              {/* <Image source={require('../assets/icon/')}/> */}
+              <Text style={{ fontSize:16 }}> Chup anh </Text>
+            </TouchableOpacity>
+            </View>
+            <View style={{ marginTop:10 }}>
+            <TouchableOpacity
+              onPress={()=> this.hanlderAvatar(ImagePicker.openPicker)}
+            >
+              <Text style={{ fontSize:16 }}> Chon anh </Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+        </Overlay>
       </>
     );
   }
