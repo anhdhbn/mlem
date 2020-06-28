@@ -4,14 +4,9 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  StatusBar,
   Image,
   TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Modal,
   Text,
-  YellowBox,
 } from "react-native";
 
 console.disableYellowBox = true;
@@ -21,7 +16,7 @@ import { Input, Overlay } from "react-native-elements";
 import { DatePicker } from "native-base";
 
 // import ImagePicker from "react-native-image-picker";
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from "react-native-image-crop-picker";
 
 import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
@@ -36,13 +31,12 @@ import style from "../components/slider/style";
 import * as baseRequest from "../customerServices/requests";
 import RNFetchBlob from "rn-fetch-blob";
 
-
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.createParams = this.createParams.bind(this);
-    this.postImageWithUrl = this.postImageWithUrl.bind(this)
+    this.postImageWithUrl = this.postImageWithUrl.bind(this);
     // console.log(props.route.params)
     this.state = {
       // For react-native-image-picker
@@ -55,33 +49,12 @@ export default class Profile extends Component {
         },
       },
       // Modal
-      visibleAvaModal : false,
+      visibleAvaModal: false,
       visible: props.route.params.showModal ? true : false,
       isLoading: false,
       error: null,
       // response was retured when login
       data: this.props.route.params.response,
-      // Add data was responded in response when login.
-
-      // data: {
-      //   account_AccountFoodFavorites: this.props.route.params.response
-      //     .account_AccountFoodFavorites,
-      //   address: this.props.route.params.response.address,
-      //   avatar: this.props.route.params.response.avatar,
-      //   displayName: this.props.route.params.response.displayName,
-      //   dob: this.props.route.params.response.dob,
-      //   email: this.props.route.params.response.email,
-      //   errors: this.props.route.params.response.errors,
-      //   expiredTimeCode: this.props.route.params.response.expiredTimeCode,
-      //   id: this.props.route.params.response.id,
-      //   password: this.props.route.params.response.password,
-      //   passwordRecoveryCode: this.props.route.params.response
-      //     .passwordRecoveryCode,
-      //   phone: this.props.route.params.response.phone,
-      //   roleId: this.props.route.params.response.roleId,
-      //   salt: this.props.route.params.response.salt,
-      //   token: this.props.route.params.response.token,
-      // },
       modal: {
         avatar: null,
         displayName: null,
@@ -90,15 +63,13 @@ export default class Profile extends Component {
         dob: null,
         address: null,
         password: null,
-        imageId: null
+        imageId: null,
       },
     };
   }
 
   async get() {
     let response = await profileService.get();
-    // response.avatar has 99999 line
-    // console.log("[INFO] Response in profile after GET", response);
   }
 
   async update() {
@@ -112,7 +83,7 @@ export default class Profile extends Component {
     return response;
   }
 
-  async postImageWithUrl (url, filename) {
+  async postImageWithUrl(url, filename) {
     const host = baseRequest.BASE_API_URL;
     await RNFetchBlob.fetch(
       "POST",
@@ -135,31 +106,31 @@ export default class Profile extends Component {
         // custom content type
       ]
     )
-    .then((res) => {
-      let data = JSON.parse(res.data);
-      // console.log(data);
-      // console.log(
-      //   "[INFO] Uri image: ",
-      //   "http://admin.wepick.vn:20000" + data.url
-      // );
+      .then((res) => {
+        let data = JSON.parse(res.data);
+        // console.log(data);
+        // console.log(
+        //   "[INFO] Uri image: ",
+        //   "http://admin.wepick.vn:20000" + data.url
+        // );
 
-      const imageId = data.id
-      
-      this.setState({
-        ...this.state,
-        modal: {
-          ...this.state.modal,
-          // avatar: imageId,
-          imageId: imageId, 
-        },
+        const imageId = data.id;
+
+        this.setState({
+          ...this.state,
+          modal: {
+            ...this.state.modal,
+            // avatar: imageId,
+            imageId: imageId,
+          },
+        });
+        console.log(imageId, this.state.modal.imageId);
+      })
+      .catch((err) => {
+        // error handling ..
+        Alert.log("Upload error");
+        console.log(err);
       });
-      console.log(imageId, this.state.modal.imageId)
-    })
-    .catch((err) => {
-      // error handling ..
-      Alert.log("Upload error");
-      console.log(err);
-    });
   }
 
   createParams = () => {
@@ -194,12 +165,13 @@ export default class Profile extends Component {
   // For modal
   _showModal = () => this.setState({ visible: true });
   _hideModal = () => this.setState({ visible: false });
-  _onsubmitModal = () => {
-    this.setState({isLoading: true });
+  _onsubmitModal = async () => {
+    await this.setState({ isLoading: true });
     this.update().then((response) => {
-      console.log(response)
+      console.log(response);
       this.setState({ data: response, isLoading: false });
     });
+    this.setState({ visible: false });
   };
 
   _setDate = (newDate) => {
@@ -210,96 +182,36 @@ export default class Profile extends Component {
         dob: newDate,
       },
     });
+    console.log(("ngay sinh:", newDate));
   };
 
-  hanlderAvatar = async (func)=>{
+  hanlderAvatar = async (func) => {
     func({
       width: 300,
       height: 300,
-      cropping: true
-    }).then( async image => {
+      cropping: true,
+    }).then(async (image) => {
       // console.log(image.path)
       // const source = "data:image/jpeg;base64," + image.data;
       this._hideModal();
 
       const names = image.path.split("/");
-      const name = names[names.length - 1]
+      const name = names[names.length - 1];
 
       this.setState({ isLoading: true });
       this.setState({
-        visibleAvaModal:false
-      })
-      await this.postImageWithUrl(image.path, name)
+        visibleAvaModal: false,
+      });
+      await this.postImageWithUrl(image.path, name);
       // this.state.modal.imageId = imageId
       this._onsubmitModal();
-      
     });
-  }
+  };
 
   _changeAvatar = () => {
-    // console.log("[INFO] _changeAvatar() called.");
-    // // More info on all the options is below in the API Reference... just some common use cases shown here
     this.setState({
-      visibleAvaModal:true
-    })
-    // /**
-    //  * The first arg is the options object for customization (it can also be null or omitted for default options),
-    //  * The second arg is the callback which sends object: response (more info in the API Reference)
-    //  */
-    
-    // ImagePicker.openCamera({
-    //   width: 300,
-    //   height: 300,
-    //   cropping: true
-    // }).then( async image => {
-    //   // console.log(image.path)
-    //   // const source = "data:image/jpeg;base64," + image.data;
-    //   this._hideModal();
-
-    //   const names = image.path.split("/");
-    //   const name = names[names.length - 1]
-
-    //   this.setState({ isLoading: true });
-
-    //   await this.postImageWithUrl(image.path, name)
-    //   // this.state.modal.imageId = imageId
-    //   this._onsubmitModal();
-    // });
-    
-    // ImagePicker.showImagePicker(this.state.options, (response) => {
-    //   // Not try (return 999999 line :)
-    //   // console.log("[INFO] Response in image picker = ", response);
-    //   // if (response.didCancel) {
-    //   //   console.log("User cancelled image picker");
-    //   // } else if (response.error) {
-    //   //   console.log("ImagePicker Error: ", response.error);
-    //   // } else if (response.customButton) {
-    //   //   console.log("User tapped custom button: ", response.customButton);
-    //   // }
-
-    //   if (response.didCancel) {
-    //     console.log("User cancelled image picker");
-    //   } else if (response.error) {
-    //     console.log("ImagePicker Error: ", response.error);
-    //   } else {
-    //     // const source = { uri: response.uri };
-
-    //     // console.log("[INFO] Link image: ", source);
-
-    //     // You can also display the image using data:
-    //     const source = "data:image/jpeg;base64," + response.data;
-
-    //     this.setState({
-    //       ...this.state,
-    //       modal: {
-    //         ...this.state.modal,
-    //         avatar: source,
-    //       },
-    //     });
-
-    //     this._onsubmitModal();
-    //   }
-    // });
+      visibleAvaModal: true,
+    });
   };
 
   _onDismissSnackBar = () => {
@@ -324,8 +236,13 @@ export default class Profile extends Component {
             <Text>{this.state.isLoading ? "Show" : "Hide"}</Text>
           </TouchableOpacity> */}
           <HeaderProfile
-            avatar={this.state.data.image.url ? `${baseRequest.BASE_API_URL}${this.state.data.image.url}` : null}
+            avatar={
+              this.state.data.image.url
+                ? `${baseRequest.BASE_API_URL}${this.state.data.image.url}`
+                : null
+            }
             _changeAvatar={this._changeAvatar}
+            _changeInfo={this._showModal}
             name={this.state.data.displayName}
           />
           <UserProfile
@@ -337,7 +254,7 @@ export default class Profile extends Component {
                 : null
             }
             address={this.state.data.address}
-            onPress={this._showModal}
+            // onPress={this._showModal}
           />
           <View
             style={
@@ -353,21 +270,27 @@ export default class Profile extends Component {
             onBackdropPress={this._hideModal}
             fullScreen={true}
           >
-            {/* <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
-            <View
-              style={{
-                backgroundColor: "#ffffff",
-                margin: 50,
-                padding: 10,
-                borderRadius: 10,
-                flex: 1,
-              }}
-            > */}
             <SafeAreaView>
               <ScrollView showsVerticalScrollIndicator={false}>
-                <View>
+                <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                  <TouchableOpacity onPress={() => this._hideModal()}>
+                    <Image
+                      style={{
+                        width: 23,
+                        height: 23,
+                        padding: 10,
+                        marginTop: 15,
+                      }}
+                      source={require("../assets/icon/back.png")}
+                    />
+                  </TouchableOpacity>
                   <Text
-                    style={{ fontWeight: "bold", fontSize: 25, padding: 10 }}
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 20,
+                      padding: 14,
+                      marginLeft: 40,
+                    }}
                   >
                     Cập nhật thông tin cá nhân
                   </Text>
@@ -423,19 +346,6 @@ export default class Profile extends Component {
                 </View>
                 <View>
                   <Text style={styles.modalItemTitle}>Ngày sinh</Text>
-                  {/* <Input
-                  placeholder="Ngày sinh"
-                  defaultValue={this.state.data.dob}
-                  onChangeText={(text) => {
-                    this.setState({
-                      ...this.state,
-                      modal: {
-                        ...this.state.modal,
-                        dob: text,
-                      },
-                    });
-                  }}
-                ></Input> */}
                   <DatePicker
                     defaultDate={
                       this.state.data.dob
@@ -456,9 +366,6 @@ export default class Profile extends Component {
                     onDateChange={this._setDate}
                     disabled={false}
                   />
-                  {/* <Text>
-                  Date: {this.state.chosenDate.toString().substr(4, 12)}
-                </Text> */}
                 </View>
                 <View>
                   <Text style={styles.modalItemTitle}>Địa chỉ</Text>
@@ -477,57 +384,70 @@ export default class Profile extends Component {
                   ></Input>
                 </View>
                 <View style={{ flexDirection: "row", paddingBottom: 10 }}>
-                  <View style={{ flex: 1 }}>
-                    <TouchableOpacity onPress={() => this._hideModal()}>
-                      <Image
-                        source={require("../assets/icon/cross.png")}
-                        style={{ width: 20, height: 20, marginLeft: 10 }}
-                      />
-                    </TouchableOpacity>
-                  </View>
                   <View
                     style={{
                       flex: 1,
-                      justifyContent: "flex-end",
-                      alignItems: "flex-end",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <TouchableOpacity onPress={() => this._onsubmitModal()}>
-                      <Image
-                        source={require("../assets/icon/submit.png")}
-                        style={{ width: 20, height: 20, marginRight: 10 }}
-                      />
+                    <TouchableOpacity
+                      onPress={() => this._onsubmitModal()}
+                      style={{
+                        height: 40,
+                        width: 90,
+                        backgroundColor: "#D20000",
+                        borderRadius: 8,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "white",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Cập nhật
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
               </ScrollView>
             </SafeAreaView>
-            {/* </View>
-          </View> */}
           </Overlay>
         </ScrollView>
-        <Overlay visible={this.state.visibleAvaModal}
-        onBackdropPress={()=>{this.setState({visibleAvaModal: false})}}
+        <Overlay
+          visible={this.state.visibleAvaModal}
+          onBackdropPress={() => {
+            this.setState({ visibleAvaModal: false });
+          }}
         >
-          <View style={{ alignItems:'center' }}>
-                <Text style={{ fontSize:18,color:'red' }}>Chinh sua avatar</Text>
+          <View style={{ height: 100, width: 300, justifyContent: "center" }}>
+            <View style={{ height: 40, flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{ flexDirection: "row", padding: 8 }}
+                onPress={() => this.hanlderAvatar(ImagePicker.openCamera)}
+              >
+                <Image
+                  source={require("../assets/icon/camera.png")}
+                  style={{ width: 20, height: 20, padding: 10, marginRight: 5 }}
+                />
+                <Text style={{ fontSize: 16 }}> Chụp ảnh </Text>
+              </TouchableOpacity>
             </View>
-          <View style={{ height:100,width:300,justifyContent:'center' }}>
-            
-            <View style={{ height: 40 }}>
-            <TouchableOpacity
-             onPress={()=> this.hanlderAvatar(ImagePicker.openCamera)}
-            >
-              {/* <Image source={require('../assets/icon/')}/> */}
-              <Text style={{ fontSize:16 }}> Chup anh </Text>
-            </TouchableOpacity>
-            </View>
-            <View style={{ marginTop:10 }}>
-            <TouchableOpacity
-              onPress={()=> this.hanlderAvatar(ImagePicker.openPicker)}
-            >
-              <Text style={{ fontSize:16 }}> Chon anh </Text>
-            </TouchableOpacity>
+            <View style={{ marginTop: 10 }}>
+              <TouchableOpacity
+                style={{ flexDirection: "row", padding: 8 }}
+                onPress={() => this.hanlderAvatar(ImagePicker.openPicker)}
+              >
+                <Image
+                  source={require("../assets/icon/lib.png")}
+                  style={{ width: 20, height: 20, padding: 10, marginRight: 5 }}
+                />
+                <Text style={{ fontSize: 16 }}> Chọn ảnh từ album </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Overlay>

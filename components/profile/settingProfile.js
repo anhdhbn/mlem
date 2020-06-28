@@ -216,38 +216,109 @@ export default class SettingProfile extends Component {
           text={this.state.textAlert}
         />
 
-        <Text style={{ color: "#8A8F9C", marginHorizontal: 10, fontSize: 16 }}>
-          Cài đặt
+        <Text
+          style={{
+            color: "#8A8F9C",
+            marginHorizontal: 10,
+            fontSize: 16,
+            marginBottom: 7,
+          }}
+        >
+          Quản lý
         </Text>
         <View
           style={{
             // Card
-            borderRadius: 6,
             elevation: 3,
             backgroundColor: "#fff",
-            shadowOffset: { width: 1, height: 1 },
-            shadowColor: "#333",
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-            marginVertical: 6,
-            // Another
             flexDirection: "column",
           }}
         >
-          {/* <ItemUserProfile
-            icon={require("../../assets/icon/settings.png")}
-            title={"Cài đặt"}
-          /> */}
-          <ItemUserProfile
-            onPress={this.onPressChangePass}
-            icon={require("../../assets/icon/changepass.png")}
-            title={"Đổi mật khẩu"}
-          />
-          <ItemUserProfile
-            onPress={this.props._signOut}
-            icon={require("../../assets/icon/logout.png")}
-            title={"Đăng xuất"}
-          />
+          <View
+            style={{
+              height: 40,
+              paddingTop: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              // onPress={this.onPressChangePass}
+            >
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}
+                source={require("../../assets/icon/settings.png")}
+              />
+              <Text style={{ fontSize: 14 }}>Cài đặt</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            // Card
+            elevation: 3,
+            backgroundColor: "#fff",
+            flexDirection: "column",
+          }}
+        >
+          <View
+            style={{
+              height: 40,
+              paddingTop: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={this.onPressChangePass}
+            >
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}
+                source={require("../../assets/icon/changepass.png")}
+              />
+              <Text style={{ fontSize: 14 }}>Đổi mật khẩu</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            // Card
+            elevation: 3,
+            backgroundColor: "#fff",
+            flexDirection: "column",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              height: 40,
+              paddingTop: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={this.props._signOut}
+            >
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}
+                source={require("../../assets/icon/logout.png")}
+              />
+              <Text style={{ fontSize: 14 }}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );

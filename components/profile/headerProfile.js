@@ -35,16 +35,6 @@ export default class HeaderProfile extends Component {
             backgroundColor: "#FFFFFF",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 8,
             //
           }}
         >
@@ -58,52 +48,44 @@ export default class HeaderProfile extends Component {
                   }
                 : require("../../assets/icon/user.png")
             }
-            // style={{ paddingVertical: 20 }}
             imageProps={(resizeMode = "center")}
-            // showAccessory={true}
-            // onAccessoryPress={() => {
-            //   console.log("[INFO] Press accessoryPress");
-            // }}
             onPress={this.props._changeAvatar}
             containerStyle={{ marginVertical: 20 }}
           />
-          {/* <View
-            style={{
-              margin: 30,
-              width: 150,
-              height: 150,
-              borderRadius: 75,
-              overflow: "hidden",
-              // borderWidth: 3,
-              // borderColor: "#FF4040",
-              backgroundColor: "#FF4040",
-            }}
-          >
-            <Image
-              source={{ uri: this.props.avatar }}
-              style={{
-                flex: 1,
-                height: null,
-                width: null,
-                resizeMode: "contain",
-              }}
-              resizeMode="center"
-            ></Image>
-          </View> */}
-
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            height: 50,
+            backgroundColor: "#ffffff",
+            position: "relative",
+            justifyContent: "center",
+            borderBottomLeftRadius: 8,
+            borderBottomRightRadius: 8,
+            borderBottomWidth: 0.3,
+            marginBottom: 8,
+          }}
+        >
           <View>
             <Text
               style={{
                 fontSize: 22,
                 fontWeight: "bold",
-                paddingBottom: 30,
                 textAlign: "center",
               }}
             >
               {this.props.name}
             </Text>
           </View>
-          <TouchableOpacity></TouchableOpacity>
+          <TouchableOpacity
+            style={{ position: "absolute", right: 30 }}
+            onPress={this.props._changeInfo}
+          >
+            <Image
+              style={{ width: 21, height: 21, marginTop: 6 }}
+              source={require("../../assets/icon/pen.png")}
+            />
+          </TouchableOpacity>
         </View>
       </>
     );

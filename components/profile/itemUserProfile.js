@@ -23,8 +23,7 @@ export default class ItemUserProfile extends Component {
 
   render() {
     return (
-      <TouchableOpacity
-        onPress={this.props.onPress}
+      <View
         style={{
           paddingVertical: 10,
           flexDirection: "row",
@@ -80,7 +79,7 @@ export default class ItemUserProfile extends Component {
             </Text>
           </>
         )}
-      </TouchableOpacity>
+      </View>
     );
   }
 }

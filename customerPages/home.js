@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, YellowBox, Text } from "react-native";
+import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Button as ButtonE, Overlay } from "react-native-elements";
 import { FAB } from "react-native-paper";
 import * as signalR from "@aspnet/signalr";
@@ -13,7 +13,8 @@ import NavBar from "../components/cardList/NavBar";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner/Spinner";
 
-import { Fab, Icon, Button } from "native-base";
+import { Fab, Button } from "native-base";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function (props) {
   //   Id	Name
@@ -65,6 +66,7 @@ export default function (props) {
     props.route.params.response.account_AccountFoodFavorites
   );
 
+  const [visibleSignalContent, setVisibleSignalContent] = useState(false);
   const [delaySearch, setDelayDearch] = useState(0);
 
   useEffect(() => {
@@ -325,9 +327,17 @@ export default function (props) {
     props.navigation.navigate("Home");
   };
 
+  const showSignalContent = () => {
+    setVisibleSignalContent(true);
+  };
+
+  const hiddenSignalContent = () => {
+    setVisibleSignalContent(false);
+  };
+
   return (
     <>
-      <FAB
+      {/* <FAB
         style={{
           position: "absolute",
           zIndex: 1,
@@ -336,33 +346,26 @@ export default function (props) {
           bottom: 0,
         }}
         big
-        icon="plus"
+        icon="bell-o"
         onPress={() => {
           console.log("[INFO] Pressed button SIGNALR");
           testSignalIR();
         }}
-      />
+      /> */}
 
       {/* Cái này sẽ là Fabs nhưng khi ấn vào hơi lag và sẽ bị bóng mờ ô vuông */}
-      {/* <Fab
-        active={activeFab}
+      <Fab
+        // active={activeFab}
         direction="up"
         containerStyle={{}}
-        style={{ backgroundColor: "#5067FF", zIndex: 1 }}
+        style={{ backgroundColor: "#D20000", zIndex: 1 }}
         position="bottomRight"
-        onPress={() => setActiveFab(!activeFab)}
+        onPress={() => {
+          showSignalContent();
+        }}
       >
-        <Icon name="share" />
-        <Button style={{ backgroundColor: "#34A34F" }}>
-          <Icon name="logo-whatsapp" />
-        </Button>
-        <Button style={{ backgroundColor: "#3B5998" }}>
-          <Icon name="logo-facebook" />
-        </Button>
-        <Button disabled style={{ backgroundColor: "#DD5144" }}>
-          <Icon name="mail" />
-        </Button>
-      </Fab> */}
+        <Icon name="bell-o" size={25} />
+      </Fab>
       {/* Loading */}
       <Overlay
         fullScreen={true}
@@ -537,6 +540,36 @@ export default function (props) {
           />
         ) : null}
       </ScrollView>
+      <Overlay
+        visible={visibleSignalContent}
+        onBackdropPress={hiddenSignalContent}
+      >
+        <View
+          style={{
+            height: 100,
+            width: "100%",
+            borderRadius: 12,
+            alignItems: "center",
+          }}
+        >
+          <TextInput
+            style={{ width: 300, height: 30, fontSize: 14 }}
+            // onChange={}
+          />
+          <TouchableOpacity
+            style={{
+              width: 80,
+              height: 40,
+              borderRadius: 8,
+              backgroundColor: "#D20000",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "700" }}>Gửi</Text>
+          </TouchableOpacity>
+        </View>
+      </Overlay>
     </>
   );
 }

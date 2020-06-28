@@ -32,7 +32,7 @@ import homeServices from "../../customerServices/homeServices";
 import * as baseRequest from "../../customerServices/requests";
 import { TextInput } from "react-native-paper";
 
-import ImagePicker from 'react-native-image-crop-picker';
+import ImagePicker from "react-native-image-crop-picker";
 
 export default function (props) {
   const [data, setData] = useState({
@@ -95,12 +95,12 @@ export default function (props) {
     func({
       width: 300,
       height: 400,
-      cropping: true
-    }).then(image => {
+      cropping: true,
+    }).then((image) => {
       setVisibleAvaModal(false);
       const names = image.path.split("/");
-      const name = names[names.length - 1]
-      postImageWithUrl(image.path, name)
+      const name = names[names.length - 1];
+      postImageWithUrl(image.path, name);
     });
   };
 
@@ -128,25 +128,25 @@ export default function (props) {
         // custom content type
       ]
     )
-    .then((res) => {
-      let data = JSON.parse(res.data);
-      // console.log(data.url);
-      // console.log(
-      //   "[INFO] Uri image: ",
-      //   "http://admin.wepick.vn:20000" + data.url
-      // );
-      setImageId(data.id);
-      setImage(`${host}${data.url}`);
+      .then((res) => {
+        let data = JSON.parse(res.data);
+        // console.log(data.url);
+        // console.log(
+        //   "[INFO] Uri image: ",
+        //   "http://admin.wepick.vn:20000" + data.url
+        // );
+        setImageId(data.id);
+        setImage(`${host}${data.url}`);
 
-      setStateAvatar(false);
-    })
-    .catch((err) => {
-      // error handling ..
-      Alert.log("Upload error");
-      console.log(err);
-      setStateAvatar(false);
-    });
-  }
+        setStateAvatar(false);
+      })
+      .catch((err) => {
+        // error handling ..
+        Alert.log("Upload error");
+        console.log(err);
+        setStateAvatar(false);
+      });
+  };
 
   const createParams = () => {
     let foodFoodTypeMappings = [];
@@ -274,7 +274,6 @@ export default function (props) {
           ) : (
             <Avatar
               size={150}
-              // title="Ảnh"
               activeOpacity={0.7}
               source={
                 image
@@ -291,10 +290,6 @@ export default function (props) {
               }}
               // style={{ paddingVertical: 20 }}
               imageProps={(resizeMode = "center")}
-              // showAccessory={true}
-              // onAccessoryPress={() => {
-              //   console.log("[INFO] Press accessoryPress");
-              // }}
               onPress={() => {
                 setVisibleAvaModal(true);
               }}
@@ -648,28 +643,36 @@ export default function (props) {
           </TouchableOpacity>
         </View>
 
-        <Overlay visible={visibleAvaModal}
-        onBackdropPress={()=>{setApproveVisible(false)}}
+        <Overlay
+          visible={visibleAvaModal}
+          onBackdropPress={() => {
+            setApproveVisible(false);
+          }}
         >
-          <View style={{ alignItems:'center' }}>
-                <Text style={{ fontSize:18,color:'red' }}>Chinh sua avatar</Text>
+          <View style={{ height: 100, width: 300, justifyContent: "center" }}>
+            <View style={{ height: 40, flexDirection: "row" }}>
+              <TouchableOpacity
+                style={{ flexDirection: "row", padding: 8 }}
+                onPress={() => handleChoosePhoto(ImagePicker.openCamera)}
+              >
+                <Image
+                  source={require("../../assets/icon/camera.png")}
+                  style={{ width: 20, height: 20, padding: 10, marginRight: 5 }}
+                />
+                <Text style={{ fontSize: 16 }}> Chụp ảnh </Text>
+              </TouchableOpacity>
             </View>
-          <View style={{ height:100,width:300,justifyContent:'center' }}>
-            
-            <View style={{ height: 40 }}>
-            <TouchableOpacity
-             onPress={()=> handleChoosePhoto(ImagePicker.openCamera)}
-            >
-              {/* <Image source={require('../assets/icon/')}/> */}
-              <Text style={{ fontSize:16 }}> Chup anh </Text>
-            </TouchableOpacity>
-            </View>
-            <View style={{ marginTop:10 }}>
-            <TouchableOpacity
-              onPress={()=> handleChoosePhoto(ImagePicker.openPicker)}
-            >
-              <Text style={{ fontSize:16 }}> Chon anh </Text>
-            </TouchableOpacity>
+            <View style={{ marginTop: 10 }}>
+              <TouchableOpacity
+                style={{ flexDirection: "row", padding: 8 }}
+                onPress={() => handleChoosePhoto(ImagePicker.openPicker)}
+              >
+                <Image
+                  source={require("../../assets/icon/lib.png")}
+                  style={{ width: 20, height: 20, padding: 10, marginRight: 5 }}
+                />
+                <Text style={{ fontSize: 16 }}> Chọn ảnh từ album </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Overlay>
