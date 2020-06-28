@@ -149,7 +149,7 @@ export default function (props) {
                   fontSize: 15,
                 }}
               >
-                {formatPrice(props.modal.price)} đ
+                {formatPrice(props.modal.price)}
               </Text>
               <Text style={{ fontSize: 20 }}>
                 {formatPrice(props.modal.promoPrice)}

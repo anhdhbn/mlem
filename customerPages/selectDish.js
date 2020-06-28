@@ -17,7 +17,7 @@ import ModalSelectDish from "../components/order/modalSelectDish";
 import CaculatePrice from "../components/order/calculatePrice";
 
 import orderSevices from "../customerServices/orderServices";
-
+import formatPrice from "../components/formatPrice";
 import Spinner from "../components/Spinner/Spinner";
 
 import Order from "./order";
