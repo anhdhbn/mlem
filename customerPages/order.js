@@ -21,6 +21,8 @@ import TableOff from "../components/order/tableOff";
 import Snackbar from "../components/common/snackbarUpdating";
 import Spinner from "../components/Spinner/Spinner";
 import Modal from "../components/Modal/Modal";
+
+import formatPrice from "../components/formatPrice";
 export default class order extends Component {
   constructor(props) {
     super(props);
@@ -382,11 +384,6 @@ export default class order extends Component {
     this.setAlert(false);
   };
 
-  formatPrice(price) {
-    if (price != null) {
-      return price.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + " đ";
-    } else return "";
-  }
   handleCancel = () => {
     this.setState({ modalConfirmVisible: false });
   };
@@ -588,7 +585,7 @@ export default class order extends Component {
                   {this.state.totalPromoPrice !== this.state.totalPrice ? (
                     <>
                       <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                        {this.state.totalPromoPrice}đ
+                        {formatPrice(this.state.totalPromoPrice)}
                       </Text>
                       <Text
                         style={{
@@ -596,13 +593,13 @@ export default class order extends Component {
                           color: "grey",
                         }}
                       >
-                        {this.state.totalPrice}đ
+                        {formatPrice(this.state.totalPrice)}
                       </Text>
                     </>
                   ) : (
                     <View>
                       <Text style={{}}>
-                        {this.formatPrice(this.state.totalPrice)}
+                        {formatPrice(this.state.totalPrice)}
                       </Text>
                     </View>
                   )}

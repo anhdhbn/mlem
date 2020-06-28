@@ -8,11 +8,9 @@ import {
   Dimensions,
   Text,
 } from "react-native";
-
 import formatPrice from "../formatPrice";
-
 export default function (props) {
-  return props.totalPrice !== 0 ? (
+  return (
     <View
       style={{
         bottom: 0,
@@ -66,5 +64,5 @@ export default function (props) {
         </View>
       </View>
     </View>
-  ) : null;
+  );
 }

@@ -8,7 +8,7 @@ import {
   Dimensions,
   Text,
 } from "react-native";
-
+import formatPrice from "../formatPrice";
 export default function (props) {
   nameSize = () => {
     if (props.dish.bigSize) {
@@ -50,9 +50,9 @@ export default function (props) {
               color: "grey",
             }}
           >
-            {props.dish.price} đ
+            {formatPrice(props.dish.price)}
           </Text>
-          <Text>{props.dish.promoPrice} đ</Text>
+          <Text>{formatPrice(props.dish.promoPrice)}</Text>
         </View>
       </View>
 

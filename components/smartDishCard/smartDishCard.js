@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
+import formatPrice from "../formatPrice";
 export default class SmartDishCard extends Component {
   constructor(props) {
     super(props);
@@ -36,14 +37,14 @@ export default class SmartDishCard extends Component {
 
   displayPrice() {
     if (this.props.promoPrice === null) {
-      return <Text style={{}}>{this.props.price} đ</Text>;
+      return <Text style={{}}>{formatPrice(this.props.price)}</Text>;
     } else {
       return (
         <>
           <Text style={{ textDecorationLine: "line-through", color: "grey" }}>
-            {this.props.price} đ
+            {formatPrice(this.props.price)}
           </Text>
-          <Text>{this.props.promoPrice} đ</Text>
+          <Text>{formatPrice(this.props.promoPrice)}</Text>
         </>
       );
     }
