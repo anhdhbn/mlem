@@ -3,12 +3,12 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   linear: {
     flex: 1,
-    justifyContent: "center",
   },
   mlem: {
     color: "yellow",
     fontWeight: "bold",
     fontSize: 50,
+    fontFamily: "chiller",
   },
   fbWay: {
     backgroundColor: "#1253DC",
@@ -40,7 +40,7 @@ export default StyleSheet.create({
     fontSize: 13,
     paddingTop: 3,
     paddingBottom: 3,
-    width: 160,
+    width: 250,
     color: "white",
   },
   textInputWrong: {
@@ -52,10 +52,10 @@ export default StyleSheet.create({
   },
   viewInput: {
     justifyContent: "center",
-    width: 200,
+    width: 290,
     borderWidth: 0.5,
     borderRadius: 10,
-    height: 40,
+    height: 45,
     marginTop: 10,
     backgroundColor: "#461321",
     flexDirection: "row",
@@ -65,12 +65,11 @@ export default StyleSheet.create({
     width: 8,
     height: 8,
     padding: 8,
-    margin: 10,
+    margin: 13,
   },
   submitBtn: {
     justifyContent: "center",
-    width: 200,
-    borderWidth: 0.5,
+    width: 290,
     borderRadius: 10,
     height: 40,
     marginTop: 10,
@@ -78,7 +77,7 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   line: {
-    width: 100,
+    width: 130,
     borderWidth: 0.4,
     borderColor: "#adaaaa",
     marginTop: 10,
