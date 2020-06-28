@@ -52,7 +52,7 @@ function UserHomeScreen(props) {
 
 function ProviderHomeScreen(props) {
   const { signOut } = React.useContext(AuthContext);
-  return <SlideBar />;
+  return <SlideBar signOut={signOut} />;
 }
 
 function SignInScreen(props) {

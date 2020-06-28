@@ -82,7 +82,8 @@ export default function CustomContent(props) {
           )}
           label="Đăng xuất"
           onPress={() => {
-            //handleLogout;
+            // console.log("[INFO] sign out props: ", props);
+            props.signOut();
           }}
         />
       </DrawerContentScrollView>
