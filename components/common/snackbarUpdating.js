@@ -8,7 +8,7 @@ export default function SnackbarUpdating(props) {
       visible={props.visible}
       onDismiss={props._onDismissSnackBar}
       duration={props.duration ? props.duration : 2000}
-      style={{ zIndex: 1 }}
+      style={props.style ? props.style : { zIndex: 1, opacity: 0.8 }}
       action={
         props.actionText
           ? {
