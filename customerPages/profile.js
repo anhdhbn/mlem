@@ -20,7 +20,9 @@ console.disableYellowBox = true;
 import { Input, Overlay } from "react-native-elements";
 import { DatePicker } from "native-base";
 
-import ImagePicker from "react-native-image-picker";
+// import ImagePicker from "react-native-image-picker";
+
+import ImagePicker from "react-native-image-crop-picker";
 
 import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
@@ -51,6 +53,7 @@ export default class Profile extends Component {
       },
       // Modal
       visible: props.route.params.showModal ? true : false,
+      visibleAvaSet: false,
       isLoading: false,
       error: null,
       // response was retured when login
@@ -154,49 +157,79 @@ export default class Profile extends Component {
     });
   };
 
+  // _changeAvatar = () => {
+  //   console.log("[INFO] _changeAvatar() called.");
+  //   // More info on all the options is below in the API Reference... just some common use cases shown here
+
+  //   /**
+  //    * The first arg is the options object for customization (it can also be null or omitted for default options),
+  //    * The second arg is the callback which sends object: response (more info in the API Reference)
+  //    */
+  //   ImagePicker.showImagePicker(this.state.options, (response) => {
+  //     // Not try (return 999999 line :)
+  //     // console.log("[INFO] Response in image picker = ", response);
+  //     // if (response.didCancel) {
+  //     //   console.log("User cancelled image picker");
+  //     // } else if (response.error) {
+  //     //   console.log("ImagePicker Error: ", response.error);
+  //     // } else if (response.customButton) {
+  //     //   console.log("User tapped custom button: ", response.customButton);
+  //     // }
+
+  //     if (response.didCancel) {
+  //       console.log("User cancelled image picker");
+  //     } else if (response.error) {
+  //       console.log("ImagePicker Error: ", response.error);
+  //     } else {
+  //       // const source = { uri: response.uri };
+
+  //       // console.log("[INFO] Link image: ", source);
+
+  //       // You can also display the image using data:
+  //       const source = "data:image/jpeg;base64," + response.data;
+
+  //       this.setState({
+  //         ...this.state,
+  //         modal: {
+  //           ...this.state.modal,
+  //           avatar: source,
+  //         },
+  //       });
+
+  //       this._onsubmitModal();
+  //     }
+  //   });
+  // };
+
   _changeAvatar = () => {
-    console.log("[INFO] _changeAvatar() called.");
-    // More info on all the options is below in the API Reference... just some common use cases shown here
-
-    /**
-     * The first arg is the options object for customization (it can also be null or omitted for default options),
-     * The second arg is the callback which sends object: response (more info in the API Reference)
-     */
-    ImagePicker.showImagePicker(this.state.options, (response) => {
-      // Not try (return 999999 line :)
-      // console.log("[INFO] Response in image picker = ", response);
-      // if (response.didCancel) {
-      //   console.log("User cancelled image picker");
-      // } else if (response.error) {
-      //   console.log("ImagePicker Error: ", response.error);
-      // } else if (response.customButton) {
-      //   console.log("User tapped custom button: ", response.customButton);
-      // }
-
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        // const source = { uri: response.uri };
-
-        // console.log("[INFO] Link image: ", source);
-
-        // You can also display the image using data:
-        const source = "data:image/jpeg;base64," + response.data;
-
-        this.setState({
-          ...this.state,
-          modal: {
-            ...this.state.modal,
-            avatar: source,
-          },
-        });
-
-        this._onsubmitModal();
-      }
+    this.setState({
+      visibleAvaSet: true,
     });
   };
+  openCamera() {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then((image) => {
+      this.setState({
+        ...this.state.modal,
+        avatar: image.path,
+      });
+    });
+  }
+  openPicker() {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    }).then((image) => {
+      this.setState({
+        ...this.state.modal,
+        avatar: image.path,
+      });
+    });
+  }
 
   _onDismissSnackBar = () => {
     console.log("[INFO] Ondimiss snackbar");
@@ -402,6 +435,31 @@ export default class Profile extends Component {
           </View> */}
           </Overlay>
         </ScrollView>
+        <Overlay
+          visible={this.state.visibleAvaSet}
+          onBackdropPress={() => {
+            this.setState({ visibleAvaSet: false });
+          }}
+        >
+          <View style={{ height: 200, width: 400 }}>
+            <View style={{ height: 70, justifyContent: "center" }}>
+              <TouchableOpacity onPress={this.openCamera()}>
+                <Text style={{ fontWeight: "500", fontSize: 18, color: "red" }}>
+                  Chụp ảnh
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{ height: 70, justifyContent: "center", marginTop: 30 }}
+            >
+              <TouchableOpacity onPress={this.openPicker()}>
+                <Text style={{ fontWeight: "500", fontSize: 18, color: "red" }}>
+                  Chọn trong thư viện
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Overlay>
       </>
     );
   }
