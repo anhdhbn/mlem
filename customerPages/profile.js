@@ -20,7 +20,8 @@ console.disableYellowBox = true;
 import { Input, Overlay } from "react-native-elements";
 import { DatePicker } from "native-base";
 
-import ImagePicker from "react-native-image-picker";
+// import ImagePicker from "react-native-image-picker";
+import ImagePicker from 'react-native-image-crop-picker';
 
 import HeaderProfile from "../components/profile/headerProfile";
 import UserProfile from "../components/profile/userProfile";
@@ -32,13 +33,17 @@ import SnackbarUpdating from "../components/common/snackbarUpdating";
 import { Snackbar } from "react-native-paper";
 
 import style from "../components/slider/style";
+import * as baseRequest from "../customerServices/requests";
+import RNFetchBlob from "rn-fetch-blob";
+
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.createParams = this.createParams.bind(this);
-
+    this.postImageWithUrl = this.postImageWithUrl.bind(this)
+    // console.log(props.route.params)
     this.state = {
       // For react-native-image-picker
       options: {
@@ -50,6 +55,7 @@ export default class Profile extends Component {
         },
       },
       // Modal
+      visibleAvaModal : false,
       visible: props.route.params.showModal ? true : false,
       isLoading: false,
       error: null,
@@ -84,6 +90,7 @@ export default class Profile extends Component {
         dob: null,
         address: null,
         password: null,
+        imageId: null
       },
     };
   }
@@ -96,19 +103,70 @@ export default class Profile extends Component {
 
   async update() {
     // response.avatar has 99999 line
+    // console.log(this.state.modal)
     let params = this.createParams();
-    // console.log("[INFO] Params in profile: ", params);
+    console.log("[INFO] Params in profile: ", params);
     let response = await profileService.update(params);
     // response.avatar has 99999 line
     // console.log("[INFO] Response in profile after UPDATE", response);
     return response;
   }
 
+  async postImageWithUrl (url, filename) {
+    const host = baseRequest.BASE_API_URL;
+    await RNFetchBlob.fetch(
+      "POST",
+      `${host}/api/image/upload`,
+      {
+        // dropbox upload headers
+
+        "Content-Type": "multipart/form-data",
+        // Change BASE64 encoded data to a file path with prefix `RNFetchBlob-file://`.
+        // Or simply wrap the file path with RNFetchBlob.wrap().
+      },
+      [
+        // element with property `filename` will be transformed into `file` in form data
+
+        {
+          name: "file",
+          filename: filename,
+          data: RNFetchBlob.wrap(url),
+        },
+        // custom content type
+      ]
+    )
+    .then((res) => {
+      let data = JSON.parse(res.data);
+      // console.log(data);
+      // console.log(
+      //   "[INFO] Uri image: ",
+      //   "http://admin.wepick.vn:20000" + data.url
+      // );
+
+      const imageId = data.id
+      
+      this.setState({
+        ...this.state,
+        modal: {
+          ...this.state.modal,
+          // avatar: imageId,
+          imageId: imageId, 
+        },
+      });
+      console.log(imageId, this.state.modal.imageId)
+    })
+    .catch((err) => {
+      // error handling ..
+      Alert.log("Upload error");
+      console.log(err);
+    });
+  }
+
   createParams = () => {
     let data = this.state.data;
-
-    if (this.state.modal.avatar) {
-      data.avatar = this.state.modal.avatar;
+    // data.imageId = this.state.modal.imageId;
+    if (this.state.modal.imageId) {
+      data.imageId = this.state.modal.imageId;
     }
     if (this.state.modal.displayName) {
       data.displayName = this.state.modal.displayName;
@@ -137,9 +195,9 @@ export default class Profile extends Component {
   _showModal = () => this.setState({ visible: true });
   _hideModal = () => this.setState({ visible: false });
   _onsubmitModal = () => {
-    this._hideModal();
-    this.setState({ isLoading: true });
+    this.setState({isLoading: true });
     this.update().then((response) => {
+      console.log(response)
       this.setState({ data: response, isLoading: false });
     });
   };
@@ -154,48 +212,94 @@ export default class Profile extends Component {
     });
   };
 
-  _changeAvatar = () => {
-    console.log("[INFO] _changeAvatar() called.");
-    // More info on all the options is below in the API Reference... just some common use cases shown here
+  hanlderAvatar = async (func)=>{
+    func({
+      width: 300,
+      height: 300,
+      cropping: true
+    }).then( async image => {
+      // console.log(image.path)
+      // const source = "data:image/jpeg;base64," + image.data;
+      this._hideModal();
 
-    /**
-     * The first arg is the options object for customization (it can also be null or omitted for default options),
-     * The second arg is the callback which sends object: response (more info in the API Reference)
-     */
-    ImagePicker.showImagePicker(this.state.options, (response) => {
-      // Not try (return 999999 line :)
-      // console.log("[INFO] Response in image picker = ", response);
-      // if (response.didCancel) {
-      //   console.log("User cancelled image picker");
-      // } else if (response.error) {
-      //   console.log("ImagePicker Error: ", response.error);
-      // } else if (response.customButton) {
-      //   console.log("User tapped custom button: ", response.customButton);
-      // }
+      const names = image.path.split("/");
+      const name = names[names.length - 1]
 
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        // const source = { uri: response.uri };
-
-        // console.log("[INFO] Link image: ", source);
-
-        // You can also display the image using data:
-        const source = "data:image/jpeg;base64," + response.data;
-
-        this.setState({
-          ...this.state,
-          modal: {
-            ...this.state.modal,
-            avatar: source,
-          },
-        });
-
-        this._onsubmitModal();
-      }
+      this.setState({ isLoading: true });
+      this.setState({
+        visibleAvaModal:false
+      })
+      await this.postImageWithUrl(image.path, name)
+      // this.state.modal.imageId = imageId
+      this._onsubmitModal();
+      
     });
+  }
+
+  _changeAvatar = () => {
+    // console.log("[INFO] _changeAvatar() called.");
+    // // More info on all the options is below in the API Reference... just some common use cases shown here
+    this.setState({
+      visibleAvaModal:true
+    })
+    // /**
+    //  * The first arg is the options object for customization (it can also be null or omitted for default options),
+    //  * The second arg is the callback which sends object: response (more info in the API Reference)
+    //  */
+    
+    // ImagePicker.openCamera({
+    //   width: 300,
+    //   height: 300,
+    //   cropping: true
+    // }).then( async image => {
+    //   // console.log(image.path)
+    //   // const source = "data:image/jpeg;base64," + image.data;
+    //   this._hideModal();
+
+    //   const names = image.path.split("/");
+    //   const name = names[names.length - 1]
+
+    //   this.setState({ isLoading: true });
+
+    //   await this.postImageWithUrl(image.path, name)
+    //   // this.state.modal.imageId = imageId
+    //   this._onsubmitModal();
+    // });
+    
+    // ImagePicker.showImagePicker(this.state.options, (response) => {
+    //   // Not try (return 999999 line :)
+    //   // console.log("[INFO] Response in image picker = ", response);
+    //   // if (response.didCancel) {
+    //   //   console.log("User cancelled image picker");
+    //   // } else if (response.error) {
+    //   //   console.log("ImagePicker Error: ", response.error);
+    //   // } else if (response.customButton) {
+    //   //   console.log("User tapped custom button: ", response.customButton);
+    //   // }
+
+    //   if (response.didCancel) {
+    //     console.log("User cancelled image picker");
+    //   } else if (response.error) {
+    //     console.log("ImagePicker Error: ", response.error);
+    //   } else {
+    //     // const source = { uri: response.uri };
+
+    //     // console.log("[INFO] Link image: ", source);
+
+    //     // You can also display the image using data:
+    //     const source = "data:image/jpeg;base64," + response.data;
+
+    //     this.setState({
+    //       ...this.state,
+    //       modal: {
+    //         ...this.state.modal,
+    //         avatar: source,
+    //       },
+    //     });
+
+    //     this._onsubmitModal();
+    //   }
+    // });
   };
 
   _onDismissSnackBar = () => {
@@ -220,7 +324,7 @@ export default class Profile extends Component {
             <Text>{this.state.isLoading ? "Show" : "Hide"}</Text>
           </TouchableOpacity> */}
           <HeaderProfile
-            avatar={this.state.data.avatar}
+            avatar={this.state.data.image.url ? `${baseRequest.BASE_API_URL}${this.state.data.image.url}` : null}
             _changeAvatar={this._changeAvatar}
             name={this.state.data.displayName}
           />
@@ -402,6 +506,31 @@ export default class Profile extends Component {
           </View> */}
           </Overlay>
         </ScrollView>
+        <Overlay visible={this.state.visibleAvaModal}
+        onBackdropPress={()=>{this.setState({visibleAvaModal: false})}}
+        >
+          <View style={{ alignItems:'center' }}>
+                <Text style={{ fontSize:18,color:'red' }}>Chinh sua avatar</Text>
+            </View>
+          <View style={{ height:100,width:300,justifyContent:'center' }}>
+            
+            <View style={{ height: 40 }}>
+            <TouchableOpacity
+             onPress={()=> this.hanlderAvatar(ImagePicker.openCamera)}
+            >
+              {/* <Image source={require('../assets/icon/')}/> */}
+              <Text style={{ fontSize:16 }}> Chup anh </Text>
+            </TouchableOpacity>
+            </View>
+            <View style={{ marginTop:10 }}>
+            <TouchableOpacity
+              onPress={()=> this.hanlderAvatar(ImagePicker.openPicker)}
+            >
+              <Text style={{ fontSize:16 }}> Chon anh </Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+        </Overlay>
       </>
     );
   }

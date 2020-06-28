@@ -24,12 +24,16 @@ import subIcon from "../../assets/icon/-.png";
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
 import Modal from "../Components/Modal";
 
-import ImagePicker from "react-native-image-picker";
+// import ImagePicker from "react-native-image-picker";
 import menuServices from "../../providerServices/menuServices";
 
 //Test
 import homeServices from "../../customerServices/homeServices";
+import * as baseRequest from "../../customerServices/requests";
 import { TextInput } from "react-native-paper";
+
+import ImagePicker from 'react-native-image-crop-picker';
+
 export default function (props) {
   const [data, setData] = useState({
     name: null,
@@ -58,6 +62,7 @@ export default function (props) {
 
   const [invalidPriceInput, setInvalidPriceInput] = useState(false);
   const [invalidDiscountInput, setInvalidDiscountInput] = useState(false);
+  const [visibleAvaModal, setVisibleAvaModal] = useState(false);
 
   const increasePrice = () => {
     setPriceEach(priceEach + 1000);
@@ -85,61 +90,63 @@ export default function (props) {
     setData({ ...data, statusId: code });
   };
 
-  const handleChoosePhoto = async () => {
-    const options = {
-      noData: true,
-    };
-    let photo = null;
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else if (response.customButton) {
-      } else {
-        let source = { uri: response.uri };
-        setStateAvatar(true);
-        RNFetchBlob.fetch(
-          "POST",
-          "http://admin.wepick.vn:20000/api/image/upload",
-          {
-            // dropbox upload headers
-
-            "Content-Type": "multipart/form-data",
-            // Change BASE64 encoded data to a file path with prefix `RNFetchBlob-file://`.
-            // Or simply wrap the file path with RNFetchBlob.wrap().
-          },
-          [
-            // element with property `filename` will be transformed into `file` in form data
-
-            {
-              name: "file",
-              filename: response.fileName,
-              data: RNFetchBlob.wrap(response.uri),
-            },
-            // custom content type
-          ]
-        )
-          .then((res) => {
-            let data = JSON.parse(res.data);
-            // console.log(data.url);
-            // console.log(
-            //   "[INFO] Uri image: ",
-            //   "http://admin.wepick.vn:20000" + data.url
-            // );
-
-            setImageId(data.id);
-            setImage("http://admin.wepick.vn:20000" + data.url);
-
-            setStateAvatar(false);
-          })
-          .catch((err) => {
-            // error handling ..
-            Alert.log("Upload error");
-            console.log(err);
-            setStateAvatar(false);
-          });
-      }
+  const handleChoosePhoto = async (func) => {
+    setVisibleAvaModal(true);
+    func({
+      width: 300,
+      height: 400,
+      cropping: true
+    }).then(image => {
+      setVisibleAvaModal(false);
+      const names = image.path.split("/");
+      const name = names[names.length - 1]
+      postImageWithUrl(image.path, name)
     });
   };
+
+  const postImageWithUrl = (url, filename) => {
+    setStateAvatar(true);
+    const host = baseRequest.BASE_API_URL;
+    RNFetchBlob.fetch(
+      "POST",
+      `${host}/api/image/upload`,
+      {
+        // dropbox upload headers
+
+        "Content-Type": "multipart/form-data",
+        // Change BASE64 encoded data to a file path with prefix `RNFetchBlob-file://`.
+        // Or simply wrap the file path with RNFetchBlob.wrap().
+      },
+      [
+        // element with property `filename` will be transformed into `file` in form data
+
+        {
+          name: "file",
+          filename: filename,
+          data: RNFetchBlob.wrap(url),
+        },
+        // custom content type
+      ]
+    )
+    .then((res) => {
+      let data = JSON.parse(res.data);
+      // console.log(data.url);
+      // console.log(
+      //   "[INFO] Uri image: ",
+      //   "http://admin.wepick.vn:20000" + data.url
+      // );
+      setImageId(data.id);
+      setImage(`${host}${data.url}`);
+
+      setStateAvatar(false);
+    })
+    .catch((err) => {
+      // error handling ..
+      Alert.log("Upload error");
+      console.log(err);
+      setStateAvatar(false);
+    });
+  }
 
   const createParams = () => {
     let foodFoodTypeMappings = [];
@@ -289,7 +296,7 @@ export default function (props) {
               //   console.log("[INFO] Press accessoryPress");
               // }}
               onPress={() => {
-                handleChoosePhoto();
+                setVisibleAvaModal(true);
               }}
               containerStyle={{ marginVertical: 20 }}
             />
@@ -640,6 +647,32 @@ export default function (props) {
             <Text style={{ top: 10, color: "#ffffff" }}>Thêm món</Text>
           </TouchableOpacity>
         </View>
+
+        <Overlay visible={visibleAvaModal}
+        onBackdropPress={()=>{setApproveVisible(false)}}
+        >
+          <View style={{ alignItems:'center' }}>
+                <Text style={{ fontSize:18,color:'red' }}>Chinh sua avatar</Text>
+            </View>
+          <View style={{ height:100,width:300,justifyContent:'center' }}>
+            
+            <View style={{ height: 40 }}>
+            <TouchableOpacity
+             onPress={()=> handleChoosePhoto(ImagePicker.openCamera)}
+            >
+              {/* <Image source={require('../assets/icon/')}/> */}
+              <Text style={{ fontSize:16 }}> Chup anh </Text>
+            </TouchableOpacity>
+            </View>
+            <View style={{ marginTop:10 }}>
+            <TouchableOpacity
+              onPress={()=> handleChoosePhoto(ImagePicker.openPicker)}
+            >
+              <Text style={{ fontSize:16 }}> Chon anh </Text>
+            </TouchableOpacity>
+            </View>
+          </View>
+        </Overlay>
       </ScrollView>
     </>
   );
