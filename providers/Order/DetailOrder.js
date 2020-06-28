@@ -164,10 +164,10 @@ export default function DetailOrder(props) {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              padding: 5,
+              padding: 10,
             }}
           >
-            <Text>
+            <Text >
               Thời gian: {moment(data.orderDate).format("HH:mm") + " - "}
               {moment(data.orderDate).format("DD/MM/YYYY")}
             </Text>
@@ -176,8 +176,10 @@ export default function DetailOrder(props) {
             </Text>
           </View>
           <TouchableOpacity style={{
-            marginLeft: 5,
-            flexDirection: 'row'
+            paddingLeft: 10,
+            flexDirection: 'row',
+            backgroundColor:'#F5F6F7',
+            elevation:5
           }}
             onPress={() => { data.status.id =='2'&& setVisible(true) }}
           >
@@ -320,7 +322,7 @@ export default function DetailOrder(props) {
             </TouchableOpacity>
           </View>
         </View>
-        : <View style={{
+        :<View style={{
           backgroundColor: '#ffffff',
           borderRadius: 10,
           height: 50,
@@ -333,18 +335,20 @@ export default function DetailOrder(props) {
           shadowOpacity: 0.51,
           shadowRadius: 13.16,
           elevation: 20,
-
+  
         }}
         >
           <View
             style={{
+              flexDirection: 'row',
               flex: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              left:'20%'
+              justifyContent: 'space-around',
+              alignItems: 'center'
             }}
           >
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món): {formatPrice(data.total)}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
+  
           </View>
         </View>
       }
@@ -381,7 +385,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   cardView: {

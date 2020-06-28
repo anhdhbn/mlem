@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Toaster from "../../components/Modal/Toaster";
 
 import search from "../../assets/icon/search.png";
@@ -89,7 +90,7 @@ export default ({ navigation }) => (
           ></Icon.Button>
         ),
         headerRight: () => (
-          <Icon.Button
+          <FontAwesome.Button
             name="trash"
             size={25}
             backgroundColor="#D20000"
@@ -97,7 +98,7 @@ export default ({ navigation }) => (
               route.params.handleDeleteDish();
               navigation.navigate("MenuProvider");
             }}
-          ></Icon.Button>
+          ></FontAwesome.Button>
         ),
       })}
     />
