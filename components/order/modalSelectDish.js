@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   TextInput,
@@ -11,9 +11,63 @@ import {
 
 import { Overlay, CheckBox } from "react-native-elements";
 
+import Snackbar from "../common/snackbarUpdating";
+
 import formatPrice from "../formatPrice";
+import orderServices from "../../customerServices/orderServices";
 
 export default function (props) {
+  const [isloading, setIsLoading] = useState(true);
+
+  const [food, setFood] = useState(null);
+
+  // Alert
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(null);
+
+  const onDismissError = () => {
+    setIsError(false);
+  };
+
+  const createAlert = async (textAlert) => {
+    // console.log("Create alert");
+    await setError(textAlert);
+    setIsError(true);
+  };
+
+  //
+  const onDismissLoading = () => {
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    // console.log("[INFO] Props modal in modalSelectDish: ", props.modal);
+    fetchSize();
+  }, [props.modal.id]);
+
+  const fetchSize = async () => {
+    // console.log("Call fetch size in modalSelectDish");
+    if (props.modal.id) {
+      let params = { idsss: props.modal.id };
+      setIsLoading(true);
+      let res = await orderServices
+        .getFood({ params })
+        .then((res) => {
+          console.log("[INFO] Response fecch size in modalSelectDish", res);
+          setFood(res);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          // console.log(
+          //   "[INFO] Error fecch size in modalSelectDish",
+          //   JSON.stringify(err)
+          // );
+          console.log("[INFO] Error fecch size in modalSelectDish: ", err.data);
+          setIsLoading(false);
+          createAlert(err.data);
+        });
+    }
+  };
   return (
     <Overlay
       visible={props.visible}
@@ -30,6 +84,12 @@ export default function (props) {
         bottom: 0,
       }}
     >
+      <Snackbar
+        visible={isError}
+        _onDismissSnackBar={onDismissError}
+        actionText={"HIDE"}
+        text={error}
+      />
       {/* {console.log("[INFO] Props in modelSelectDish: ", props.modal)} */}
       {/* {props.modal.nameDish ? props.addDish2Order() : null} */}
       <View style={{ alignItems: "center", borderBottomWidth: 0.5 }}>

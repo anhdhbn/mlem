@@ -123,40 +123,42 @@ export default function (props) {
         <View style={{ flex: 1 }}></View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {listSearch.map((dish) => (
-          //   {
-          //     "descreption": "Món này được giảm giá",
-          //     "discountRate": 10,
-          //     "errors": null,
-          //     "foodFoodGroupingMappings": null,
-          //     "foodFoodTypeMappings": null,
-          //     "id": 11,
-          //     "image": null,
-          //     "imageId": null,
-          //     "name": "Hải sản 3",
-          //     "priceEach": 10000,
-          //     "statusId": 0
-          // }
-          <SmartDishCard
-            key={dish.id}
-            id={dish.id}
-            linkImageDish={dish.image}
-            nameDish={dish.name}
-            describeDish={dish.descreption}
-            price={dish.priceEach}
-            // promoPrice={dish.discountRate * dish.priceEach}
-            promoPrice={
-              dish.discountRate
-                ? (dish.priceEach * (100 - dish.discountRate)) / 100
-                : dish.discountRate
-            }
-            // For icon
-            linkIconActive={require("../assets/icon/heart.png")}
-            linkIconInactive={require("../assets/icon/heart-unlike.png")}
-            handClickIcon={handClickIcon}
-            isActive={checkLikedFood(dish.id)}
-          ></SmartDishCard>
-        ))}
+        {listSearch
+          ? listSearch.map((dish) => (
+              //   {
+              //     "descreption": "Món này được giảm giá",
+              //     "discountRate": 10,
+              //     "errors": null,
+              //     "foodFoodGroupingMappings": null,
+              //     "foodFoodTypeMappings": null,
+              //     "id": 11,
+              //     "image": null,
+              //     "imageId": null,
+              //     "name": "Hải sản 3",
+              //     "priceEach": 10000,
+              //     "statusId": 0
+              // }
+              <SmartDishCard
+                key={dish.id}
+                id={dish.id}
+                linkImageDish={dish.image}
+                nameDish={dish.name}
+                describeDish={dish.descreption}
+                price={dish.priceEach}
+                // promoPrice={dish.discountRate * dish.priceEach}
+                promoPrice={
+                  dish.discountRate
+                    ? (dish.priceEach * (100 - dish.discountRate)) / 100
+                    : dish.discountRate
+                }
+                // For icon
+                linkIconActive={require("../assets/icon/heart.png")}
+                linkIconInactive={require("../assets/icon/heart-unlike.png")}
+                handClickIcon={handClickIcon}
+                isActive={checkLikedFood(dish.id)}
+              ></SmartDishCard>
+            ))
+          : null}
       </ScrollView>
     </>
   );

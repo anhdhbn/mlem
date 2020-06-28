@@ -160,6 +160,7 @@ export default class order extends Component {
   };
 
   handClickIcon = (dish) => {
+    console.log("DISH click: ", dish);
     this.toggleModal(dish);
     // this.props.route.params.addOrderDish(nameDish);
   };
@@ -338,7 +339,7 @@ export default class order extends Component {
                 this.setListDishRender(0);
               }}
             >
-              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Tất cả </Text>
+              <Text style={{ fontSize: 14, color: "#8A8F9C" }}> Tất cả </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{}}
@@ -346,7 +347,10 @@ export default class order extends Component {
                 this.setListDishRender(6);
               }}
             >
-              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Top bán chạy </Text>
+              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+                {" "}
+                Top bán chạy{" "}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{}}
@@ -354,7 +358,10 @@ export default class order extends Component {
                 this.setListDishRender(7);
               }}
             >
-              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Đặt gần đây </Text>
+              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+                {" "}
+                Đặt gần đây{" "}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{}}
@@ -362,12 +369,18 @@ export default class order extends Component {
                 this.setListDishRender(8);
               }}
             >
-              <Text style={{ fontSize: 14, color: '#8A8F9C' }}> Giá thấp đến cao </Text>
+              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+                {" "}
+                Giá thấp đến cao{" "}
+              </Text>
             </TouchableOpacity>
           </View>
 
           {/* <SafeAreaView style={{ height: 350 }}> */}
-
+          {/* {console.log(
+            "[LIST dish to render] ",
+            JSON.stringify(this.state.listDishRender)
+          )} */}
           <View>
             {this.state.listDishRender ? (
               this.state.listDishRender.map((dish) => (

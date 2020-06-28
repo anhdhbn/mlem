@@ -27,10 +27,9 @@ customAxios.interceptors.response.use(
       // Lay cai message này
       const { code, type, message } = data;
       // message error
-     /*  console.log("[ERROR] In requests.js: ", code, type, message, data); */
-    
+      /*  console.log("[ERROR] In requests.js: ", code, type, message, data); */
     }
-    return error.response
+    return Promise.reject(error.response);
   }
 );
 
