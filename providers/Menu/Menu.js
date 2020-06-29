@@ -5,8 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Toaster from "../../components/Modal/Toaster";
+import Snackbar from "../../components/common/snackbarUpdating";
 
 import search from "../../assets/icon/search.png";
 import viewMoreIcon from "../../assets/icon/view_more.png";
@@ -127,17 +128,18 @@ const Menu = (props) => {
     setIsUploading(true);
     setEditMenuVisible(false);
     // console.log("[TEST] Delete: ", selectedDish);
-    await menuServices.deleteDish(selectedDish).then(
-      (res) => {
+    await menuServices
+      .deleteDish(selectedDish)
+      .then((res) => {
         setIsUploading(false);
+        // console.log("[INFO] Response after delete food: ", res);
         setIsUploaded(true);
-      },
-      (error) => {
+      })
+      .catch((error) => {
         setIsUploading(false);
         setIsUploaded(true);
         Alert.alert(error);
-      }
-    );
+      });
     getData();
   };
 
@@ -145,17 +147,19 @@ const Menu = (props) => {
   const handleChangeDish = async (dish) => {
     // console.log("[INFO] Params to change dish: ", dish);
     setIsUploading(true);
-    await menuServices.updateDish(dish).then(
-      (res) => {
+    await menuServices
+      .updateDish(dish)
+      .then((res) => {
+        setIsUploading(false);
+        // console.log("[INFO] Response after change dish: ", res);
+        setIsUploaded(true);
+      })
+      .catch((error) => {
         setIsUploading(false);
         setIsUploaded(true);
-      },
-      (error) => {
-        setIsUploading(false);
-        setIsUploaded(true);
-        Alert.alert(error);
-      }
-    );
+
+        console.log("ERROR: ", error.data);
+      });
     getData();
   };
 
@@ -163,38 +167,41 @@ const Menu = (props) => {
   const [data, setData] = useState([]);
   const getData = async () => {
     setIsLoading(true);
-    const res = await menuServices.list({}).then(
-      (res) => {
+    await menuServices
+      .list({})
+      .then((res) => {
         setData(res);
+        // console.log("[INFO] Response after get Data: ", res);
         setIsLoading(false);
-      },
-      (error) => {
+      })
+      .catch((error) => {
         Alert.alert(error);
         setIsLoading(false);
-      }
-    );
+      });
   };
   /* xử lý filter */
   const handleFilter = async (props) => {
     setIsUploading(true);
-    setFilterParams(params);
+
     // Thêm filter text
     // tự động thêm bằng biến filterText được sửa mỗi khi bấm vào thanh tìm kiếm.
-    params = addFilterText(props);
+    let params = addFilterText(props);
+    setFilterParams(params);
     // console.log("[INFO] Filter params in Menu Provider: ", params);
-    await menuServices.list(params).then(
-      (res) => {
+    await menuServices
+      .list(params)
+      .then((res) => {
         /* console.log('data: ',res) */
         setData(res);
+        // console.log("[INFO] Resonse after use filter: ", res);
         setIsUploading(false);
         setIsUploaded(true);
-      },
-      (error) => {
+      })
+      .catch((error) => {
         Alert.alert(error);
         setIsUploading(false);
         setIsUploaded(true);
-      }
-    );
+      });
   };
 
   const addFilterText = (paramsIn, text = null) => {
@@ -219,24 +226,25 @@ const Menu = (props) => {
     props === "" ? setFilterText(null) : setFilterText(props);
 
     setIsUploading(true);
+    let params = {};
     props === ""
       ? (params = addFilterText(filterParams, null))
       : (params = addFilterText(filterParams, props));
 
     // console.log("[INFO] Filter params in Menu Provider: ", params);
-    await menuServices.list(params).then(
-      (rs) => {
+    await menuServices
+      .list(params)
+      .then((rs) => {
         setData(rs);
         // console.log("Response after search: ", rs);
         setIsUploading(false);
         setIsUploaded(true);
-      },
-      (error) => {
+      })
+      .catch((error) => {
         Alert.alert(error);
         setIsUploading(false);
         setIsUploaded(true);
-      }
-    );
+      });
   };
 
   const pressChangeDish = (data = null) => {
@@ -264,20 +272,42 @@ const Menu = (props) => {
     getData();
   }, []);
 
+  const onDismissUploading = () => {
+    setIsUploading(false);
+  };
+
+  const onDismissUploaded = () => {
+    setIsUploaded(false);
+  };
+
   return (
     <View style={styles.container}>
       {/* {console.log("Uploading: ", isUploading)}
       {console.log("Uploaded: ", isUploaded)} */}
-      <Toaster
+      {/* <Toaster
         notification={"Đang cập nhật"}
         visible={isUploading}
         setVisible={setIsUploading}
+      /> */}
+
+      <Snackbar
+        visible={isUploading}
+        _onDismissSnackBar={onDismissUploading}
+        actionText={"HIDE"}
+        text={"Đang cập nhật"}
       />
 
-      <Toaster
+      {/* <Toaster
         notification={"Cập nhật thành công"}
         visible={isUploaded}
         setVisible={setIsUploaded}
+      /> */}
+
+      <Snackbar
+        visible={isUploaded}
+        _onDismissSnackBar={onDismissUploaded}
+        actionText={"HIDE"}
+        text={"Cập nhật thành công"}
       />
 
       <View style={styles.viewInput}>
