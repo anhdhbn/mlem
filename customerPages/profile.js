@@ -73,13 +73,9 @@ export default class Profile extends Component {
   }
 
   async update() {
-    // response.avatar has 99999 line
-    // console.log(this.state.modal)
     let params = this.createParams();
     console.log("[INFO] Params in profile: ", params);
     let response = await profileService.update(params);
-    // response.avatar has 99999 line
-    // console.log("[INFO] Response in profile after UPDATE", response);
     return response;
   }
 
@@ -165,6 +161,7 @@ export default class Profile extends Component {
   // For modal
   _showModal = () => this.setState({ visible: true });
   _hideModal = () => this.setState({ visible: false });
+
   _onsubmitModal = async () => {
     await this.setState({ isLoading: true });
     this.update().then((response) => {
@@ -227,14 +224,6 @@ export default class Profile extends Component {
           text={"Đang cập nhật"}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Test Snackbar */}
-          {/* <TouchableOpacity
-            onPress={() => {
-              this.setState({ isLoading: true });
-            }}
-          >
-            <Text>{this.state.isLoading ? "Show" : "Hide"}</Text>
-          </TouchableOpacity> */}
           <HeaderProfile
             avatar={
               this.state.data.image.url
