@@ -10,6 +10,8 @@ import {
 
 import moment from "moment";
 
+import { Button } from "react-native-elements";
+
 import orderServices from "../customerServices/orderServices";
 
 import Header from "../components/header/header";
@@ -341,19 +343,19 @@ export default class order extends Component {
       subTotal: this.state.totalPromoPrice,
     };
     console.log("[INFO] Params to create order: ", JSON.stringify(params));
-    let response = await orderServices.createOrder(params).then(
-      (res) => {
+    let response = await orderServices
+      .createOrder(params)
+      .then((res) => {
         console.log("Đặt bàn thành công");
         this.createAlert("Đặt bàn thành công");
         this.resetOrder();
         return res;
-      },
-      (err) => {
+      })
+      .catch((err) => {
         console.log("Đặt bàn thất bại", err);
         this.createAlert("Đặt bàn thất bại");
         return null;
-      }
-    );
+      });
     console.log("[INFO] Reponse in createOrder: ", response);
   };
 

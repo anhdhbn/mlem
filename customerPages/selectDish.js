@@ -9,6 +9,8 @@ import {
   SafeAreaView,
 } from "react-native";
 
+import { Button } from "react-native-elements";
+
 import NavBar from "../components/cardList/NavBar";
 import Header from "../components/header/header";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -76,16 +78,24 @@ export default class order extends Component {
         normalSize: true,
         bigSize: false,
       },
+
+      isLoading: false,
     };
   }
 
+  setIsLoading = (value) => {
+    this.setState({ isLoading: value });
+  };
+
   // B52
-  componentDidMount = () => {
-    this.getListFood().then((data) => {
+  componentDidMount = async () => {
+    this.setIsLoading(true);
+    await this.getListFood().then((data) => {
       let listFood = data;
       this.setState({ listDishRender: listFood });
       this.setState({ listAllDish: listFood });
     });
+    this.setIsLoading(false);
     this.getListLau();
     this.getListHaisan();
     this.getListRaucu();
@@ -135,6 +145,7 @@ export default class order extends Component {
   getListLau = async () => {
     let params = this.createParams(1);
     console.log("[INFO] Params to get list lau: ", params);
+    this.setIsLoading(true);
     let response = await orderSevices
       .listFood(params)
       .then((res) => {
@@ -146,14 +157,18 @@ export default class order extends Component {
       .catch((err) => {
         console.log("Error in get list lau", err.data);
       });
-    this.setState({ listLau: response });
+    await this.setState({ listLau: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
   getListHaisan = async () => {
     let params = this.createParams(2);
+    this.setIsLoading(true);
     let response = await orderSevices.listFood(params);
-    this.setState({ listHaisan: response });
+
+    await this.setState({ listHaisan: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
@@ -163,8 +178,10 @@ export default class order extends Component {
         equal: 3,
       },
     };
+    this.setIsLoading(true);
     let response = await orderSevices.listFood(params);
-    this.setState({ listRaucu: response });
+    await this.setState({ listRaucu: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
@@ -174,8 +191,10 @@ export default class order extends Component {
         equal: 4,
       },
     };
+    this.setIsLoading(true);
     let response = await orderSevices.listFood(params);
-    this.setState({ listThit: response });
+    await this.setState({ listThit: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
@@ -185,22 +204,28 @@ export default class order extends Component {
         equal: 5,
       },
     };
+    this.setIsLoading(true);
     let response = await orderSevices.listFood(params);
-    this.setState({ listDouong: response });
+    await this.setState({ listDouong: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
   getListTopOrder = async () => {
     let params = {};
+    this.setIsLoading(true);
     let response = await orderSevices.listFoodTopOrder(params);
-    this.setState({ listDishTopOrder: response });
+    await this.setState({ listDishTopOrder: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
   getListRecently = async () => {
     let params = {};
+    this.setIsLoading(true);
     let response = await orderSevices.listFoodRecently(params);
-    this.setState({ listDishRecently: response });
+    await this.setState({ listDishRecently: response });
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
@@ -208,13 +233,18 @@ export default class order extends Component {
     let params = {};
     // let response = await orderSevices.TenAPI(params);
     // this.setState({ listDishRecently: response });
+    this.setIsLoading(true);
     console.log("Chưa có api in getListL2H in selectDish");
+    this.setIsLoading(false);
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
   getListFood = async () => {
     let params = {};
+
     let response = await orderSevices.listFood(params);
+    console.log(response);
+
     // console.log("[TEST] Get list food in selectDIsh: ", response);
     return response;
   };
@@ -518,35 +548,49 @@ export default class order extends Component {
             "[LIST dish to render] ",
             JSON.stringify(this.state.listDishRender)
           )} */}
-          <View>
-            {this.state.listDishRender ? (
-              this.state.listDishRender.map((dish) => (
-                <SmartDishCard
-                  id={dish.id}
-                  linkImageDish={dish.image}
-                  nameDish={dish.name}
-                  describeDish={dish.describe}
-                  price={dish.priceEach}
-                  promoPrice={
-                    dish.discountRate
-                      ? (dish.priceEach * (100 - dish.discountRate)) / 100
-                      : null
-                  }
-                  // For icon
-                  linkIconActive={require("../assets/icon/+.png")}
-                  linkIconInactive={require("../assets/icon/+.png")}
-                  handClickIcon={this.handClickIcon}
-                  isActive={true}
-                />
-              ))
-            ) : (
-              <View>
-                {" "}
-                <Spinner />{" "}
-              </View>
-            )}
-          </View>
-
+          {this.state.isLoading ? (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                type="clear"
+                loading={true}
+                loadingStyle={{ height: 50 }}
+              />
+            </View>
+          ) : (
+            <View>
+              {this.state.listDishRender ? (
+                this.state.listDishRender.map((dish) => (
+                  <SmartDishCard
+                    id={dish.id}
+                    linkImageDish={dish.image}
+                    nameDish={dish.name}
+                    describeDish={dish.describe}
+                    price={dish.priceEach}
+                    promoPrice={
+                      dish.discountRate
+                        ? (dish.priceEach * (100 - dish.discountRate)) / 100
+                        : null
+                    }
+                    // For icon
+                    linkIconActive={require("../assets/icon/+.png")}
+                    linkIconInactive={require("../assets/icon/+.png")}
+                    handClickIcon={this.handClickIcon}
+                    isActive={true}
+                  />
+                ))
+              ) : (
+                <View>
+                  <Spinner />
+                </View>
+              )}
+            </View>
+          )}
           <View>
             <ModalSelectDish
               addDish2Order={this.addDish2Order}
