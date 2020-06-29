@@ -29,6 +29,10 @@ export default class order extends Component {
       showModal: false,
 
       listDishRender: [],
+      pathListDish: 1000,
+
+      isLoadingSkip: false,
+
       listAllDish: [],
       listLau: [],
       listHaisan: [],
@@ -41,6 +45,22 @@ export default class order extends Component {
 
       totalPrice: 0,
       totalPromoPrice: 0,
+
+      skipFoods: [
+        // Tất cả
+        { skip: 0, isOutOfFood: false },
+        // Lẩu
+        { skip: 0, isOutOfFood: false },
+        //
+        { skip: 0, isOutOfFood: false },
+        { skip: 0, isOutOfFood: false },
+        { skip: 0, isOutOfFood: false },
+        { skip: 0, isOutOfFood: false },
+        { skip: 0, isOutOfFood: false },
+        { skip: 0, isOutOfFood: false },
+        { skip: 0, isOutOfFood: false },
+      ],
+      codeRender: 0,
 
       modal: {
         id: null,
@@ -75,23 +95,63 @@ export default class order extends Component {
     this.getListRecently();
   };
 
+  setIsLoadingSkip = (value) => {
+    console.log("IsLoading: ", value);
+    this.setState({ isLoadingSkip: value });
+  };
+
+  createParams = (code = 0) => {
+    if (code >= this.state.skipFoods.length) {
+      console.log("Không tìm thấy code của món để tăng skip. Code = ", code);
+      return {};
+    } else {
+      // Neu code === 0 là get tất cả nên equal: null
+      let params = {
+        foodGroupingId: {
+          equal: code === 0 ? null : code,
+        },
+        skip: this.state.skipFoods[code].skip,
+        take: 10,
+      };
+      // console.log(params);
+      return params;
+    }
+  };
+
+  countSkips = (code = 0) => {
+    let length = this.state.skipFoods.length;
+    let newSkipFoods = [];
+    for (let index = 0; index < length; index++) {
+      if (index === code) {
+        newSkipFoods.push({ skip: this.state.skipFoods[index].skip + 10 });
+      } else {
+        newSkipFoods.push(this.state.skipFoods[index]);
+      }
+    }
+    // console.log("[INFO] New skipFoods: ", newSkipFoods);
+    this.setState({ skipFoods: newSkipFoods });
+  };
+
   getListLau = async () => {
-    let params = {
-      foodGroupingId: {
-        equal: 1,
-      },
-    };
-    let response = await orderSevices.listFood(params);
+    let params = this.createParams(1);
+    console.log("[INFO] Params to get list lau: ", params);
+    let response = await orderSevices
+      .listFood(params)
+      .then((res) => {
+        this.countSkips(1);
+        // console.log("Respone in ", JSON.stringify(res));
+        console.log("Length response: ", res.length);
+        return res;
+      })
+      .catch((err) => {
+        console.log("Error in get list lau", err.data);
+      });
     this.setState({ listLau: response });
     // console.log("[TEST] Get list food in selectDIsh: ", response);
   };
 
   getListHaisan = async () => {
-    let params = {
-      foodGroupingId: {
-        equal: 2,
-      },
-    };
+    let params = this.createParams(2);
     let response = await orderSevices.listFood(params);
     this.setState({ listHaisan: response });
     // console.log("[TEST] Get list food in selectDIsh: ", response);
@@ -282,7 +342,34 @@ export default class order extends Component {
     this.setListDishRender(5);
   };
 
+  setCodeRender = (code) => {
+    this.setState({ codeRender: code });
+  };
+
+  fetchListRender = async (code) => {
+    if (code == 0) {
+      this.setState({ listDishRender: this.state.listAllDish });
+    } else if (code == 1) {
+      await this.getListLau();
+    } else if (code == 2) {
+      this.setState({ listDishRender: this.state.listHaisan });
+    } else if (code == 3) {
+      this.setState({ listDishRender: this.state.listRaucu });
+    } else if (code == 4) {
+      this.setState({ listDishRender: this.state.listThit });
+    } else if (code == 5) {
+      this.setState({ listDishRender: this.state.listDouong });
+    } else if (code == 6) {
+      this.setState({ listDishRender: this.state.listDishTopOrder });
+    } else if (code == 7) {
+      this.setState({ listDishRender: this.state.listDishRecently });
+    } else if (code == 8) {
+      this.setState({ listDishRender: this.state.listDishSortL2H });
+    }
+  };
+
   setListDishRender = (code) => {
+    this.setCodeRender(code);
     if (code == 0) {
       this.setState({ listDishRender: this.state.listAllDish });
     } else if (code == 1) {
@@ -305,11 +392,50 @@ export default class order extends Component {
     // console.log("[INFO] New List Dish: ", this.state.listDishRender);
   };
 
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    // const path =
+    //   listDishRender.length == 0
+    //     ? 200
+    //     : contentSize.height / listDishRender.length;
+
+    // const expectation = path * 7;
+
+    const threshhold = 320;
+    // console.log(
+    //   layoutMeasurement.height + contentOffset.y,
+    //   contentSize.height - threshhold
+    // );
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - threshhold
+    );
+  };
+
   render() {
     return (
       <SafeAreaView style={{ backgroundColor: "#F5F6F7", flex: 1 }}>
         <Header title="Chọn món"></Header>
-        <ScrollView>
+        <ScrollView
+          onScroll={async ({ nativeEvent }) => {
+            const {
+              layoutMeasurement,
+              contentOffset,
+              contentSize,
+            } = nativeEvent;
+
+            if (this.isCloseToBottom(nativeEvent)) {
+              //do something
+              // console.log("Close to bottom");
+              if (!this.state.isLoadingSkip) {
+                if (!this.state.skipFoods[this.state.codeRender].isOutOfFood) {
+                  this.setIsLoadingSkip(true);
+                  await this.fetchListRender(this.state.codeRender);
+                  this.setIsLoadingSkip(false);
+                }
+              }
+            }
+          }}
+        >
           <View>
             <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
               Danh mục
@@ -317,6 +443,7 @@ export default class order extends Component {
           </View>
 
           <NavBar
+            codeRender={this.state.codeRender}
             onPressAll={this.onPressAll}
             onPressLau={this.onPressLau}
             onPressHaisan={this.onPressHaisan}
@@ -336,18 +463,16 @@ export default class order extends Component {
             <TouchableOpacity
               style={{}}
               onPress={() => {
-                this.setListDishRender(0);
-              }}
-            >
-              <Text style={{ fontSize: 14, color: "#8A8F9C" }}> Tất cả </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
                 this.setListDishRender(6);
               }}
             >
-              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              <Text
+                style={
+                  this.state.codeRender === 6
+                    ? { fontSize: 14, color: "#DF0000" }
+                    : { fontSize: 14, color: "#8A8F9C" }
+                }
+              >
                 {" "}
                 Top bán chạy{" "}
               </Text>
@@ -358,7 +483,13 @@ export default class order extends Component {
                 this.setListDishRender(7);
               }}
             >
-              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              <Text
+                style={
+                  this.state.codeRender === 7
+                    ? { fontSize: 14, color: "#DF0000" }
+                    : { fontSize: 14, color: "#8A8F9C" }
+                }
+              >
                 {" "}
                 Đặt gần đây{" "}
               </Text>
@@ -369,7 +500,13 @@ export default class order extends Component {
                 this.setListDishRender(8);
               }}
             >
-              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              <Text
+                style={
+                  this.state.codeRender === 8
+                    ? { fontSize: 14, color: "#DF0000" }
+                    : { fontSize: 14, color: "#8A8F9C" }
+                }
+              >
                 {" "}
                 Giá thấp đến cao{" "}
               </Text>

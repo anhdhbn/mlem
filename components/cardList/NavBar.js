@@ -17,37 +17,37 @@ import all from "../../assets/images/food/supermarket.png";
 export default function (props) {
   const kindFoods = [
     {
-      id: "1",
+      id: 0,
       name: "Tất Cả",
       icon: all,
       onPress: props.onPressAll,
     },
     {
-      id: "2",
+      id: 1,
       name: "Lẩu-buffet",
       icon: buffet,
       onPress: props.onPressLau,
     },
     {
-      id: "3",
+      id: 2,
       name: "Hải Sản",
       icon: seafood,
       onPress: props.onPressHaisan,
     },
     {
-      id: "4",
+      id: 3,
       name: "Rau Củ",
       icon: vegetable,
       onPress: props.onPressRaucu,
     },
     {
-      id: "5",
+      id: 4,
       name: "Thịt",
       icon: meat,
       onPress: props.onPressThit,
     },
     {
-      id: "6",
+      id: 5,
       name: "Đồ Uống",
       icon: wine,
       onPress: props.onPressDouong,
@@ -62,7 +62,13 @@ export default function (props) {
           return (
             <TouchableOpacity style={styles.element} onPress={item.onPress}>
               <Image source={item.icon} style={styles.icon} />
-              <Text>{item.name}</Text>
+              <Text
+                style={
+                  item.id === props.codeRender ? { color: "#DF0000" } : null
+                }
+              >
+                {item.name}
+              </Text>
             </TouchableOpacity>
           );
         }}

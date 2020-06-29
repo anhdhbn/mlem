@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import formatPrice from "../formatPrice";
 export default function (props) {
-  return (
+  return props.totalPrice ? (
     <View
       style={{
         bottom: 0,
@@ -64,5 +64,5 @@ export default function (props) {
         </View>
       </View>
     </View>
-  );
+  ) : null;
 }
