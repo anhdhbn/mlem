@@ -131,9 +131,27 @@ export default class SettingProfile extends Component {
         >
           <SafeAreaView>
             <ScrollView showsVerticalScrollIndicator={false}>
-              <View>
-                <Text style={{ fontWeight: "bold", fontSize: 25, padding: 10 }}>
-                  Cập nhật mật khẩu
+              <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                <TouchableOpacity onPress={() => this.hideModalChangePass()}>
+                  <Image
+                    style={{
+                      width: 23,
+                      height: 23,
+                      padding: 10,
+                      marginTop: 15,
+                    }}
+                    source={require("../../assets/icon/back.png")}
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 20,
+                    padding: 12,
+                    marginLeft: 100,
+                  }}
+                >
+                  Đổi mật khẩu
                 </Text>
               </View>
               <View>
@@ -182,26 +200,33 @@ export default class SettingProfile extends Component {
                 ></Input>
               </View>
               <View style={{ flexDirection: "row", paddingBottom: 10 }}>
-                <View style={{ flex: 1 }}>
-                  <TouchableOpacity onPress={() => this.hideModalChangePass()}>
-                    <Image
-                      source={require("../../assets/icon/cross.png")}
-                      style={{ width: 20, height: 20, marginLeft: 10 }}
-                    />
-                  </TouchableOpacity>
-                </View>
                 <View
                   style={{
                     flex: 1,
-                    justifyContent: "flex-end",
-                    alignItems: "flex-end",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <TouchableOpacity onPress={() => this._onsubmitModal()}>
-                    <Image
-                      source={require("../../assets/icon/submit.png")}
-                      style={{ width: 20, height: 20, marginRight: 10 }}
-                    />
+                  <TouchableOpacity
+                    onPress={() => this._onsubmitModal()}
+                    style={{
+                      height: 40,
+                      width: 90,
+                      backgroundColor: "#D20000",
+                      borderRadius: 8,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "white",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Cập nhật
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
