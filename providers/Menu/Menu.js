@@ -138,7 +138,7 @@ const Menu = (props) => {
       .catch((error) => {
         setIsUploading(false);
         setIsUploaded(true);
-        Alert.alert(error);
+        createAlert(error.data);
       });
     getData();
   };
@@ -158,7 +158,7 @@ const Menu = (props) => {
         setIsUploading(false);
         setIsUploaded(true);
 
-        console.log("ERROR: ", error.data);
+        createAlert(error.data);
       });
     getData();
   };
@@ -175,7 +175,7 @@ const Menu = (props) => {
         setIsLoading(false);
       })
       .catch((error) => {
-        Alert.alert(error);
+        createAlert(error.data);
         setIsLoading(false);
       });
   };
@@ -198,7 +198,7 @@ const Menu = (props) => {
         setIsUploaded(true);
       })
       .catch((error) => {
-        Alert.alert(error);
+        createAlert(error.data);
         setIsUploading(false);
         setIsUploaded(true);
       });
@@ -241,7 +241,7 @@ const Menu = (props) => {
         setIsUploaded(true);
       })
       .catch((error) => {
-        Alert.alert(error);
+        createAlert(error.data);
         setIsUploading(false);
         setIsUploaded(true);
       });
@@ -280,6 +280,20 @@ const Menu = (props) => {
     setIsUploaded(false);
   };
 
+  // Alert
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState(null);
+
+  const onDismissError = () => {
+    setIsError(false);
+  };
+
+  const createAlert = async (textAlert) => {
+    // console.log("Create alert");
+    await setError(textAlert);
+    setIsError(true);
+  };
+
   return (
     <View style={styles.container}>
       {/* {console.log("Uploading: ", isUploading)}
@@ -289,6 +303,13 @@ const Menu = (props) => {
         visible={isUploading}
         setVisible={setIsUploading}
       /> */}
+
+      <Snackbar
+        visible={isError}
+        _onDismissSnackBar={onDismissError}
+        actionText={"HIDE"}
+        text={error}
+      />
 
       <Snackbar
         visible={isUploading}
