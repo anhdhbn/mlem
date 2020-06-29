@@ -546,14 +546,35 @@ export default function (props) {
       >
         <View
           style={{
-            height: 100,
+            height: 150,
             width: "100%",
             borderRadius: 12,
             alignItems: "center",
           }}
         >
+          <View>
+            <Text style={{}}>Nội dung thông báo</Text>
+          </View>
           <TextInput
-            style={{ width: 300, height: 30, fontSize: 14 }}
+            style={{
+              marginTop: 20,
+              width: 300,
+              height: 50,
+              paddingLeft: 10,
+              paddingRight: 10,
+              paddingBottom: 8,
+              fontSize: 14,
+              marginBottom: 20,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 1,
+              },
+              shadowOpacity: 0.2,
+              shadowRadius: 1.41,
+
+              elevation: 2,
+            }}
             // onChange={}
           />
           <TouchableOpacity
@@ -566,7 +587,9 @@ export default function (props) {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 16, fontWeight: "700" }}>Gửi</Text>
+            <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
+              Gửi
+            </Text>
           </TouchableOpacity>
         </View>
       </Overlay>

@@ -288,7 +288,7 @@ export default class Profile extends Component {
                     style={{
                       fontWeight: "bold",
                       fontSize: 20,
-                      padding: 14,
+                      padding: 12,
                       marginLeft: 40,
                     }}
                   >
