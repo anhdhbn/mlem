@@ -19,6 +19,7 @@ import Order from "./order";
 import SelectDish from "./selectDish";
 
 import History from "./history";
+import HistoryDetail from "../components/history/historyDetail";
 
 import Profile from "./profile";
 
@@ -61,6 +62,24 @@ function OrderStackScreen() {
   );
 }
 
+const HistoryStack = createStackNavigator();
+
+function HistoryStackScreen() {
+  return (
+    <HistoryStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <HistoryStack.Screen name="CustomerHistory" component={History} />
+      <HistoryStack.Screen
+        name="CustomerHistoryDetail"
+        component={HistoryDetail}
+      />
+    </HistoryStack.Navigator>
+  );
+}
+
 const Tab = createMaterialTopTabNavigator();
 
 export default class MainBody extends Component {
@@ -96,6 +115,7 @@ export default class MainBody extends Component {
         initialRouteName="Home"
         tabBarPosition="bottom"
         lazy="true"
+        swipeEnabled={false}
         tabBarOptions={{
           activeTintColor: "#DF0000",
           inactiveTintColor: "grey",
@@ -126,9 +146,9 @@ export default class MainBody extends Component {
         />
         <Tab.Screen
           name="Diary"
-          component={History}
+          component={HistoryStackScreen}
           options={{
-            tabBarLabel: "Nhật ký",
+            tabBarLabel: "Lịch sử",
             tabBarIcon: ({ _, color }) => (
               <Icon name="address-book" color={color} size={24} />
             ),

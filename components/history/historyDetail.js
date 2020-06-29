@@ -13,6 +13,8 @@ import moment from "moment";
 import { FlatList } from "react-native-gesture-handler";
 
 import Spinner from "../../components/Spinner/Spinner";
+import Header from "../header/header";
+import formatPrice from "../formatPrice";
 
 export default function (props) {
   const [data, setData] = useState({
@@ -119,60 +121,78 @@ export default function (props) {
     ],
   });
 
+  useEffect(() => {
+    setData(props.route.params.data);
+  }, []);
+
   return data ? (
     <SafeAreaView style={styles.container}>
+      <Header
+        title="Chi tiết đơn hàng"
+        onPressBack={() => {
+          props.navigation.navigate("CustomerHistory");
+        }}
+      />
       <ScrollView>
-        <View style={styles.customerInfoView}>
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-              {data.account.displayName}
-            </Text>
-            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
-              +{data.account.phone}
-            </Text>
-            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
-              {data?.status?.name}{" "}
-              {moment(data.createdAt).format("HH:mm") + " - "}
-              {moment(data.createdAt).format("DD/MM/YYYY")}
-            </Text>
+        <View>
+          <View style={styles.customerInfoView}>
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                {data.account.displayName}
+              </Text>
+              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+                +{data.account.phone}
+              </Text>
+              <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+                {data?.status?.name}{" "}
+                {moment(data.createdAt).format("HH:mm") + " - "}
+                {moment(data.createdAt).format("DD/MM/YYYY")}
+              </Text>
+            </View>
           </View>
-        </View>
-
-        <View style={styles.orderInfoView}>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              padding: 5,
+              paddingVertical: 10,
+              paddingHorizontal: 15,
+              backgroundColor: "#FFFFFF",
             }}
           >
-            <Text>
+            <Text style={{ fontSize: 14 }}>
               Thời gian: {moment(data.orderDate).format("HH:mm") + " - "}
               {moment(data.orderDate).format("DD/MM/YYYY")}
             </Text>
-            <Text>
-              Số Lượng {data.numOfTable} bàn - {data.numOfPerson} người
+            <Text style={{ fontSize: 14 }}>
+              Số lượng {data.numOfTable} bàn - {data.numOfPerson} người
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 10,
-            marginTop: 5,
-          }}
-        >
-          <View style={{ flex: 3, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold" }}>Tên</Text>
-          </View>
-          <View style={{ flex: 2, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold" }}>Size</Text>
-          </View>
-          <View style={{ flex: 2, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold" }}>Số lượng</Text>
-          </View>
-          <View style={{ flex: 3, alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold" }}>Thành tiền</Text>
+
+        <View style={styles.cardView}>
+          <View
+            style={{
+              flexDirection: "row",
+
+              flex: 1,
+            }}
+          >
+            <View style={{ flex: 3, alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold", color: "#8A8F9C" }}>Tên</Text>
+            </View>
+            <View style={{ flex: 2, alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold", color: "#8A8F9C" }}>Size</Text>
+            </View>
+            <View style={{ flex: 2, alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold", color: "#8A8F9C" }}>
+                Số lượng
+              </Text>
+            </View>
+            <View style={{ flex: 3, alignItems: "center" }}>
+              <Text style={{ fontWeight: "bold", color: "#8A8F9C" }}>
+                Thành tiền
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -183,37 +203,43 @@ export default function (props) {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => {
               return (
-                <View style={styles.cardView}>
-                  <View style={{ flex: 3, alignItems: "center" }}>
+                <View style={styles.cardItemView}>
+                  <View style={{ flex: 3, alignItems: "center", fontSize: 14 }}>
                     <Text>{item.foodFoodTypeMapping.food.name}</Text>
                   </View>
-                  <View style={{ flex: 2, alignItems: "center" }}>
+                  <View style={{ flex: 2, alignItems: "center", fontSize: 14 }}>
                     <Text>{item.foodFoodTypeMapping.foodType.name}</Text>
                   </View>
-                  <View style={{ flex: 2, alignItems: "center" }}>
+                  <View style={{ flex: 2, alignItems: "center", fontSize: 14 }}>
                     <Text>{item.quantity}</Text>
                   </View>
-                  <View style={{ flex: 3, alignItems: "center" }}>
+                  <View style={{ flex: 3, alignItems: "center", fontSize: 14 }}>
                     <Text>
                       {item.foodFoodTypeMapping.foodType.id === 1
-                        ? (item.quantity *
-                            item.foodFoodTypeMapping.food.priceEach *
-                            (100 -
-                              item.foodFoodTypeMapping.food.discountRate)) /
-                          100
+                        ? formatPrice(
+                            (item.quantity *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )
                         : item.foodFoodTypeMapping.foodType.id === 2
-                        ? (item.quantity *
-                            1.2 *
-                            item.foodFoodTypeMapping.food.priceEach *
-                            (100 -
-                              item.foodFoodTypeMapping.food.discountRate)) /
-                          100
-                        : (item.quantity *
-                            1.5 *
-                            item.foodFoodTypeMapping.food.priceEach *
-                            (100 -
-                              item.foodFoodTypeMapping.food.discountRate)) /
-                          100}
+                        ? formatPrice(
+                            (item.quantity *
+                              1.2 *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )
+                        : formatPrice(
+                            (item.quantity *
+                              1.5 *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )}
                     </Text>
                   </View>
                 </View>
@@ -224,9 +250,9 @@ export default function (props) {
       </ScrollView>
       <View
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "#F8F8F8",
           borderRadius: 10,
-          height: 80,
+          height: 40,
           bottom: 0,
           shadowColor: "#000",
           shadowOffset: {
@@ -246,12 +272,16 @@ export default function (props) {
           }}
         >
           <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16 }}>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
               Tổng cộng ({data?.orderContents?.length} món):
             </Text>
           </View>
           <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16 }}>{data.total}</Text>
+            <Text
+              style={{ fontSize: 16, color: "#D20000", fontWeight: "bold" }}
+            >
+              {formatPrice(data.total)}
+            </Text>
           </View>
         </View>
       </View>
@@ -272,7 +302,8 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     backgroundColor: "#FFFFFF",
 
-    borderWidth: 0.5,
+    borderBottomColor: "#707070",
+    borderBottomWidth: 1,
     shadowRadius: 10,
   },
   orderInfoView: {
@@ -294,6 +325,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     backgroundColor: "#FFFFFF",
+    height: 40,
+    paddingTop: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+    marginBottom: 5,
+  },
+  cardItemView: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: "#F8F8F8",
     height: 40,
     paddingTop: 10,
     shadowColor: "#000",

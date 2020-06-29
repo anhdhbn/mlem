@@ -357,13 +357,6 @@ export default class order extends Component {
     console.log("[INFO] Reponse in createOrder: ", response);
   };
 
-  createAlert = (textAlert) => {
-    console.log("Create alert");
-    this.setState({ textAlert: textAlert }, () => {
-      this.setAlert(true);
-    });
-  };
-
   setDate = (date) => {
     // console.log("[INFO] Date: ", date);
     this.getNumTableAvailable(this.state.date, this.state.time);
@@ -374,6 +367,13 @@ export default class order extends Component {
     this.setState({ time: time });
     this.getNumTableAvailable(this.state.date, time);
     // console.log("[INFO] Time: ", time);
+  };
+
+  createAlert = (textAlert) => {
+    console.log("Create alert");
+    this.setState({ textAlert: textAlert }, () => {
+      this.setAlert(true);
+    });
   };
 
   setAlert = (visible) => {

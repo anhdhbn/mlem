@@ -15,6 +15,7 @@ import {
 import Header from "../components/header/header";
 import FilterBar from "../components/history/filterBar";
 import ItemHistoryCard from "../components/history/itemHistoryCard";
+import Snackbar from "../components/common/snackbarUpdating";
 
 import historyServices from "../customerServices/historyServices";
 import moment from "moment";
@@ -27,6 +28,9 @@ export default class History extends Component {
 
     this.state = {
       history: [],
+      visibleAlert: false,
+      textAlert: null,
+
       isLoading: true,
     };
   }
@@ -54,14 +58,22 @@ export default class History extends Component {
     let params = {};
     this.setIsLoading(true);
     // console.log("[INFO] Params in getListOrder(): ", params);
-    let response = await historyServices.list(params);
+    await historyServices
+      .list(params)
+      .then((res) => {
+        this.setHistory(res);
+        return res;
+      })
+      .catch((err) => {
+        this.createAlert(err);
+        return null;
+      });
     //let length = response.length;
     // for (let index = 0; index < length; index++) {
     //   console.log("[INFO] Response in history: ", response[index].total);
     // }
 
     this.setIsLoading(false);
-    this.setHistory(response);
   };
 
   renderOrdered = (codeTime, codeStatus, pickedDate = null) => {
@@ -84,6 +96,24 @@ export default class History extends Component {
 
   renderAllOrdered = async (codeStatus) => {
     console.log("[INFO] List all rendered: ", codeStatus);
+    this.setIsLoading(true);
+
+    let params = {
+      statusId: { equal: codeStatus != 0 ? codeStatus : null },
+    };
+
+    await historyServices
+      .list(params)
+      .then((res) => {
+        this.setHistory(res);
+        return res;
+      })
+      .catch((err) => {
+        this.createAlert(err);
+        return null;
+      });
+
+    this.setIsLoading(false);
     // let newlistRender = await historyServices.list({})
   };
 
@@ -100,9 +130,17 @@ export default class History extends Component {
       statusId: { equal: codeStatus != 0 ? codeStatus : null },
     };
 
-    let newListRender = await historyServices.list(params);
-    console.log("[INFO] List rendered in week: ", params);
-    this.setHistory(newListRender);
+    await historyServices
+      .list(params)
+      .then((res) => {
+        this.setHistory(res);
+        return res;
+      })
+      .catch((err) => {
+        this.createAlert(err);
+        return null;
+      });
+
     this.setIsLoading(false);
   };
 
@@ -119,9 +157,18 @@ export default class History extends Component {
       statusId: { equal: codeStatus != 0 ? codeStatus : null },
     };
 
-    let newListRender = await historyServices.list(params);
-    console.log("[INFO] List rendered in month: ", params);
-    this.setHistory(newListRender);
+    await historyServices
+      .list(params)
+      .then((res) => {
+        this.setHistory(res);
+        return res;
+      })
+      .catch((err) => {
+        this.createAlert(err);
+        return null;
+      });
+
+    // this.setHistory(newListRender);
     this.setIsLoading(false);
   };
 
@@ -136,16 +183,45 @@ export default class History extends Component {
       statusId: { equal: codeStatus != 0 ? codeStatus : null },
     };
 
-    let newListRender = await historyServices.list(params);
-    console.log("[INFO] List rendered in week: ", params);
-    this.setHistory(newListRender);
+    await historyServices
+      .list(params)
+      .then((res) => {
+        this.setHistory(res);
+        return res;
+      })
+      .catch((err) => {
+        this.createAlert(err);
+        return null;
+      });
+
     this.setIsLoading(false);
+  };
+
+  createAlert = (textAlert) => {
+    console.log("Create alert");
+    this.setState({ textAlert: textAlert }, () => {
+      this.setAlert(true);
+    });
+  };
+
+  setAlert = (visible) => {
+    this.setState({ visibleAlert: visible });
+  };
+
+  _onDismissSnackBar = () => {
+    this.setAlert(false);
   };
 
   render() {
     return (
       <View>
-        <Header title="Nhật ký" />
+        <Snackbar
+          visible={this.state.visibleAlert}
+          _onDismissSnackBar={this._onDismissSnackBar}
+          duration={5000}
+          text={this.state.textAlert}
+        />
+        <Header title="Lịch sử" />
         <FilterBar renderOrdered={this.renderOrdered} />
 
         {this.state.isLoading ? (
@@ -156,16 +232,24 @@ export default class History extends Component {
           <ScrollView style={{ marginBottom: 140 }}>
             {this.state.history.map((item) => {
               return (
-                <ItemHistoryCard
-                  key={item.code}
-                  id={item.code}
-                  orderTime={item.createdAt}
-                  dmy={item.createdAt}
-                  price={item.total}
-                  // // Gia goc
-                  // subPrice={item.subTotal}
-                  status={item.statusId}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate("CustomerHistoryDetail", {
+                      data: item,
+                    });
+                  }}
+                >
+                  <ItemHistoryCard
+                    key={item.code}
+                    id={item.code}
+                    orderTime={item.createdAt}
+                    dmy={item.createdAt}
+                    price={item.total}
+                    // // Gia goc
+                    // subPrice={item.subTotal}
+                    status={item.statusId}
+                  />
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
