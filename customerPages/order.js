@@ -121,7 +121,7 @@ export default class order extends Component {
     if (newData === 0) {
       return;
     }
-    newData++;
+    newData--;
     this.setState({ numOfPeople: newData });
   };
 
@@ -640,7 +640,8 @@ export default class order extends Component {
         ) : null}
         <Modal
           modalConfirmVisible={this.state.modalConfirmVisible}
-          title="Bạn có muốn gửi đơn?"
+          title="Đặt bàn"
+          titleBody = "Bạn có chắc chắn đặt bàn không?"
           titleCancel="Huỷ"
           titleSubmit="Đặt"
           handleCancel={this.handleCancel}

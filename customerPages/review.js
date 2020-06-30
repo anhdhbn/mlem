@@ -394,7 +394,7 @@ export default (props) => {
                       <View style={{ justifyContent: "center" }}>
                         <Avatar
                           rounded
-                          size={80}
+                          size={50}
                           source={
                             item.account.image.url
                               ? {

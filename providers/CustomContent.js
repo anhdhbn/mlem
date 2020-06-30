@@ -165,7 +165,7 @@ export default function CustomContent(props) {
       </DrawerContentScrollView>
       <Overlay
         visible={visibleBackgroundImageModal}
-        onBackdropPress={() => setVisibleBackgroundImageModal(fasle)}
+        onBackdropPress={() => setVisibleBackgroundImageModal(false)}
       >
         <View style={{ height: 100, width: 300, justifyContent: "center" }}>
           <View style={{ height: 40, flexDirection: "row" }}>
