@@ -114,7 +114,7 @@ export default class MainBody extends Component {
       // </SafeAreaView>
       // console.log("[INFO] Props in body: ", this.props),
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeStack"
         tabBarPosition="bottom"
         lazy="true"
         swipeEnabled={false}
