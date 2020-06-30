@@ -14,7 +14,7 @@ const verifyCode = (params) =>
     .then((res) => res.data);
 const recoveryPass = (params) =>
   requestServices.customAxios
-    .post(`api​/account​/recovery-password`, params)
+    .post("api/account/recovery-password", params)
     .then((res) => res.data);
 // Not work
 // const getUserInfoByUsername = (username) => requestServices.customAxios.get(`user/${username}`).then((res) => res.data);

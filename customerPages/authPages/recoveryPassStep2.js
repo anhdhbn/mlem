@@ -15,6 +15,7 @@ import LinearGradient from "react-native-linear-gradient";
 import styles from "../../styles/authScreen/recoveryPassStep2Style";
 import authServices from "../../customerServices/authServices";
 import CheckData from "./checkData";
+import SnackBar from "../../components/common/snackbarUpdating";
 import { Button } from "react-native-elements";
 export default class recoveryPassStep2 extends Component {
   constructor(props) {
@@ -27,14 +28,14 @@ export default class recoveryPassStep2 extends Component {
       confirmPasswordError: null,
 
       visibleAlert: false,
-
+      notification:null,
       loading: false,
       password: null,
       confirmPassword: null,
     };
 
     this.handlePassword = this.handlePassword.bind(this);
-    this.handleConfirmPassword = this.handleConfirmPassword(this);
+    this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getData = this.getData.bind(this);
@@ -54,7 +55,7 @@ export default class recoveryPassStep2 extends Component {
 
   getData() {
     return {
-      id: this.props.id,
+      id: 23,//this.props.route.params.id,
       password: this.state.password.toString(),
       confirmPassword: this.state.password.toString(),
     };
@@ -62,8 +63,45 @@ export default class recoveryPassStep2 extends Component {
 
   async onSubmit() {
     let checkData = new CheckData();
-    if (checkData.checkPassword(this.state.password)) {
+    if (!checkData.checkPassword(this.state.password)) {
+      this.setPasswordError();
+
+    } else {
+      if (!checkData.checkPassword(this.state.confirmPassword)) {
+        this.setConfirmPasswordError();
+      }
+      else {
+        if (!checkData.comparePassword(this.state.password, this.state.confirmPassword)) {
+          this.setComparePasswordError();
+        }
+        else {
+          this.setLoading(true);
+          let data = this.getData();
+
+          authServices.recoveryPass(data)
+            .then(async res => {
+              await this.setState({notification:"Khôi phục mật khẩu thành công"})
+              this.setAlert(true);
+              setTimeout(() => {
+                this.props.navigation.navigate("SignIn");
+                
+              }, 2000);
+            })
+            .catch(async(err) => {
+              //console.log('error: ', err);
+              await this.setState({notification:err.data})
+              this.setAlert(true);
+            });
+          this.setLoading(false);
+        }
+      }
+    }
+
+
+    /* if (checkData.checkPassword(this.state.password)) {
       this.cleanPasswordError();
+      console.log('aaaa');
+      
       if (checkData.checkPassword(this.state.confirmPassword)) {
         this.cleanConfirmPasswordError();
         if (
@@ -97,8 +135,10 @@ export default class recoveryPassStep2 extends Component {
       }
     } else {
       // Mat khau khong hop le
+      console.log('aaaaaaaâ');
+      
       this.setPasswordError();
-    }
+    } */
   }
 
   setPasswordError = () => {
@@ -110,21 +150,21 @@ export default class recoveryPassStep2 extends Component {
   };
 
   setConfirmPasswordError = () => {
-    this.setState({ confirmPasswordError: "Mật khẩu xác nhận không hợp lệ" });
+    this.setState({ passwordError: "Mật khẩu xác nhận không hợp lệ" });
   };
 
   cleanConfirmPasswordError = () => {
-    this.setState({ confirmPasswordError: null });
+    this.setState({ passwordError: null });
   };
 
   setComparePasswordError = () => {
     this.setState({
-      comparePasswordError: "Mật khẩu xác nhận không trùng khớp",
+      passwordError: "Mật khẩu xác nhận không trùng khớp",
     });
   };
 
   cleanComparePasswoedError = () => {
-    this.setState({ comparePasswordError: null });
+    this.setState({ passwordError: null });
   };
 
   setAlert = (visible) => {
@@ -144,7 +184,7 @@ export default class recoveryPassStep2 extends Component {
             _onDismissSnackBar={this._onDismissSnackBar}
             actionText="Hide"
             duration={5000}
-            text={"Khôi phục mật khẩu thành công"}
+            text={this.state.notification}
           />
           <View
             style={{
@@ -208,16 +248,6 @@ export default class recoveryPassStep2 extends Component {
                 />
               </View>
               <View style={styles.viewInput}>
-                {this.state.confirmPasswordError ? (
-                  <View>
-                    <Text>{this.state.confirmPasswordError}</Text>
-                  </View>
-                ) : null}
-                {this.state.comparePasswordError ? (
-                  <View>
-                    <Text>{this.state.comparePasswordError}</Text>
-                  </View>
-                ) : null}
                 <Image
                   source={require("../../assets/icon/key.png")}
                   style={styles.image}
@@ -232,26 +262,26 @@ export default class recoveryPassStep2 extends Component {
               </View>
             </View>
           </KeyboardAvoidingView>
-          {loading ? (
+          {this.state.loading ? (
             <View style={{ marginTop: 20, alignItems: "center" }}>
               <TouchableOpacity style={styles.submitBtn}>
                 <Button type="clear" loading={true} />
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={{ marginTop: 10, alignItems: "center" }}>
-              <TouchableOpacity
-                style={styles.submitBtn}
-                onPress={() => this.onSubmit()}
-              >
-                <Text
-                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+              <View style={{ marginTop: 10, alignItems: "center" }}>
+                <TouchableOpacity
+                  style={styles.submitBtn}
+                  onPress={() => this.onSubmit()}
                 >
-                  Xác nhận
+                  <Text
+                    style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Xác nhận
                 </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+                </TouchableOpacity>
+              </View>
+            )}
           <View
             style={{
               marginTop: 10,

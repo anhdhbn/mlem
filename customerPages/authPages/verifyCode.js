@@ -29,7 +29,9 @@ class verifyCode extends Component {
       error: null,
       loading: false,
       resending: false,
-      response: null,
+      response: this.props.route.params.response,
+      sendMail: this.props.route.params.sendMail,
+      email:this.props.route.params.email
     };
 
     this.setLoading = this.setLoading.bind(this);
@@ -50,25 +52,32 @@ class verifyCode extends Component {
     let isWrongCode = false;
     this.setLoading(true);
     let data = {
-      id: this.props.response,
+      id: this.state.response,
       passwordRecoveryCode: code.toString(),
-    };
-
-    let response = await authServices.verifyCode(data).catch((reason) => {
+    }; 
+    await authServices.verifyCode(data)
+    .then(res=>{
+      if (!isWrongCode) {
+        this.setLoading(false);
+        this.props.navigation.navigate("RecoveryPassStep2", {
+          id: res,
+        });
+      }
+    })
+    .catch((err) => {
       // console.log("==========================================");
-      const message = reason.response.data;
+      const message = err.data;
       // console.log("[INFO] message in signUp: ", message);
+      
+      this.setState({error:err.data})
       this.setAlert(true);
       isWrongCode = true;
     });
+    
     this.setLoading(false);
     // TODO: Handle code incorrect
 
-    if (!isWrongCode) {
-      this.props.navigation.navigate("RecoveryPassStep2VerifyCode", {
-        id: response,
-      });
-    }
+    
   }
 
   setAlert = (visible) => {
@@ -79,9 +88,9 @@ class verifyCode extends Component {
     this.setState({ visibleAlert: false });
   };
 
-  resendVerifyCode() {
+ async resendVerifyCode() {
     this.setResending(true);
-    this.props.onSubmit();
+   await  this.state.sendMail(this.state.email);
     this.setResending(false);
   }
 
@@ -115,7 +124,7 @@ class verifyCode extends Component {
             _onDismissSnackBar={this._onDismissSnackBar}
             actionText="Hide"
             duration={5000}
-            text={"Mã xách thực không khớp"}
+            text={this.state.error}
           />
           <View
             style={{
