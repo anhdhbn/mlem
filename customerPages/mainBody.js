@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import HomePage from "./home";
 import Detail from "./detail";
 import Search from "./search";
+import Review from "./review";
 
 import Order from "./order";
 import SelectDish from "./selectDish";
@@ -43,6 +44,7 @@ function HomeStackScreen(props) {
       />
       <HomeStack.Screen name="Detail" component={Detail} />
       <HomeStack.Screen name="Search" component={Search} />
+      <HomeStack.Screen name="Review" component={Review} />
     </HomeStack.Navigator>
   );
 }
