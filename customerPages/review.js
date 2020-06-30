@@ -389,12 +389,13 @@ export default (props) => {
                         flexDirection: "row",
                         flex: 1,
                         justifyContent: "center",
+                        marginBottom: 10,
                       }}
                     >
-                      <View style={{ justifyContent: "center" }}>
+                      <View>
                         <Avatar
                           rounded
-                          size={50}
+                          size={45}
                           source={
                             item.account.image.url
                               ? {
@@ -418,9 +419,25 @@ export default (props) => {
                           flex: 1,
                         }}
                       >
-                        <Text style={{ fontSize: 17, fontWeight: "bold" }}>
-                          {item.account.displayName}
-                        </Text>
+                        <View style={{ flexDirection: "row" }}>
+                          <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                            {item.account.displayName}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 13,
+                              color: "#8A8F9C",
+                              paddingTop: 1.5,
+                              paddingLeft: 2,
+                            }}
+                          >
+                            {" - " +
+                              moment(item.time).format("HH:mm") +
+                              " - " +
+                              moment(item.time).format("DD/MM/YYYY")}
+                          </Text>
+                        </View>
+
                         <View style={{ flexDirection: "row" }}>
                           <AirbnbRating
                             count={5}
@@ -429,7 +446,7 @@ export default (props) => {
                             size={15}
                             showRating={false}
                           />
-                          <Text
+                          {/* <Text
                             style={{
                               fontSize: 14,
                               color: "#8A8F9C",
@@ -440,7 +457,7 @@ export default (props) => {
                             {moment(item.time).format("HH:mm") +
                               " - " +
                               moment(item.time).format("DD/MM/YYYY")}
-                          </Text>
+                          </Text> */}
                         </View>
 
                         <View style={{ paddingRight: 10 }}>
@@ -482,6 +499,7 @@ export default (props) => {
                   flexDirection: "row",
                   flex: 1,
                   height: 50,
+                  alignItems: "center",
                 }}
               >
                 <View
@@ -492,21 +510,8 @@ export default (props) => {
                   }}
                 >
                   <Button
-                    title="Yêu thích"
-                    buttonStyle={{ width: 185, backgroundColor: "#DF0000" }}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
                     title="Đặt ngay"
-                    buttonStyle={{ width: 185, backgroundColor: "#DF0000" }}
+                    buttonStyle={{ width: 370, backgroundColor: "#DF0000" }}
                   />
                 </View>
               </View>
