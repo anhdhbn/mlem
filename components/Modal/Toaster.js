@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { View, Text } from "react-native";
-import { Overlay } from "react-native-elements";
 import Toast from "react-native-root-toast";
 
 function Toaster(props) {

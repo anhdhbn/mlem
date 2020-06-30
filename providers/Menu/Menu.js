@@ -90,17 +90,6 @@ export default ({ navigation }) => (
             }}
           ></Icon.Button>
         ),
-        headerRight: () => (
-          <FontAwesome.Button
-            name="trash"
-            size={25}
-            backgroundColor="#D20000"
-            onPress={() => {
-              route.params.handleDeleteDish();
-              navigation.navigate("MenuProvider");
-            }}
-          ></FontAwesome.Button>
-        ),
       })}
     />
   </MenuStack.Navigator>

@@ -3,16 +3,15 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 
-
 import Icon from "react-native-vector-icons/Ionicons";
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
 import orderServices from "../../providerServices/orderServices";
 import PaymentDetail from "./PaymentDetail";
 import Spinner from "../../components/Spinner/Spinner";
-import Filter from './Filter';
+import Filter from "./Filter";
 import Snackbar from "../../components/common/snackbarUpdating";
-import formatPrice from '../../components/formatPrice';
+import formatPrice from "../../components/formatPrice";
 const PaymentStack = createStackNavigator();
 /*PaymentStackScreen  */
 export default ({ navigation }) => (
@@ -29,7 +28,7 @@ export default ({ navigation }) => (
       name="PaymentScreen"
       component={Payment}
       options={{
-        title: "Đơn Đặt Hàng",
+        title: "Thanh toán",
         headerLeft: () => (
           <Icon.Button
             name="ios-menu"
@@ -53,7 +52,7 @@ export default ({ navigation }) => (
             size={25}
             backgroundColor="#D20000"
             onPress={() => {
-              navigation.navigate("PaymentScreen")
+              navigation.navigate("PaymentScreen");
             }}
           ></Icon.Button>
         ),
@@ -79,24 +78,26 @@ const Payment = (props) => {
     setIsError(true);
   };
   useEffect(() => {
-     getData();
-  }, [isError===true]);
+    getData();
+  }, [isError === true]);
 
   const getData = async () => {
     setIsLoading(true);
-    let params = {statusId:{
-      in:[3,4,5]
-    }};
+    let params = {
+      statusId: {
+        in: [3, 4, 5],
+      },
+    };
     let response = await orderServices.listOrdered(params);
     setData(response);
     setIsLoading(false);
   };
   /* filter  */
   const handleFilter = (props) => {
-    orderServices.listOrdered(props).then(res => {
-      setData(res)
+    orderServices.listOrdered(props).then((res) => {
+      setData(res);
     });
-  }
+  };
   const onselect = (code) => {
     // console.log("On select");
     let orderedData = data.find((item) => item.code === code);
@@ -105,8 +106,8 @@ const Payment = (props) => {
       toasterVisible: {
         isError,
         onDismissError,
-        createAlert
-      }
+        createAlert,
+      },
     });
   };
 

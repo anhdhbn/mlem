@@ -6,13 +6,14 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import { Overlay, Button } from "react-native-elements";
+import { Overlay } from "react-native-elements";
 
 import TickIcon from "../../assets/icon/tick.png";
 import CircleIcon from "../../assets/icon/circle.png";
-import OrderSerives from '../../providerServices/orderServices';
+import OrderSerives from "../../providerServices/orderServices";
 export default function (props) {
   //   Id	Name
   // 1	Lẩu - Buffet
@@ -24,25 +25,25 @@ export default function (props) {
   const [emptyTable, setEmptyTable] = useState([]);
   const getEmptyTable = async () => {
     const result = await OrderSerives.listReservation({
-      date:{
-        equal:orderDate
-      }
+      date: {
+        equal: orderDate,
+      },
     });
     let data = [];
     await result.map((item) => {
       if (item.status.id == 2) {
         const tmp = {
           ...item,
-          isCliked: false
-        }
+          isCliked: false,
+        };
         data.push(tmp);
       }
-    })
+    });
     setEmptyTable(data);
-  }
+  };
   useEffect(() => {
     getEmptyTable();
-  }, [])
+  }, []);
   const onselect = (id) => {
     /* console.log("[INFO] Code in modal select food: ", id); */
     let lengthData = emptyTable.length;
@@ -84,21 +85,23 @@ export default function (props) {
                 paddingBottom: 10,
               }}
             >
-              Chọn nhóm
+              Chọn bàn
             </Text>
           </View>
-          {emptyTable.length === 0
-            ? <View style={{
-              ...styles.cardView,
-              padding: 50,
-              justifyContent: 'center',
-              alignContent: 'center',
-              paddingVertical:100
-            }}
+          {emptyTable.length === 0 ? (
+            <View
+              style={{
+                ...styles.cardView,
+                padding: 50,
+                justifyContent: "center",
+                alignContent: "center",
+                paddingVertical: 100,
+              }}
             >
               <Text> Không còn bàn còn trống </Text>
             </View>
-            : <ScrollView>
+          ) : (
+            <ScrollView>
               <View style={{ top: 2 }}>
                 <FlatList
                   showsHorizontalScrollIndicator={false}
@@ -106,7 +109,14 @@ export default function (props) {
                   keyExtractor={(item) => item.id}
                   renderItem={({ item }) => {
                     return (
-                      <View style={styles.cardView}>
+                      <View
+                        style={{
+                          backgroundColor: "#ffffff",
+                          height: 45,
+                          borderBottomWidth: 0.3,
+                          justifyContent: "center",
+                        }}
+                      >
                         <TouchableOpacity
                           style={{ flexDirection: "row" }}
                           onPress={() => {
@@ -114,12 +124,15 @@ export default function (props) {
                           }}
                         >
                           {!item.isCliked ? (
-                            <Image source={CircleIcon} style={styles.iconstyle} />
+                            <Image
+                              source={CircleIcon}
+                              style={styles.iconstyle}
+                            />
                           ) : (
-                              <Image source={TickIcon} style={styles.iconstyle} />
-                            )}
-                          <Text style={{ color: "#8A8F9C", fontSize: 16 }}>
-                            {item.table.code}
+                            <Image source={TickIcon} style={styles.iconstyle} />
+                          )}
+                          <Text style={{ color: "black", fontSize: 16 }}>
+                            Bàn số {item.table.code}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -127,35 +140,59 @@ export default function (props) {
                   }}
                 />
               </View>
-            </ScrollView>}
+            </ScrollView>
+          )}
         </View>
         <View style={styles.btnView}>
-          <Button
-            buttonStyle={{
+          <TouchableOpacity
+            style={{
               width: 146,
               height: 48,
-              backgroundColor: "#C7c7c7",
+              backgroundColor: "grey",
               alignItems: "center",
+              borderRadius: 10,
             }}
-            title="Huỷ"
             onPress={() => {
+              props.handleSelectTable(emptyTable);
               props.setVisible(false);
             }}
-          />
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                paddingTop: 10,
+                fontWeight: "700",
+                color: "white",
+              }}
+            >
+              Hủy
+            </Text>
+          </TouchableOpacity>
 
-          <Button
-            buttonStyle={{
+          <TouchableOpacity
+            style={{
               width: 146,
               height: 48,
-              backgroundColor: "#DC0000",
+              backgroundColor: "#D20000",
               alignItems: "center",
+              borderRadius: 10,
             }}
             onPress={() => {
-              props.handleSelectTable(emptyTable)
+              props.handleSelectTable(emptyTable);
               props.setVisible(false);
             }}
-            title="Thêm"
-          />
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                paddingTop: 10,
+                fontWeight: "700",
+                color: "white",
+              }}
+            >
+              Chọn
+            </Text>
+          </TouchableOpacity>
         </View>
       </Overlay>
     </View>
@@ -192,9 +229,8 @@ const styles = StyleSheet.create({
   cardView: {
     flexDirection: "row",
     justifyContent: "space-between",
-
     padding: 10,
-    elevation: 3,
+    elevation: 2,
     backgroundColor: "#fff",
     shadowOffset: { width: 1, height: 1 },
     shadowColor: "#333",
@@ -206,6 +242,7 @@ const styles = StyleSheet.create({
     height: 18,
     marginRight: 10,
     marginLeft: 10,
+    marginTop: 3,
   },
   btnView: {
     flexDirection: "row",

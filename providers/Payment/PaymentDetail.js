@@ -16,8 +16,8 @@ import PhoneIcon from "../../assets/icon/provider/phone.png";
 import { FlatList } from "react-native-gesture-handler";
 import Spinner from "../../components/Spinner/Spinner";
 import orderServices from "../../providerServices/orderServices";
-import ModalAccept from '../Components/Modal';
-import formatPrice from '../../components/formatPrice';
+import ModalAccept from "../Components/Modal";
+import formatPrice from "../../components/formatPrice";
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   const [totalQuantity, setTotalQuantity] = useState(0);
@@ -26,37 +26,36 @@ export default function DetailOrder(props) {
   const {
     isError,
     onDismissError,
-    createAlert
-  } = props.route.params.toasterVisible
+    createAlert,
+  } = props.route.params.toasterVisible;
   const handlePay = async () => {
-
     props.navigation.navigate("PaymentScreen");
     setModalPayVisible(false);
-    const res = await orderServices.payment(data)
-      .then(res => {
-        createAlert('Xác nhận đơn hàng thành công')
-      }
-      ).catch(err => {
-        // console.log(err.data.errors.statusId);
-        createAlert(err.data.errors.statusId)
+    const res = await orderServices
+      .payment(data)
+      .then((res) => {
+        createAlert("Thanh toán đơn hàng thành công");
       })
-
-  }
+      .catch((err) => {
+        // console.log(err.data.errors.statusId);
+        createAlert(err.data.errors.statusId);
+      });
+  };
   const handleDelete = async () => {
     //console.log('delete');
-    props.navigation.navigate("PaymentScreen")
+    props.navigation.navigate("PaymentScreen");
     setModalDelVisible(false);
-    const res = await orderServices.deleteOrder(data)
-      .then(res => {
-        createAlert('Xác nhận đơn hàng thành công')
-      }
-      ).catch(err => {
+    const res = await orderServices
+      .deleteOrder(data)
+      .then((res) => {
+        createAlert("Xóa đơn hàng thành công");
+      })
+      .catch((err) => {
         // console.log(err.data.errors.statusId);
 
-        createAlert(err.data.errors.statusId)
-      })
-
-  }
+        createAlert(err.data.errors.statusId);
+      });
+  };
   useEffect(() => {
     // console.log(props.route.params.data);
     setData(props.route.params.data);
@@ -69,37 +68,46 @@ export default function DetailOrder(props) {
   return data ? (
     <SafeAreaView style={styles.container}>
       {/* modal thanh toán */}
-      <ModalAccept data={{
-        visible: modalPayVisible,
-        setVisible: setModalPayVisible,
-        handleSubmit: handlePay,
-      }}
+      <ModalAccept
+        data={{
+          visible: modalPayVisible,
+          setVisible: setModalPayVisible,
+          handleSubmit: handlePay,
+        }}
         button={{
-          title: 'Xác nhận thanh toán',
-          titleSubmit: 'Xác nhận',
-          titleCancel: 'Quay lại'
+          title: "Xác nhận thanh toán",
+          titleBody: "Bạn có chắc chắn thanh toán đơn hàng này không?",
+          titleSubmit: "Thanh toán",
+          titleCancel: "Quay lại",
         }}
       />
 
       {/* Modal xoá */}
-      <ModalAccept data={{
-        visible: modalDelVisible,
-        setVisible: setModalDelVisible,
-        handleSubmit: handleDelete
-      }}
+      <ModalAccept
+        data={{
+          visible: modalDelVisible,
+          setVisible: setModalDelVisible,
+          handleSubmit: handleDelete,
+        }}
         button={{
-          title: '      Xác nhận xoá        ',
-          titleSubmit: 'Xác nhận',
-          titleCancel: 'Quay lại'
+          title: "Xác nhận xoá",
+          titleBody: "Bạn có chắc chắn muốn xóa đơn hàng này không?",
+          titleSubmit: "Xóa",
+          titleCancel: "Quay lại",
         }}
       />
-      <ScrollView >
+      <ScrollView>
         <View style={styles.customerInfoView}>
-          <View >
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{data.account.displayName}</Text>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>+{data.account.phone}</Text>
-            <Text style={{ fontSize: 16 }}>
-              Mới Tạo lúc {moment(data.createdAt).format("HH:mm") + " - "}
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              {data.account.displayName}
+            </Text>
+            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              +{data.account.phone}
+            </Text>
+            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              {data?.status?.name}{" "}
+              {moment(data.createdAt).format("HH:mm") + " - "}
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
@@ -127,38 +135,54 @@ export default function DetailOrder(props) {
               Số Lượng {data.numOfTable} bàn - {data.numOfPerson} người
             </Text>
           </View>
-          <View style={{
-            marginLeft: 5,
-            flexDirection: 'row'
-          }}>
-            <Text>Bàn: {"\n\n"}</Text>
-            <View style={{ maxWidth: 150, overflow: 'hidden' }}>
-              {data.reservations.length <= 3
-                ?
-                <View style={{ flexDirection: 'row' }}>
-                  {data.reservations.map((item, index) => index < data.reservations.length - 1
-                    ? <Text>{item.table.code}, </Text>
-                    : <Text>{item.table.code}</Text>
+          <View
+            style={{
+              marginLeft: 5,
+              flexDirection: "row",
+              marginBottom: 6,
+            }}
+          >
+            <Text>Bàn: </Text>
+            <View style={{ maxWidth: 150, overflow: "hidden" }}>
+              {data.reservations.length <= 3 ? (
+                <View style={{ flexDirection: "row" }}>
+                  {data.reservations.map((item, index) =>
+                    index < data.reservations.length - 1 ? (
+                      <Text>{item.table.code}, </Text>
+                    ) : (
+                      <Text>{item.table.code}</Text>
+                    )
                   )}
                 </View>
-                : <Text>
-                  {data.reservations[0].table.code}, {data.reservations[1].table.code}, {data.reservations[2].table.code},...
-                </Text>}
+              ) : (
+                <Text>
+                  {data.reservations[0].table.code},{" "}
+                  {data.reservations[1].table.code},{" "}
+                  {data.reservations[2].table.code},...
+                </Text>
+              )}
             </View>
           </View>
-
         </View>
         <View
           style={{
             flexDirection: "row",
             flex: 10,
-            marginTop: 5
+            marginTop: 5,
           }}
         >
-          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
-          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
-          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
-          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
+          <View style={{ flex: 3, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Tên</Text>
+          </View>
+          <View style={{ flex: 2, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Size</Text>
+          </View>
+          <View style={{ flex: 2, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Số lượng</Text>
+          </View>
+          <View style={{ flex: 3, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Thành tiền</Text>
+          </View>
         </View>
 
         <View style={{ height: "50%", flex: 10 }}>
@@ -169,143 +193,170 @@ export default function DetailOrder(props) {
             renderItem={({ item }) => {
               return (
                 <View style={styles.cardView}>
-                  <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
-                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
-                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
-                  <View style={{ flex: 3, alignItems: 'center' }}><Text>
-                    {item.foodFoodTypeMapping.foodType.id === 1
-                      ? formatPrice((item.quantity *
-                        item.foodFoodTypeMapping.food.priceEach *
-                        (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                      100)
-                      : item.foodFoodTypeMapping.foodType.id === 2
-                        ? formatPrice((item.quantity *
-                          1.2 *
-                          item.foodFoodTypeMapping.food.priceEach *
-                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100)
-                        : formatPrice((item.quantity *
-                          1.5 *
-                          item.foodFoodTypeMapping.food.priceEach *
-                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100)}
-                  </Text></View>
-
+                  <View style={{ flex: 3, alignItems: "center" }}>
+                    <Text>{item.foodFoodTypeMapping.food.name}</Text>
+                  </View>
+                  <View style={{ flex: 2, alignItems: "center" }}>
+                    <Text>{item.foodFoodTypeMapping.foodType.name}</Text>
+                  </View>
+                  <View style={{ flex: 2, alignItems: "center" }}>
+                    <Text>{item.quantity}</Text>
+                  </View>
+                  <View style={{ flex: 3, alignItems: "center" }}>
+                    <Text>
+                      {item.foodFoodTypeMapping.foodType.id === 1
+                        ? formatPrice(
+                            (item.quantity *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )
+                        : item.foodFoodTypeMapping.foodType.id === 2
+                        ? formatPrice(
+                            (item.quantity *
+                              1.2 *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )
+                        : formatPrice(
+                            (item.quantity *
+                              1.5 *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )}
+                    </Text>
+                  </View>
                 </View>
               );
             }}
           />
         </View>
       </ScrollView>
-      {data.status.id=='3'
-      ?<View style={{
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        height: 80,
-        bottom: 0,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.51,
-        shadowRadius: 13.16,
-
-        elevation: 20,
-      }}
-      >
+      {data.status.id == "3" ? (
         <View
           style={{
-            flexDirection: "row",
-            flex: 10
+            backgroundColor: "#ffffff",
+            borderRadius: 10,
+            height: 80,
+            bottom: 0,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 10,
+            },
+            shadowOpacity: 0.51,
+            shadowRadius: 13.16,
+
+            elevation: 20,
           }}
         >
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng({totalQuantity} món):</Text>
-          </View>
-          <View style={{ flex: 5, alignItems: "center" }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
-          </View>
-        </View>
-        <View style={styles.btnView}>
-          <TouchableOpacity
+          <View
             style={{
-              backgroundColor: "#c7c5bf",
-              borderRadius: 8,
-              width: 120,
-              height: 40,
-              alignItems: 'center'
+              flexDirection: "row",
+              flex: 10,
             }}
-            onPress={() => { setModalDelVisible(true) }}
           >
-            <Text
+            <View style={{ flex: 5, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                Tổng cộng({totalQuantity} món):
+              </Text>
+            </View>
+            <View style={{ flex: 5, alignItems: "center" }}>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {formatPrice(data.total)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.btnView}>
+            <TouchableOpacity
               style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#000",
+                backgroundColor: "#c7c5bf",
+                borderRadius: 8,
+                width: 120,
+                height: 40,
+                alignItems: "center",
+              }}
+              onPress={() => {
+                setModalDelVisible(true);
               }}
             >
-              Xoá
-          </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#DC0000",
-              borderRadius: 8,
-              width: 120,
-              height: 40,
-              alignItems: 'center'
-            }}
-            onPress={() => setModalPayVisible(true)}
-          >
-            <Text
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  padding: 8,
+                  color: "#000",
+                }}
+              >
+                Xoá
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                padding: 8,
-                color: "#fff",
+                backgroundColor: "#DC0000",
+                borderRadius: 8,
+                width: 120,
+                height: 40,
+                alignItems: "center",
               }}
-
+              onPress={() => setModalPayVisible(true)}
             >
-              Thanh toán
-          </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  padding: 8,
+                  color: "#fff",
+                }}
+              >
+                Thanh toán
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      :<View style={{
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        height: 50,
-        bottom: 0,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.51,
-        shadowRadius: 13.16,
-        elevation: 20,
-
-      }}
-      >
+      ) : (
         <View
           style={{
-            flexDirection: 'row',
-            flex: 10,
-            justifyContent: 'space-around',
-            alignItems: 'center'
+            backgroundColor: "#ffffff",
+            borderRadius: 10,
+            height: 50,
+            bottom: 0,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 10,
+            },
+            shadowOpacity: 0.51,
+            shadowRadius: 13.16,
+            elevation: 20,
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
-
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 10,
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Tổng cộng ({data?.orderContents?.length} món):
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              {formatPrice(data.total)}
+            </Text>
+          </View>
         </View>
-      </View>}
+      )}
     </SafeAreaView>
   ) : (
-      <Spinner />
-    );
+    <Spinner />
+  );
 }
 const styles = StyleSheet.create({
   container: {
@@ -322,7 +373,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     borderWidth: 0.5,
     shadowRadius: 10,
-
   },
   orderInfoView: {
     backgroundColor: "#FFFFFF",
@@ -354,12 +404,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-    marginBottom: 5
+    marginBottom: 5,
   },
   btnView: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingBottom: 8
+    paddingBottom: 8,
   },
-
 });

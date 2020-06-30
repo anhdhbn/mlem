@@ -47,7 +47,7 @@ function Modal(props) {
             <View>
               <Text style={{ fontSize: 16, padding: 8 }}>
                 {props.titleBody}
-                Bạn có muốn xác nhận đơn hàng này không
+                {/* Bạn có muốn xác nhận đơn hàng này không */}
               </Text>
             </View>
           </View>
@@ -56,54 +56,69 @@ function Modal(props) {
               flexDirection: "row",
               bottom: 0,
               position: "absolute",
+              width: 320,
+              borderTopWidth: 0.4,
+              borderColor: "grey",
             }}
           >
-            <View>
-              <TouchableOpacity
+            <TouchableOpacity
+              style={{
+                width: 150,
+                height: 50,
+                paddingTop: 10,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 7,
+              }}
+              onPress={() => {
+                handleCancel();
+              }}
+            >
+              <Text style={{ fontSize: 18, fontWeight: "700" }}>
+                {" "}
+                {props.titleCancel}{" "}
+              </Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                height: 50,
+                justifyContent: "center",
+              }}
+            >
+              <View
                 style={{
-                  width: 150,
-                  height: 50,
-                  backgroundColor: "gray",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 7,
+                  width: 12,
+                  borderLeftWidth: 0.4,
+                  height: 40,
+                  borderColor: "grey",
+                  marginTop: 10,
                 }}
-                onPress={() => {
-                  handleCancel();
+              ></View>
+            </View>
+            <TouchableOpacity
+              style={{
+                width: 150,
+                height: 50,
+                paddingTop: 10,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 7,
+              }}
+              onPress={() => {
+                handleSubmit();
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "black",
+                  fontWeight: "700",
                 }}
               >
-                <Text style={{ fontSize: 18, fontWeight: "700" }}>
-                  {" "}
-                  {props.titleCancel}{" "}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  width: 150,
-                  height: 50,
-                  backgroundColor: "red",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 7,
-                }}
-                onPress={() => {
-                  handleSubmit();
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 18,
-                    color: "white",
-                    fontWeight: "700",
-                  }}
-                >
-                  {" "}
-                  {props.titleSubmit}{" "}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                {" "}
+                {props.titleSubmit}{" "}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Overlay>

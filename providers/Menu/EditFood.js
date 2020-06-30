@@ -56,7 +56,7 @@ export default function EditFood(props) {
   // });
 
   const [imageId, setImageId] = useState(data.imageId);
-  const [image, setImage] = useState(base_url + data.image.url);
+  const [image, setImage] = useState(base_url + data.image?.url);
   const [priceEach, setPriceEach] = useState(data.priceEach);
   const [discountRate, setDiscountRate] = useState(
     data.discountRate ? data.discountRate : 0
@@ -285,7 +285,7 @@ export default function EditFood(props) {
       >
         <Input
           placeholder="Tên món ăn"
-          defaultValue={data.descreption}
+          defaultValue={data.name}
           onChangeText={(text) => {
             // setData({ ...data, name: text });
             setModalName(text);
@@ -330,12 +330,7 @@ export default function EditFood(props) {
                 color: "#d4d3cf",
                 type: "font-awesome",
               }}
-              // style={{ paddingVertical: 20 }}
               imageProps={(resizeMode = "center")}
-              // showAccessory={true}
-              // onAccessoryPress={() => {
-              //   console.log("[INFO] Press accessoryPress");
-              // }}
               onPress={() => {
                 handleChoosePhoto();
               }}
@@ -349,7 +344,7 @@ export default function EditFood(props) {
             }}
           >
             <Text style={styles.titleImage}>
-              {data.name ? data.name : "Vui lòng nhập tên món ăn"}
+              {data.name ? data.name : "Tên món ăn"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -364,7 +359,6 @@ export default function EditFood(props) {
               paddingRight: 20,
               paddingTop: 14,
               paddingBottom: 14,
-              // padding: 14,
             }}
           >
             {isLoading ? (
@@ -472,7 +466,23 @@ export default function EditFood(props) {
                   {/* {setIsShowedGroupMapping(false)} BUG many render */}
                   {foodGroupMapping ? (
                     foodGroupMapping.length === 0 ? (
-                      <Text>Bấm chọn</Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                        }}
+                      >
+                        <Text style={{ marginLeft: -10 }}>Bấm chọn</Text>
+                        <View style={{ marginLeft: 300 }}>
+                          <Image
+                            style={{
+                              width: 20,
+                              height: 20,
+                              marginTop: 2,
+                            }}
+                            source={require("../../assets/icon/view-more.png")}
+                          />
+                        </View>
+                      </View>
                     ) : (
                       <>
                         {/* {console.log(
@@ -486,8 +496,6 @@ export default function EditFood(props) {
                           renderItem={({ item }) => {
                             return (
                               <View style={styles.cardView}>
-                                {console.log("Item to render editFood", item)}
-
                                 <View
                                   style={{
                                     // Card
@@ -503,23 +511,30 @@ export default function EditFood(props) {
                                     justifyContent: "space-between",
                                   }}
                                 >
-                                  <Image
-                                    source={TickIcon}
-                                    style={{
-                                      width: 18,
-                                      height: 18,
-                                      margin: 5,
-                                    }}
-                                  />
                                   <Text
                                     style={{
-                                      color: "#8A8F9C",
+                                      color: "#000000",
                                       fontSize: 16,
                                       margin: 5,
                                     }}
                                   >
                                     {item.kindOfFood}
                                   </Text>
+                                  <TouchableOpacity
+                                  // onPress={() =>
+                                  //   handleDeleteGrouping(item.id)
+                                  // }
+                                  >
+                                    <Image
+                                      source={require("../../assets/icon/cross.png")}
+                                      style={{
+                                        width: 10,
+                                        height: 10,
+                                        marginTop: 13,
+                                        marginRight: 10,
+                                      }}
+                                    />
+                                  </TouchableOpacity>
                                 </View>
                               </View>
                             );
@@ -587,6 +602,7 @@ export default function EditFood(props) {
                 /> */}
 
                 <TextInput
+                  style={{ height: 25, backgroundColor: "" }}
                   value={priceEach.toString()}
                   onChangeText={(e) => {
                     if (e.replace(/[^0-9]/g, "").length === e.length) {
@@ -628,6 +644,7 @@ export default function EditFood(props) {
               /> */}
 
               <TextInput
+                style={{ height: 25, backgroundColor: "" }}
                 value={discountRate.toString()}
                 onChangeText={(e) => {
                   if (e.replace(/[^0-9]/g, "").length === e.length) {
@@ -714,30 +731,49 @@ export default function EditFood(props) {
       </ScrollView>
       <View style={styles.btnView}>
         <TouchableOpacity
+          style={{
+            backgroundColor: "#c7c5bf",
+            borderRadius: 8,
+            width: 100,
+            height: 40,
+          }}
           onPress={() => {
             cancel();
           }}
-          style={{
-            width: 146,
-            height: 48,
-            backgroundColor: "#C7c7c7",
-            alignItems: "center",
-          }}
         >
-          <Text style={{ top: 10 }}>Huỷ</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              padding: 8,
+              paddingLeft: 20,
+              color: "#000",
+            }}
+          >
+            Hủy
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => {
-            setApproveVisible(true);
-          }}
           style={{
-            width: 146,
-            height: 48,
             backgroundColor: "#DC0000",
-            alignItems: "center",
+            borderRadius: 8,
+            width: 110,
+            height: 40,
           }}
+          onPress={() =>
+            // setApproveVisible(true);
+            setApproveVisible(true)
+          }
         >
-          <Text style={{ top: 10, color: "#ffffff" }}>Xong</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              padding: 8,
+              paddingLeft: 20,
+              color: "#fff",
+            }}
+          >
+            Cập nhật
+          </Text>
         </TouchableOpacity>
       </View>
     </>
@@ -749,6 +785,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F6F7",
   },
   title: {
+    height: 25,
     paddingLeft: 10,
     color: "#8A8F9C",
     backgroundColor: "#DEDEDE",
@@ -779,5 +816,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     top: 10,
+    marginBottom: 20,
   },
 });

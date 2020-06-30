@@ -15,10 +15,10 @@ import { FlatList } from "react-native-gesture-handler";
 import PhoneIcon from "../../assets/icon/provider/phone.png";
 import Spinner from "../../components/Spinner/Spinner";
 
-import OrderServices from '../../providerServices/orderServices'
-import Modal from '../Components/Modal';
-import formatPrice from '../../components/formatPrice';
-import Call from "react-native-phone-call"
+import OrderServices from "../../providerServices/orderServices";
+import Modal from "../Components/Modal";
+import formatPrice from "../../components/formatPrice";
+import Call from "react-native-phone-call";
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   useEffect(() => {
@@ -29,32 +29,33 @@ export default function DetailOrder(props) {
     });
   }, []);
   const handleCall = () => {
-
     const args = {
-      number: '111', // String value with the number to call
-      prompt: false // Optional boolean property. Determines if the user should be prompt prior to the call 
-    }
+      number: "111", // String value with the number to call
+      prompt: false, // Optional boolean property. Determines if the user should be prompt prior to the call
+    };
 
-    Call(args).catch(console.error)
-  }
+    Call(args).catch(console.error);
+  };
   /*  */
 
   return data ? (
     <SafeAreaView style={styles.container}>
-
-      <ScrollView >
+      <ScrollView>
         <View style={styles.customerInfoView}>
-          <View >
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{data.account.displayName}</Text>
-            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>+{data.account.phone}</Text>
+          <View>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+              {data.account.displayName}
+            </Text>
             <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
-              {data?.status?.name} {moment(data.createdAt).format("HH:mm") + " - "}
+              +{data.account.phone}
+            </Text>
+            <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
+              {data?.status?.name}{" "}
+              {moment(data.createdAt).format("HH:mm") + " - "}
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={handleCall}
-          >
+          <TouchableOpacity onPress={handleCall}>
             <Image
               source={PhoneIcon}
               style={{ width: 34, height: 34, top: 10, right: 5 }}
@@ -78,23 +79,32 @@ export default function DetailOrder(props) {
               Số Lượng {data.numOfTable} bàn - {data.numOfPerson} người
             </Text>
           </View>
-          <View style={{
-            marginLeft: 5,
-            flexDirection: 'row'
-          }}>
-            <Text>Bàn: {"\n\n"}</Text>
-            <View style={{ maxWidth: 150, overflow: 'hidden' }}>
-              {data.reservations.length <= 3
-                ?
-                <View style={{ flexDirection: 'row' }}>
-                  {data.reservations.map((item, index) => index < data.reservations.length - 1
-                    ? <Text>{item.table.code}, </Text>
-                    : <Text>{item.table.code}</Text>
+          <View
+            style={{
+              marginLeft: 5,
+              flexDirection: "row",
+              paddingBottom: 7,
+            }}
+          >
+            <Text>Bàn:</Text>
+            <View style={{ maxWidth: 150, overflow: "hidden" }}>
+              {data.reservations.length <= 3 ? (
+                <View style={{ flexDirection: "row" }}>
+                  {data.reservations.map((item, index) =>
+                    index < data.reservations.length - 1 ? (
+                      <Text>{item.table.code}, </Text>
+                    ) : (
+                      <Text>{item.table.code}</Text>
+                    )
                   )}
                 </View>
-                : <Text>
-                  {data.reservations[0].table.code}, {data.reservations[1].table.code}, {data.reservations[2].table.code},...
-                </Text>}
+              ) : (
+                <Text>
+                  {data.reservations[0].table.code},{" "}
+                  {data.reservations[1].table.code},{" "}
+                  {data.reservations[2].table.code},...
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -102,13 +112,21 @@ export default function DetailOrder(props) {
           style={{
             flexDirection: "row",
             flex: 10,
-            marginTop: 5
+            marginTop: 5,
           }}
         >
-          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Tên</Text></View>
-          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Size</Text></View>
-          <View style={{ flex: 2, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Số lượng</Text></View>
-          <View style={{ flex: 3, alignItems: 'center' }}><Text style={{ fontWeight: 'bold' }}>Thành tiền</Text></View>
+          <View style={{ flex: 3, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Tên</Text>
+          </View>
+          <View style={{ flex: 2, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Size</Text>
+          </View>
+          <View style={{ flex: 2, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Số lượng</Text>
+          </View>
+          <View style={{ flex: 3, alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}>Thành tiền</Text>
+          </View>
         </View>
 
         <View style={{ height: "50%", flex: 10 }}>
@@ -119,68 +137,86 @@ export default function DetailOrder(props) {
             renderItem={({ item }) => {
               return (
                 <View style={styles.cardView}>
-                  <View style={{ flex: 3, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.food.name}</Text></View>
-                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.foodFoodTypeMapping.foodType.name}</Text></View>
-                  <View style={{ flex: 2, alignItems: 'center' }}><Text>{item.quantity}</Text></View>
-                  <View style={{ flex: 3, alignItems: 'center' }}><Text>
-                    {item.foodFoodTypeMapping.foodType.id === 1
-                      ? formatPrice((item.quantity *
-                        item.foodFoodTypeMapping.food.priceEach *
-                        (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                        100)
-                      : item.foodFoodTypeMapping.foodType.id === 2
-                        ? formatPrice((item.quantity *
-                          1.2 *
-                          item.foodFoodTypeMapping.food.priceEach *
-                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                          100)
-                        : formatPrice((item.quantity *
-                          1.5 *
-                          item.foodFoodTypeMapping.food.priceEach *
-                          (100 - item.foodFoodTypeMapping.food.discountRate)) /
-                          100)}
-                  </Text></View>
-
+                  <View style={{ flex: 3, alignItems: "center" }}>
+                    <Text>{item.foodFoodTypeMapping.food.name}</Text>
+                  </View>
+                  <View style={{ flex: 2, alignItems: "center" }}>
+                    <Text>{item.foodFoodTypeMapping.foodType.name}</Text>
+                  </View>
+                  <View style={{ flex: 2, alignItems: "center" }}>
+                    <Text>{item.quantity}</Text>
+                  </View>
+                  <View style={{ flex: 3, alignItems: "center" }}>
+                    <Text>
+                      {item.foodFoodTypeMapping.foodType.id === 1
+                        ? formatPrice(
+                            (item.quantity *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )
+                        : item.foodFoodTypeMapping.foodType.id === 2
+                        ? formatPrice(
+                            (item.quantity *
+                              1.2 *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )
+                        : formatPrice(
+                            (item.quantity *
+                              1.5 *
+                              item.foodFoodTypeMapping.food.priceEach *
+                              (100 -
+                                item.foodFoodTypeMapping.food.discountRate)) /
+                              100
+                          )}
+                    </Text>
+                  </View>
                 </View>
               );
             }}
           />
         </View>
       </ScrollView>
-      <View style={{
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        height: 50,
-        bottom: 0,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 10,
-        },
-        shadowOpacity: 0.51,
-        shadowRadius: 13.16,
-        elevation: 20,
-
-      }}
+      <View
+        style={{
+          backgroundColor: "#ffffff",
+          borderRadius: 10,
+          height: 50,
+          bottom: 0,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 10,
+          },
+          shadowOpacity: 0.51,
+          shadowRadius: 13.16,
+          elevation: 20,
+        }}
       >
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: "row",
             flex: 10,
-            justifyContent: 'space-around',
-            alignItems: 'center'
+            justifyContent: "space-around",
+            alignItems: "center",
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Tổng cộng ({data?.orderContents?.length} món):</Text>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{formatPrice(data.total)}</Text>
-
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            Tổng cộng ({data?.orderContents?.length} món):
+          </Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            {formatPrice(data.total)}
+          </Text>
         </View>
       </View>
-
     </SafeAreaView>
   ) : (
-      <Spinner />
-    );
+    <Spinner />
+  );
 }
 const styles = StyleSheet.create({
   container: {
@@ -197,7 +233,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     borderWidth: 0.5,
     shadowRadius: 10,
-
   },
   orderInfoView: {
     backgroundColor: "#FFFFFF",
@@ -229,12 +264,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-    marginBottom: 5
+    marginBottom: 5,
   },
   btnView: {
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingBottom: 8
+    paddingBottom: 8,
   },
-
 });

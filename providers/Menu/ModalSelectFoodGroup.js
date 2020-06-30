@@ -140,7 +140,14 @@ export default function (props) {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                   return (
-                    <View style={styles.cardView}>
+                    <View
+                      style={{
+                        backgroundColor: "#ffffff",
+                        height: 45,
+                        borderBottomWidth: 0.3,
+                        justifyContent: "center",
+                      }}
+                    >
                       <TouchableOpacity
                         style={{ flexDirection: "row" }}
                         onPress={() => {
