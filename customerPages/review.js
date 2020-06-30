@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import moment from "moment";
-import { Avatar, Button } from "react-native-elements";
+import { Avatar, Button, Overlay } from "react-native-elements";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -160,376 +160,381 @@ export default (props) => {
     setChangeReview(true);
   };
 
-  const submitReview = async () => {};
+  const submitReview = async () => {
+    setChangeReview(false);
+  };
 
   return (
     <View style={styles.container}>
-      {/* <Header title="Chi tiết món ăn" hideButtonBack={true} /> */}
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            // Card
-            borderRadius: 6,
-            elevation: 3,
-            backgroundColor: "#fff",
-            shadowOffset: { width: 1, height: 1 },
-            shadowColor: "#333",
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-            flex: 1,
-            //
-            flexDirection: "column",
-          }}
-        >
-          <View style={{ flexDirection: "row" }}>
-            <View style={{}}>
-              <Image
-                source={{
-                  uri: BASE_URL + data.image.url,
-                }}
-                style={styles.avatar}
-              ></Image>
-            </View>
-            <View>
-              <View style={{ flex: 1, flexDirection: "column" }}>
-                <View style={{ flex: 4, margin: 5 }}>
-                  <Text
+      <Overlay isVisible={true} fullScreen={true} overlayStyle={{ padding: 0 }}>
+        <Header title="Chi tiết món ăn" hideButtonBack={true} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View
+            style={{
+              // Card
+              borderRadius: 6,
+              elevation: 3,
+              backgroundColor: "#fff",
+              shadowOffset: { width: 1, height: 1 },
+              shadowColor: "#333",
+              shadowOpacity: 0.3,
+              shadowRadius: 2,
+              flex: 1,
+              //
+              flexDirection: "column",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <View style={{}}>
+                <Image
+                  source={{
+                    uri: BASE_URL + data.image.url,
+                  }}
+                  style={styles.avatar}
+                ></Image>
+              </View>
+              <View>
+                <View style={{ flex: 1, flexDirection: "column" }}>
+                  <View style={{ flex: 4, margin: 5 }}>
+                    <Text
+                      style={{
+                        fontFamily: "Regular",
+                        fontWeight: "bold",
+                        fontSize: 27,
+                      }}
+                    >
+                      {data.name}
+                    </Text>
+                  </View>
+
+                  <View
                     style={{
-                      fontFamily: "Regular",
-                      fontWeight: "bold",
-                      fontSize: 27,
+                      flex: 2,
+                      marginHorizontal: 10,
+                      marginVertical: 5,
+
+                      justifyContent: "center",
                     }}
                   >
-                    {data.name}
-                  </Text>
-                </View>
+                    {data.discountRate ? (
+                      <View style={{ flexDirection: "column" }}>
+                        <Text
+                          style={{
+                            fontFamily: "Regular",
+                            textDecorationLine: "line-through",
+                            fontSize: 21,
 
-                <View
-                  style={{
-                    flex: 2,
-                    marginHorizontal: 10,
-                    marginVertical: 5,
+                            color: "#ABABAB",
+                          }}
+                        >
+                          {formatPrice(data.priceEach)}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: "Regular",
 
-                    justifyContent: "center",
-                  }}
-                >
-                  {data.discountRate ? (
-                    <View style={{ flexDirection: "column" }}>
+                            fontSize: 21,
+                          }}
+                        >
+                          {formatPrice(
+                            (data.priceEach * (100 - data.discountRate)) / 100
+                          )}
+                        </Text>
+                      </View>
+                    ) : (
                       <Text
                         style={{
                           fontFamily: "Regular",
-                          textDecorationLine: "line-through",
                           fontSize: 21,
-
-                          color: "#ABABAB",
+                          fontWeight: "bold",
                         }}
                       >
                         {formatPrice(data.priceEach)}
                       </Text>
-                      <Text
-                        style={{
-                          fontFamily: "Regular",
+                    )}
+                  </View>
+                </View>
+              </View>
 
-                          fontSize: 21,
-                        }}
-                      >
-                        {formatPrice(
-                          (data.priceEach * (100 - data.discountRate)) / 100
-                        )}
-                      </Text>
-                    </View>
-                  ) : (
+              <View
+                style={{
+                  // marginHorizontal: 10,
+
+                  flex: 1,
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    padding: 5,
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: 5,
+                    margin: 10,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    width: 70,
+                    elevation: 5,
+                    alignItems: "center",
+                    flex: 1,
+                    flexDirection: "column",
+                  }}
+                >
+                  <View
+                    style={{
+                      borderBottomColor: "#8A8F9C",
+                      borderBottomWidth: 1,
+                    }}
+                  >
                     <Text
                       style={{
                         fontFamily: "Regular",
-                        fontSize: 21,
+                        fontSize: 26,
+                        marginBottom: 7,
+                        textAlignVertical: "bottom",
                         fontWeight: "bold",
+                        color: "#DC0000",
+
+                        opacity: 1,
                       }}
                     >
-                      {formatPrice(data.priceEach)}
+                      {data.rate}
                     </Text>
-                  )}
+                  </View>
+
+                  <Image source={StarIcon} style={styles.starIcon}></Image>
                 </View>
               </View>
+            </View>
+
+            <View style={{ margin: 10 }}>
+              <Text style={{ color: "#8A8F9C", fontSize: 17 }}>
+                {data.descreption}
+              </Text>
             </View>
 
             <View
               style={{
-                // marginHorizontal: 10,
-
-                flex: 1,
-                alignItems: "flex-end",
-                justifyContent: "center",
+                flexDirection: "column",
               }}
             >
-              <View
+              <Text
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  padding: 5,
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: 5,
-                  margin: 10,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-                  width: 70,
-                  elevation: 5,
-                  alignItems: "center",
-                  flex: 1,
-                  flexDirection: "column",
+                  marginHorizontal: 10,
+                  fontFamily: "Regular",
+                  fontSize: 17,
+                  color: "#232A2F",
                 }}
               >
+                Đánh giá món ăn này
+              </Text>
+              <View style={{ marginVertical: 10 }}>
+                <AirbnbRating
+                  count={5}
+                  starContainerStyle={{}}
+                  defaultRating={0}
+                  onFinishRating={ratingCompleted}
+                  size={30}
+                  showRating={false}
+                  starStyle={{ marginHorizontal: 10 }}
+                />
+              </View>
+              {changeReview ? (
                 <View
                   style={{
-                    borderBottomColor: "#8A8F9C",
-                    borderBottomWidth: 1,
+                    marginHorizontal: 10,
+                    marginBottom: 10,
+                    flexDirection: "column",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "Regular",
-                      fontSize: 26,
-                      marginBottom: 7,
-                      textAlignVertical: "bottom",
-                      fontWeight: "bold",
-                      color: "#DC0000",
-
-                      opacity: 1,
-                    }}
-                  >
-                    {data.rate}
-                  </Text>
+                  <TextInput
+                    label="Chia sẻ về cảm nhận của bạn (Tùy chọn)"
+                    value={comment}
+                    multiline={true}
+                    mode="outlined"
+                    onChangeText={(text) => setComment(text)}
+                  />
+                  <View style={{ right: 0, alignItems: "flex-end" }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        submitReview();
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#DF0000",
+                          fontSize: 17,
+                          padding: 10,
+                          right: 0,
+                        }}
+                      >
+                        Gửi
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-
-                <Image source={StarIcon} style={styles.starIcon}></Image>
-              </View>
+              ) : null}
             </View>
           </View>
 
           <View style={{ margin: 10 }}>
-            <Text style={{ color: "#8A8F9C", fontSize: 17 }}>
-              {data.descreption}
+            <Text
+              style={{
+                fontFamily: "Regular",
+                fontSize: 17,
+                color: "#8A8F9C",
+                textAlign: "justify",
+              }}
+            >
+              Đánh giá
             </Text>
           </View>
 
           <View
             style={{
+              // Card
+              borderRadius: 6,
+              elevation: 3,
+              backgroundColor: "#fff",
+              shadowOffset: { width: 1, height: 1 },
+              shadowColor: "#333",
+              shadowOpacity: 0.3,
+              shadowRadius: 2,
+              flex: 1,
+              //
               flexDirection: "column",
             }}
           >
-            <Text
-              style={{
-                marginHorizontal: 10,
-                fontFamily: "Regular",
-                fontSize: 17,
-                color: "#232A2F",
-              }}
-            >
-              Đánh giá món ăn này
-            </Text>
-            <View style={{ marginVertical: 10 }}>
-              <AirbnbRating
-                count={5}
-                starContainerStyle={{}}
-                defaultRating={0}
-                onFinishRating={ratingCompleted}
-                size={30}
-                showRating={false}
-                starStyle={{ marginHorizontal: 10 }}
-              />
-            </View>
-            {changeReview ? (
-              <View
-                style={{
-                  marginHorizontal: 10,
-                  marginBottom: 10,
-                  flexDirection: "column",
-                }}
-              >
-                <TextInput
-                  label="Chia sẻ về cảm nhận của bạn (Tùy chọn)"
-                  value={comment}
-                  multiline={true}
-                  mode="outlined"
-                  onChangeText={(text) => setComment(text)}
-                />
-                <View style={{ right: 0, alignItems: "flex-end" }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      submitReview();
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#DF0000",
-                        fontSize: 17,
-                        padding: 10,
-                        right: 0,
-                      }}
-                    >
-                      Gửi
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ) : null}
-          </View>
-        </View>
-
-        <View style={{ margin: 10 }}>
-          <Text
-            style={{
-              fontFamily: "Regular",
-              fontSize: 17,
-              color: "#8A8F9C",
-              textAlign: "justify",
-            }}
-          >
-            Đánh giá
-          </Text>
-        </View>
-
-        <View
-          style={{
-            // Card
-            borderRadius: 6,
-            elevation: 3,
-            backgroundColor: "#fff",
-            shadowOffset: { width: 1, height: 1 },
-            shadowColor: "#333",
-            shadowOpacity: 0.3,
-            shadowRadius: 2,
-            flex: 1,
-            //
-            flexDirection: "column",
-          }}
-        >
-          {data.comments.map((item) => {
-            return (
-              <View
-                style={{
-                  flexDirection: "row",
-                  flex: 1,
-                  justifyContent: "center",
-                }}
-              >
-                <View style={{ justifyContent: "center" }}>
-                  <Avatar
-                    rounded
-                    size={80}
-                    source={
-                      item.account.image.url
-                        ? {
-                            uri:
-                              "http://admin.wepick.vn:20000" +
-                              item.account.image.url,
-                          }
-                        : require("../assets/icon/user.png")
-                    }
-                    imageProps={(resizeMode = "center")}
-                    containerStyle={{
-                      marginVertical: 10,
-                      marginHorizontal: 10,
-                    }}
-                  />
-                </View>
-
+            {data.comments.map((item) => {
+              return (
                 <View
                   style={{
-                    flexDirection: "column",
+                    flexDirection: "row",
                     flex: 1,
+                    justifyContent: "center",
                   }}
                 >
-                  <Text style={{ fontSize: 17, fontWeight: "bold" }}>
-                    {item.account.displayName}
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <AirbnbRating
-                      count={5}
-                      defaultRating={item.foodAccountMapping.rate}
-                      isDisabled={true}
-                      size={15}
-                      showRating={false}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "#8A8F9C",
-                        paddingTop: 1.5,
-                        paddingLeft: 2,
+                  <View style={{ justifyContent: "center" }}>
+                    <Avatar
+                      rounded
+                      size={80}
+                      source={
+                        item.account.image.url
+                          ? {
+                              uri:
+                                "http://admin.wepick.vn:20000" +
+                                item.account.image.url,
+                            }
+                          : require("../assets/icon/user.png")
+                      }
+                      imageProps={(resizeMode = "center")}
+                      containerStyle={{
+                        marginVertical: 10,
+                        marginHorizontal: 10,
                       }}
-                    >
-                      {moment(item.time).format("HH:mm") +
-                        " - " +
-                        moment(item.time).format("DD/MM/YYYY")}
-                    </Text>
+                    />
                   </View>
 
-                  <View style={{ paddingRight: 10 }}>
-                    <Text style={{ fontSize: 16, color: "#232A2F" }}>
-                      {item.content}
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      flex: 1,
+                    }}
+                  >
+                    <Text style={{ fontSize: 17, fontWeight: "bold" }}>
+                      {item.account.displayName}
                     </Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <AirbnbRating
+                        count={5}
+                        defaultRating={item.foodAccountMapping.rate}
+                        isDisabled={true}
+                        size={15}
+                        showRating={false}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "#8A8F9C",
+                          paddingTop: 1.5,
+                          paddingLeft: 2,
+                        }}
+                      >
+                        {moment(item.time).format("HH:mm") +
+                          " - " +
+                          moment(item.time).format("DD/MM/YYYY")}
+                      </Text>
+                    </View>
+
+                    <View style={{ paddingRight: 10 }}>
+                      <Text style={{ fontSize: 16, color: "#232A2F" }}>
+                        {item.content}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-
-          backgroundColor: "#FFFFFF",
-          borderRadius: 10,
-          marginTop: 5,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-
-          elevation: 5,
-          bottom: 0,
-          flex: 1,
-        }}
-      >
-        <View style={{ flexDirection: "row", flex: 1 }}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              title="Yêu thích"
-              buttonStyle={{ width: 185, backgroundColor: "#DF0000" }}
-            />
+              );
+            })}
           </View>
+        </ScrollView>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
 
-          <View
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              title="Đặt ngay"
-              buttonStyle={{ width: 185, backgroundColor: "#DF0000" }}
-            />
+            backgroundColor: "#FFFFFF",
+            borderRadius: 10,
+            marginTop: 5,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            position: "absolute",
+            padding: 10,
+            elevation: 5,
+            bottom: 0,
+            flex: 1,
+          }}
+        >
+          <View style={{ flexDirection: "row", flex: 1 }}>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                title="Yêu thích"
+                buttonStyle={{ width: 185, backgroundColor: "#DF0000" }}
+              />
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                title="Đặt ngay"
+                buttonStyle={{ width: 185, backgroundColor: "#DF0000" }}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </Overlay>
     </View>
   );
 };

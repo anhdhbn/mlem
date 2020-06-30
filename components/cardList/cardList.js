@@ -10,9 +10,14 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
+import formatPrice from "../formatPrice";
+
 import SkeletonContent from "react-native-skeleton-content-nonexpo";
 
+import { useNavigation } from "@react-navigation/native";
+
 export default function (props) {
+  const navigation = useNavigation();
   // Example data
   // {"descreption": null,
   // "discountRate": null,
@@ -57,7 +62,7 @@ export default function (props) {
         </View> */}
       </View>
       <SkeletonContent
-        containerStyle={{ flex: 1, width: '100%', flexDirection: "row" }}
+        containerStyle={{ flex: 1, width: "100%", flexDirection: "row" }}
         isLoading={cardData ? false : true}
         // isLoading={isLoading}
         layout={[
@@ -85,6 +90,10 @@ export default function (props) {
                     padding: 4,
                     borderRadius: 10,
                   }}
+                  onPress={() => {
+                    // console.log("[INFO] Click item in cardList.js: ", item);
+                    navigation.navigate("Review", { data: item });
+                  }}
                 >
                   <Image
                     source={
@@ -101,10 +110,14 @@ export default function (props) {
                   <Text style={styles.foodname}>{item.name}</Text>
                   {item.discountRate ? (
                     <Text style={styles.price}>
-                      {(item.priceEach * (100 - item.discountRate)) / 100}
+                      {formatPrice(
+                        (item.priceEach * (100 - item.discountRate)) / 100
+                      )}
                     </Text>
                   ) : (
-                    <Text style={styles.price}>{item.priceEach}</Text>
+                    <Text style={styles.price}>
+                      {formatPrice(item.priceEach)}
+                    </Text>
                   )}
                 </TouchableOpacity>
               </View>
