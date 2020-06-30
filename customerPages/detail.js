@@ -124,25 +124,32 @@ export default class Detail extends Component {
               //     "priceEach": 10000,
               //     "statusId": 0
               // }
-              <SmartDishCard
-                key={dish.id}
-                id={dish.id}
-                linkImageDish={dish.image}
-                nameDish={dish.name}
-                describeDish={dish.descreption}
-                price={dish.priceEach}
-                // promoPrice={dish.discountRate * dish.priceEach}
-                promoPrice={
-                  dish.discountRate
-                    ? (dish.priceEach * (100 - dish.discountRate)) / 100
-                    : dish.discountRate
-                }
-                // For icon
-                linkIconActive={require("../assets/icon/heart.png")}
-                linkIconInactive={require("../assets/icon/heart-unlike.png")}
-                handClickIcon={this.handClickIcon}
-                isActive={this.checkLikedFood(dish.id)}
-              ></SmartDishCard>
+              <TouchableOpacity
+                onPress={() => {
+                  // console.log("[INFO] Click item in cardList.js: ", item);
+                  this.props.navigation.navigate("Review", { data: dish });
+                }}
+              >
+                <SmartDishCard
+                  key={dish.id}
+                  id={dish.id}
+                  linkImageDish={dish.image}
+                  nameDish={dish.name}
+                  describeDish={dish.descreption}
+                  price={dish.priceEach}
+                  // promoPrice={dish.discountRate * dish.priceEach}
+                  promoPrice={
+                    dish.discountRate
+                      ? (dish.priceEach * (100 - dish.discountRate)) / 100
+                      : dish.discountRate
+                  }
+                  // For icon
+                  linkIconActive={require("../assets/icon/heart.png")}
+                  linkIconInactive={require("../assets/icon/heart-unlike.png")}
+                  handClickIcon={this.handClickIcon}
+                  isActive={this.checkLikedFood(dish.id)}
+                ></SmartDishCard>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
