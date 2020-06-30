@@ -15,7 +15,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 import { TextInput } from "react-native-paper";
 import { Rating, AirbnbRating } from "react-native-elements";
-const BASE_URL = "http://admin.wepick.vn:20000";
+const BASE_URL = "http://112.213.88.49:20000";
 
 import Header from "../components/header/header";
 
@@ -429,7 +429,7 @@ export default (props) => {
                         item.account.image.url
                           ? {
                               uri:
-                                "http://admin.wepick.vn:20000" +
+                                "http://112.213.88.49:20000" +
                                 item.account.image.url,
                             }
                           : require("../assets/icon/user.png")

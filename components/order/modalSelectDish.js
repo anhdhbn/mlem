@@ -152,7 +152,7 @@ export default function (props) {
             props.modal.linkImageDish
               ? {
                   uri:
-                    "http://admin.wepick.vn:20000" +
+                    "http://112.213.88.49:20000" +
                     props.modal.linkImageDish.url,
                 }
               : null

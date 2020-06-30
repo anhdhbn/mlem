@@ -4,7 +4,7 @@ import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 import * as signalR from "@aspnet/signalr";
-const BASE_URL = "http://admin.wepick.vn:20000";
+const BASE_URL = "http://112.213.88.49:20000";
 
 import TickIcon from "../../assets/icon/tick.png";
 import NotifyServices from "../../providerServices/notifyServices";

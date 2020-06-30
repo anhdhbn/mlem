@@ -133,7 +133,7 @@ export default function (props) {
         // console.log(data.url);
         // console.log(
         //   "[INFO] Uri image: ",
-        //   "http://admin.wepick.vn:20000" + data.url
+        //   "http://112.213.88.49:20000" + data.url
         // );
         setImageId(data.id);
         setImage(`${host}${data.url}`);

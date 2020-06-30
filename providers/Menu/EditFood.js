@@ -26,7 +26,7 @@ import ViewMore from "../../assets/icon/view_more.png";
 import addIcon from "../../assets/icon/+.png";
 import subIcon from "../../assets/icon/-.png";
 
-const base_url = "http://admin.wepick.vn:20000";
+const base_url = "http://112.213.88.49:20000";
 export default function EditFood(props) {
   const [data, setData] = useState(props.route.params.data);
   const changeFood = props.route.params.handleChangeDish;
@@ -157,7 +157,7 @@ export default function EditFood(props) {
         setStateAvatar(true);
         RNFetchBlob.fetch(
           "POST",
-          "http://admin.wepick.vn:20000/api/image/upload",
+          "http://112.213.88.49:20000/api/image/upload",
           {
             // dropbox upload headers
 
@@ -181,11 +181,11 @@ export default function EditFood(props) {
             // console.log(data.url);
             // console.log(
             //   "[INFO] Uri image: ",
-            //   "http://admin.wepick.vn:20000" + data.url
+            //   "http://112.213.88.49:20000" + data.url
             // );
 
             setImageId(data.id);
-            setImage("http://admin.wepick.vn:20000" + data.url);
+            setImage("http://112.213.88.49:20000" + data.url);
 
             setStateAvatar(false);
           })

@@ -17,7 +17,7 @@ import SmartDishCard from "../components/smartDishCard/smartDishCard";
 
 import homeServices from "../customerServices/homeServices";
 
-const base_url = "http://admin.wepick.vn:20000";
+const base_url = "http://112.213.88.49:20000";
 export default function (props) {
   const [listFavourite, setListFavourite] = useState(
     props.route.params.listFavourite

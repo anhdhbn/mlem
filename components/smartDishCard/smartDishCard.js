@@ -92,7 +92,7 @@ export default class SmartDishCard extends Component {
                 this.props.linkImageDish
                   ? {
                       uri:
-                        "http://admin.wepick.vn:20000" +
+                        "http://112.213.88.49:20000" +
                         this.props.linkImageDish.url,
                     }
                   : null

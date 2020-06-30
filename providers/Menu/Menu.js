@@ -18,7 +18,7 @@ import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
 import menuServices from "../../providerServices/menuServices";
 import FilterBar from "./Filter";
-const base_url = "http://admin.wepick.vn:20000";
+const base_url = "http://112.213.88.49:20000";
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
 export default ({ navigation }) => (

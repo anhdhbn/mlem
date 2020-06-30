@@ -107,7 +107,7 @@ export default class Profile extends Component {
         // console.log(data);
         // console.log(
         //   "[INFO] Uri image: ",
-        //   "http://admin.wepick.vn:20000" + data.url
+        //   "http://112.213.88.49:20000" + data.url
         // );
 
         const imageId = data.id;

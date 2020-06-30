@@ -1,7 +1,7 @@
 // @flow
 import axios from "axios";
 
-export const BASE_API_URL = "http://admin.wepick.vn:20000";
+export const BASE_API_URL = "http://112.213.88.49:20000";
 
 const customAxios = axios.create({
   baseURL: BASE_API_URL,

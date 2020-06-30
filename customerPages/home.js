@@ -3,7 +3,7 @@ import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Button as ButtonE, Overlay } from "react-native-elements";
 import { FAB } from "react-native-paper";
 import * as signalR from "@aspnet/signalr";
-const BASE_URL = "http://admin.wepick.vn:20000";
+const BASE_URL = "http://112.213.88.49:20000";
 
 import homeServices from "../customerServices/homeServices";
 

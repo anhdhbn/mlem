@@ -100,7 +100,7 @@ export default function (props) {
                       item.image
                         ? {
                             uri:
-                              "http://admin.wepick.vn:20000" + item.image.url,
+                              "http://112.213.88.49:20000" + item.image.url,
                           }
                         : null
                     }
