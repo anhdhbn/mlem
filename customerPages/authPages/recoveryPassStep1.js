@@ -71,10 +71,12 @@ export default class recoveryPassStep1 extends Component {
       this.setLoading(false);
       // TODO: Handle mail incorrect
       // console.log("{INFO] Response in recoveryPassStep1: ", response);
-      if (!isWrongEmail) {
-        this.props.navigation.navigate("VerifyCode", {
+      if (!isWrongEmail) {    
+       this.props.navigation.navigate("VerifyCode", {
           response: response,
-        });
+          sendMail:  this.onSubmit,
+          email: this.state.email
+        }); 
       }
     } else {
       this.setEmailError();
