@@ -234,9 +234,8 @@ export default function (props) {
       >
         <Input
           placeholder="Tên món ăn"
-          defaultValue={data.descreption}
+          defaultValue={data.name}
           onChangeText={(text) => {
-            // setData({ ...data, name: text });
             setModalName(text);
           }}
         />
@@ -303,7 +302,7 @@ export default function (props) {
             }}
           >
             <Text style={styles.titleImage}>
-              {data.name ? data.name : "Vui lòng nhập tên món ăn"}
+              {data.name ? data.name : "Tên món ăn"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -472,11 +471,8 @@ export default function (props) {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 11,
-              paddingRight: 25,
-              paddingTop: 14,
-              paddingBottom: 14,
+              justifyContent: "space-around",
+              padding: 14,
             }}
           >
             <View style={{ flexDirection: "row" }}>
@@ -493,6 +489,7 @@ export default function (props) {
                 /> */}
 
                 <TextInput
+                  style={{ height: 25, backgroundColor: "" }}
                   value={priceEach.toString()}
                   onChangeText={(e) => {
                     if (e.replace(/[^0-9]/g, "").length === e.length) {
@@ -534,6 +531,7 @@ export default function (props) {
               /> */}
 
               <TextInput
+                style={{ height: 25, backgroundColor: "" }}
                 value={discountRate.toString()}
                 onChangeText={(e) => {
                   if (e.replace(/[^0-9]/g, "").length === e.length) {
@@ -621,25 +619,43 @@ export default function (props) {
         <View style={styles.btnView}>
           <TouchableOpacity
             style={{
-              width: 146,
-              height: 48,
-              backgroundColor: "#C7c7c7",
-              alignItems: "center",
+              backgroundColor: "#c7c5bf",
+              borderRadius: 8,
+              width: 100,
+              height: 40,
             }}
             onPress={() => cancel()}
           >
-            <Text style={{ top: 10 }}>Huỷ</Text>
+            <Text
+            style={{
+              fontSize: 16,
+              padding: 8,
+              paddingLeft: 36,
+              color: "#000",
+            }}
+          >
+            Hủy
+          </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              width: 146,
-              height: 48,
               backgroundColor: "#DC0000",
-              alignItems: "center",
+              borderRadius: 8,
+              width: 110,
+              height: 40,
             }}
             onPress={() => setApproveVisible(true)}
           >
-            <Text style={{ top: 10, color: "#ffffff" }}>Thêm món</Text>
+            <Text
+            style={{
+              fontSize: 16,
+              padding: 8,
+              paddingLeft: 20,
+              color: "#fff",
+            }}
+          >
+            Thêm mới
+          </Text>
           </TouchableOpacity>
         </View>
 
@@ -686,10 +702,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F6F7",
   },
   title: {
-    paddingLeft: 20,
     height: 25,
-    paddingTop: 2,
-    justifyContent: "center",
+    paddingLeft: 10,
     color: "#8A8F9C",
     backgroundColor: "#DEDEDE",
   },
@@ -720,5 +734,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     top: 10,
+    marginBottom: 20,
   },
 });

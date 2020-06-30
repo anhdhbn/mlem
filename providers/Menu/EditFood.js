@@ -71,6 +71,8 @@ export default function EditFood(props) {
   const [visibleFoodGroup, setvisibleFoodGroup] = useState(false);
   const [visibleChangeName, setVisibleChangeName] = useState(false);
   const [approveVisible, setApproveVisible] = useState(false);
+  const [invalidPriceInput, setInvalidPriceInput] = useState(false);
+  const [invalidDiscountInput, setInvalidDiscountInput] = useState(false);
 
   const getDetail = async () => {
     let params = { id: data.id };
@@ -287,7 +289,6 @@ export default function EditFood(props) {
           placeholder="Tên món ăn"
           defaultValue={data.name}
           onChangeText={(text) => {
-            // setData({ ...data, name: text });
             setModalName(text);
           }}
         />
@@ -745,7 +746,7 @@ export default function EditFood(props) {
             style={{
               fontSize: 16,
               padding: 8,
-              paddingLeft: 20,
+              paddingLeft: 36,
               color: "#000",
             }}
           >
@@ -768,7 +769,7 @@ export default function EditFood(props) {
             style={{
               fontSize: 16,
               padding: 8,
-              paddingLeft: 20,
+              paddingLeft: 23,
               color: "#fff",
             }}
           >

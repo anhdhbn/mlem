@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
   icon_button: {
     width: 20,
     height: 20,
+    marginTop: 5
   },
   header: {
     flexDirection: "row",
@@ -183,19 +184,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   viewInput: {
+    position: "relative",
     width: 350,
     borderRadius: 10,
     height: 40,
-
-    marginVertical: 10,
+    marginLeft: 30,
+    marginTop: 10,
     backgroundColor: "#c4c1c0",
     flexDirection: "row",
+    overflow: "hidden",
     opacity: 0.8,
   },
   input: {
+    textAlignVertical: "center",
     paddingLeft: 10,
     height: 40,
     borderRadius: 10,
     width: 350,
+    color: "#B21",
   },
 });
