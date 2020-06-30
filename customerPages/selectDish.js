@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 
-import { Button } from "react-native-elements";
+import { Button, Overlay } from "react-native-elements";
 
 import NavBar from "../components/cardList/NavBar";
 import Header from "../components/header/header";
@@ -749,206 +749,210 @@ export default class order extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ backgroundColor: "#F5F6F7", flex: 1 }}>
-        <Header
-          title="Chọn món"
-          onPressBack={() => {
-            this.props.navigation.navigate("Order");
-          }}
-        ></Header>
-        <Snackbar
-          visible={this.state.visibleAlert}
-          _onDismissSnackBar={this._onDismissSnackBar}
-          actionText="Hide"
-          duration={3000}
-          text={this.state.textAlert}
-        />
-        <ScrollView
-          onScroll={async ({ nativeEvent }) => {
-            const {
-              layoutMeasurement,
-              contentOffset,
-              contentSize,
-            } = nativeEvent;
+      <Overlay isVisible={true} fullScreen={true} overlayStyle={{ padding: 0 }}>
+        <SafeAreaView style={{ backgroundColor: "#F5F6F7", flex: 1 }}>
+          <Header
+            title="Chọn món"
+            onPressBack={() => {
+              this.props.navigation.navigate("Order");
+            }}
+          ></Header>
+          <Snackbar
+            visible={this.state.visibleAlert}
+            _onDismissSnackBar={this._onDismissSnackBar}
+            actionText="Hide"
+            duration={3000}
+            text={this.state.textAlert}
+          />
+          <ScrollView
+            onScroll={async ({ nativeEvent }) => {
+              const {
+                layoutMeasurement,
+                contentOffset,
+                contentSize,
+              } = nativeEvent;
 
-            if (this.isCloseToBottom(nativeEvent)) {
-              //do something
-              console.log("Close to bottom");
-              if (!this.state.isLoadingSkip) {
-                if (!this.state.skipFoods[this.state.codeRender].isOutOfFood) {
-                  this.setIsLoadingSkip(true);
-                  await this.fetchListRender(this.state.codeRender);
-                  this.setIsLoadingSkip(false);
+              if (this.isCloseToBottom(nativeEvent)) {
+                //do something
+                console.log("Close to bottom");
+                if (!this.state.isLoadingSkip) {
+                  if (
+                    !this.state.skipFoods[this.state.codeRender].isOutOfFood
+                  ) {
+                    this.setIsLoadingSkip(true);
+                    await this.fetchListRender(this.state.codeRender);
+                    this.setIsLoadingSkip(false);
+                  }
                 }
               }
-            }
-          }}
-        >
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
-              Danh mục
-            </Text>
-          </View>
-
-          <NavBar
-            codeRender={this.state.codeRender}
-            onPressAll={this.onPressAll}
-            onPressLau={this.onPressLau}
-            onPressHaisan={this.onPressHaisan}
-            onPressRaucu={this.onPressRaucu}
-            onPressThit={this.onPressThit}
-            onPressDouong={this.onPressDouong}
-          />
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              height: 45,
-              padding: 10,
             }}
           >
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                this.setListDishRender(6);
-              }}
-            >
-              <Text
-                style={
-                  this.state.codeRender === 6
-                    ? { fontSize: 14, color: "#DF0000" }
-                    : { fontSize: 14, color: "#8A8F9C" }
-                }
-              >
-                {" "}
-                Top bán chạy{" "}
+            <View>
+              <Text style={{ fontSize: 18, fontWeight: "bold", padding: 8 }}>
+                Danh mục
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                this.setListDishRender(7);
-              }}
-            >
-              <Text
-                style={
-                  this.state.codeRender === 7
-                    ? { fontSize: 14, color: "#DF0000" }
-                    : { fontSize: 14, color: "#8A8F9C" }
-                }
-              >
-                {" "}
-                Đặt gần đây{" "}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                this.setListDishRender(8);
-              }}
-            >
-              <Text
-                style={
-                  this.state.codeRender === 8
-                    ? { fontSize: 14, color: "#DF0000" }
-                    : { fontSize: 14, color: "#8A8F9C" }
-                }
-              >
-                {" "}
-                Giá thấp đến cao{" "}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
 
-          {/* <SafeAreaView style={{ height: 350 }}> */}
-          {/* {console.log(
+            <NavBar
+              codeRender={this.state.codeRender}
+              onPressAll={this.onPressAll}
+              onPressLau={this.onPressLau}
+              onPressHaisan={this.onPressHaisan}
+              onPressRaucu={this.onPressRaucu}
+              onPressThit={this.onPressThit}
+              onPressDouong={this.onPressDouong}
+            />
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                height: 45,
+                padding: 10,
+              }}
+            >
+              <TouchableOpacity
+                style={{}}
+                onPress={() => {
+                  this.setListDishRender(6);
+                }}
+              >
+                <Text
+                  style={
+                    this.state.codeRender === 6
+                      ? { fontSize: 14, color: "#DF0000" }
+                      : { fontSize: 14, color: "#8A8F9C" }
+                  }
+                >
+                  {" "}
+                  Top bán chạy{" "}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{}}
+                onPress={() => {
+                  this.setListDishRender(7);
+                }}
+              >
+                <Text
+                  style={
+                    this.state.codeRender === 7
+                      ? { fontSize: 14, color: "#DF0000" }
+                      : { fontSize: 14, color: "#8A8F9C" }
+                  }
+                >
+                  {" "}
+                  Đặt gần đây{" "}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{}}
+                onPress={() => {
+                  this.setListDishRender(8);
+                }}
+              >
+                <Text
+                  style={
+                    this.state.codeRender === 8
+                      ? { fontSize: 14, color: "#DF0000" }
+                      : { fontSize: 14, color: "#8A8F9C" }
+                  }
+                >
+                  {" "}
+                  Giá thấp đến cao{" "}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* <SafeAreaView style={{ height: 350 }}> */}
+            {/* {console.log(
             "[LIST dish to render] ",
             JSON.stringify(this.state.listDishRender)
           )} */}
-          {this.state.isLoading ? (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                type="clear"
-                loading={true}
-                loadingStyle={{ height: 50 }}
+            {this.state.isLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Button
+                  type="clear"
+                  loading={true}
+                  loadingStyle={{ height: 50 }}
+                />
+              </View>
+            ) : (
+              <View>
+                {this.state.listDishRender ? (
+                  this.state.listDishRender.map((dish) => {
+                    return (
+                      <SmartDishCard
+                        id={dish.id}
+                        linkImageDish={dish.image}
+                        nameDish={dish.name}
+                        describeDish={dish.describe}
+                        price={dish.priceEach}
+                        promoPrice={
+                          dish.discountRate
+                            ? (dish.priceEach * (100 - dish.discountRate)) / 100
+                            : null
+                        }
+                        // For icon
+                        linkIconActive={require("../assets/icon/+.png")}
+                        linkIconInactive={require("../assets/icon/+.png")}
+                        handClickIcon={this.handClickIcon}
+                        isActive={true}
+                      />
+                    );
+                  })
+                ) : (
+                  <View>
+                    <Spinner />
+                  </View>
+                )}
+                {this.state.isLoadingList[this.state.codeRender].isLoading ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Button
+                      type="clear"
+                      loading={true}
+                      loadingStyle={{ height: 50 }}
+                    />
+                  </View>
+                ) : null}
+              </View>
+            )}
+            <View>
+              <ModalSelectDish
+                addDish2Order={this.addDish2Order}
+                removeDish2Order={this.removeDish2Order}
+                visible={this.state.showModal}
+                hideModal={this.hideModal}
+                modal={this.state.modal}
+                subNumOfDish={this.subNumOfDish}
+                addNumOfDish={this.addNumOfDish}
+                selectOrderSize={this.selectOrderSize}
+                totalPromoPrice={this.state.totalPromoPrice}
+                totalPrice={this.state.totalPrice}
               />
             </View>
-          ) : (
-            <View>
-              {this.state.listDishRender ? (
-                this.state.listDishRender.map((dish) => {
-                  return (
-                    <SmartDishCard
-                      id={dish.id}
-                      linkImageDish={dish.image}
-                      nameDish={dish.name}
-                      describeDish={dish.describe}
-                      price={dish.priceEach}
-                      promoPrice={
-                        dish.discountRate
-                          ? (dish.priceEach * (100 - dish.discountRate)) / 100
-                          : null
-                      }
-                      // For icon
-                      linkIconActive={require("../assets/icon/+.png")}
-                      linkIconInactive={require("../assets/icon/+.png")}
-                      handClickIcon={this.handClickIcon}
-                      isActive={true}
-                    />
-                  );
-                })
-              ) : (
-                <View>
-                  <Spinner />
-                </View>
-              )}
-              {this.state.isLoadingList[this.state.codeRender].isLoading ? (
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    type="clear"
-                    loading={true}
-                    loadingStyle={{ height: 50 }}
-                  />
-                </View>
-              ) : null}
-            </View>
-          )}
-          <View>
-            <ModalSelectDish
-              addDish2Order={this.addDish2Order}
-              removeDish2Order={this.removeDish2Order}
-              visible={this.state.showModal}
-              hideModal={this.hideModal}
-              modal={this.state.modal}
-              subNumOfDish={this.subNumOfDish}
-              addNumOfDish={this.addNumOfDish}
-              selectOrderSize={this.selectOrderSize}
-              totalPromoPrice={this.state.totalPromoPrice}
-              totalPrice={this.state.totalPrice}
-            />
-          </View>
-        </ScrollView>
+          </ScrollView>
 
-        <CaculatePrice
-          totalPromoPrice={this.state.totalPromoPrice}
-          totalPrice={this.state.totalPrice}
-          navigation={this.props.navigation}
-          // addOrderDish={this.props.route.params.addOrderDish(this.state.modal)}
-        />
-      </SafeAreaView>
+          <CaculatePrice
+            totalPromoPrice={this.state.totalPromoPrice}
+            totalPrice={this.state.totalPrice}
+            navigation={this.props.navigation}
+            // addOrderDish={this.props.route.params.addOrderDish(this.state.modal)}
+          />
+        </SafeAreaView>
+      </Overlay>
     );
   }
 }

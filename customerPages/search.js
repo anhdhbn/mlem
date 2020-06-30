@@ -17,6 +17,8 @@ import SmartDishCard from "../components/smartDishCard/smartDishCard";
 
 import homeServices from "../customerServices/homeServices";
 
+import { Avatar, Button, Overlay } from "react-native-elements";
+
 const base_url = "http://112.213.88.49:20000";
 export default function (props) {
   const [listFavourite, setListFavourite] = useState(
@@ -74,92 +76,94 @@ export default function (props) {
 
   return (
     <>
-      <View style={styles.header}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => props.route.params.navigateHomePage()}
-            activeOpacity={0.5}
-            style={styles.button}
+      <Overlay isVisible={true} fullScreen={true} overlayStyle={{ padding: 0 }}>
+        <View style={styles.header}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <Image
-              source={require("../assets/icon/back.png")}
-              style={styles.icon_button}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View
-          style={{
-            justifyContent: "center",
-            flexDirection: "row",
-            alignItems: "center",
-            flex: 10,
-          }}
-        >
-          <View style={styles.viewInput}>
-            <Image
-              source={search}
-              style={{ width: 15, height: 15, marginLeft: 10, marginTop: 12 }}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder={"MlemMlem"}
-              placeholderTextColor="#B21"
-              onChangeText={(text) => {
-                props.route.params.searchDish(text).then((data) => {
-                  // console.log("[INFO] Response after search: ", data);
-                  setListSearch(data);
-                });
-              }}
-            ></TextInput>
+            <TouchableOpacity
+              onPress={() => props.route.params.navigateHomePage()}
+              activeOpacity={0.5}
+              style={styles.button}
+            >
+              <Image
+                source={require("../assets/icon/back.png")}
+                style={styles.icon_button}
+              />
+            </TouchableOpacity>
           </View>
+
+          <View
+            style={{
+              justifyContent: "center",
+              flexDirection: "row",
+              alignItems: "center",
+              flex: 10,
+            }}
+          >
+            <View style={styles.viewInput}>
+              <Image
+                source={search}
+                style={{ width: 15, height: 15, marginLeft: 10, marginTop: 12 }}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder={"MlemMlem"}
+                placeholderTextColor="#B21"
+                onChangeText={(text) => {
+                  props.route.params.searchDish(text).then((data) => {
+                    // console.log("[INFO] Response after search: ", data);
+                    setListSearch(data);
+                  });
+                }}
+              ></TextInput>
+            </View>
+          </View>
+          <View style={{ flex: 1 }}></View>
         </View>
-        <View style={{ flex: 1 }}></View>
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {listSearch
-          ? listSearch.map((dish) => (
-              //   {
-              //     "descreption": "Món này được giảm giá",
-              //     "discountRate": 10,
-              //     "errors": null,
-              //     "foodFoodGroupingMappings": null,
-              //     "foodFoodTypeMappings": null,
-              //     "id": 11,
-              //     "image": null,
-              //     "imageId": null,
-              //     "name": "Hải sản 3",
-              //     "priceEach": 10000,
-              //     "statusId": 0
-              // }
-              <SmartDishCard
-                key={dish.id}
-                id={dish.id}
-                linkImageDish={dish.image}
-                nameDish={dish.name}
-                describeDish={dish.descreption}
-                price={dish.priceEach}
-                // promoPrice={dish.discountRate * dish.priceEach}
-                promoPrice={
-                  dish.discountRate
-                    ? (dish.priceEach * (100 - dish.discountRate)) / 100
-                    : dish.discountRate
-                }
-                // For icon
-                linkIconActive={require("../assets/icon/heart.png")}
-                linkIconInactive={require("../assets/icon/heart-unlike.png")}
-                handClickIcon={handClickIcon}
-                isActive={checkLikedFood(dish.id)}
-              ></SmartDishCard>
-            ))
-          : null}
-      </ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {listSearch
+            ? listSearch.map((dish) => (
+                //   {
+                //     "descreption": "Món này được giảm giá",
+                //     "discountRate": 10,
+                //     "errors": null,
+                //     "foodFoodGroupingMappings": null,
+                //     "foodFoodTypeMappings": null,
+                //     "id": 11,
+                //     "image": null,
+                //     "imageId": null,
+                //     "name": "Hải sản 3",
+                //     "priceEach": 10000,
+                //     "statusId": 0
+                // }
+                <SmartDishCard
+                  key={dish.id}
+                  id={dish.id}
+                  linkImageDish={dish.image}
+                  nameDish={dish.name}
+                  describeDish={dish.descreption}
+                  price={dish.priceEach}
+                  // promoPrice={dish.discountRate * dish.priceEach}
+                  promoPrice={
+                    dish.discountRate
+                      ? (dish.priceEach * (100 - dish.discountRate)) / 100
+                      : dish.discountRate
+                  }
+                  // For icon
+                  linkIconActive={require("../assets/icon/heart.png")}
+                  linkIconInactive={require("../assets/icon/heart-unlike.png")}
+                  handClickIcon={handClickIcon}
+                  isActive={checkLikedFood(dish.id)}
+                ></SmartDishCard>
+              ))
+            : null}
+        </ScrollView>
+      </Overlay>
     </>
   );
 }
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
   icon_button: {
     width: 20,
     height: 20,
-    marginTop: 5
+    marginTop: 5,
   },
   header: {
     flexDirection: "row",
