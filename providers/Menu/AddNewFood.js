@@ -241,8 +241,8 @@ export default function (props) {
         />
         <TouchableOpacity
           style={{
-            width: 146,
-            height: 48,
+            width: 130,
+            height: 45,
             backgroundColor: "#DC0000",
             alignItems: "center",
           }}
@@ -251,7 +251,16 @@ export default function (props) {
             setVisibleChangeName(false);
           }}
         >
-          <Text style={{ top: 10, color: "#ffffff" }}>Xong</Text>
+          <Text
+            style={{
+              top: 10,
+              fontSize: 16,
+              fontWeight: "700",
+              color: "#ffffff",
+            }}
+          >
+            Xong
+          </Text>
         </TouchableOpacity>
       </Overlay>
 
@@ -407,23 +416,30 @@ export default function (props) {
                               justifyContent: "space-between",
                             }}
                           >
-                            <Image
-                              source={TickIcon}
-                              style={{
-                                width: 18,
-                                height: 18,
-                                margin: 5,
-                              }}
-                            />
                             <Text
                               style={{
-                                color: "#8A8F9C",
+                                color: "#000000",
                                 fontSize: 16,
                                 margin: 5,
                               }}
                             >
                               {item.kindOfFood}
                             </Text>
+                            <TouchableOpacity
+                            // onPress={() =>
+                            //   handleDeleteGrouping(item.id)
+                            // }
+                            >
+                              <Image
+                                source={require("../../assets/icon/cross.png")}
+                                style={{
+                                  width: 10,
+                                  height: 10,
+                                  marginTop: 13,
+                                  marginRight: 10,
+                                }}
+                              />
+                            </TouchableOpacity>
                           </View>
                         }
                       </View>
@@ -627,15 +643,15 @@ export default function (props) {
             onPress={() => cancel()}
           >
             <Text
-            style={{
-              fontSize: 16,
-              padding: 8,
-              paddingLeft: 36,
-              color: "#000",
-            }}
-          >
-            Hủy
-          </Text>
+              style={{
+                fontSize: 16,
+                padding: 8,
+                paddingLeft: 36,
+                color: "#000",
+              }}
+            >
+              Hủy
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -647,15 +663,15 @@ export default function (props) {
             onPress={() => setApproveVisible(true)}
           >
             <Text
-            style={{
-              fontSize: 16,
-              padding: 8,
-              paddingLeft: 20,
-              color: "#fff",
-            }}
-          >
-            Thêm mới
-          </Text>
+              style={{
+                fontSize: 16,
+                padding: 8,
+                paddingLeft: 20,
+                color: "#fff",
+              }}
+            >
+              Thêm mới
+            </Text>
           </TouchableOpacity>
         </View>
 
