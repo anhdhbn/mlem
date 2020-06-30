@@ -226,8 +226,8 @@ export default class Profile extends Component {
         <ScrollView showsVerticalScrollIndicator={false}>
           <HeaderProfile
             avatar={
-              this.state.data.image.url
-                ? `${baseRequest.BASE_API_URL}${this.state.data.image.url}`
+              this.state.data.image?.url
+                ? `${baseRequest.BASE_API_URL}${this.state.data.image?.url}`
                 : null
             }
             _changeAvatar={this._changeAvatar}
