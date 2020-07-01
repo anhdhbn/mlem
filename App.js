@@ -59,7 +59,10 @@ function SignInScreen(props) {
   const { signIn } = React.useContext(AuthContext);
   return <SignIn signIn={signIn} navigation={props.navigation} />;
 }
-
+function SignUpScreen (props){
+  const {signIn} = React.useContext(AuthContext);
+  return <SignUp signIn={signIn} navigation={props.navigation} />
+}
 const Stack = createStackNavigator();
 
 export default function App({ navigation }) {
@@ -254,7 +257,7 @@ export default function App({ navigation }) {
           ) : state.userToken == null ? (
             // No token found, user isn't signed in
             <>
-              <Stack.Screen name="SignUp" component={SignUp} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
               <Stack.Screen
                 name="SignIn"
                 component={SignInScreen}
