@@ -234,11 +234,11 @@ export default function (props) {
   };
 
   const getListFavouriteFoods = async () => {
-    let response = await homeServices.listFavorite();
-    // console.log(
-    //   "[INFO] Response in home after getListFavouriteFoods: ",
-    //   response
-    // );
+    let response = await homeServices.listFavorite({});
+    console.log(
+      "[INFO] Response in home after getListFavouriteFoods: ",
+      response
+    );
     return response;
   };
 
@@ -267,7 +267,7 @@ export default function (props) {
     return response;
   };
 
-  const onPressDetail = (cardData, titleHeader) => {
+  const onPressDetail = (cardData, titleHeader, id) => {
     cardData
       ? props.navigation.navigate("Detail", {
           listDishs: cardData,
@@ -275,6 +275,7 @@ export default function (props) {
           fetchFavourite: fetchFavourite,
           setListLikedDish: setListLikedDish,
           titleHeader: titleHeader,
+          id: id,
         })
       : null;
   };
@@ -415,14 +416,18 @@ export default function (props) {
         {listFavorite === null ? (
           <CardList
             cardData={listFavorite}
-            onPressDetail={() => onPressDetail(listFavorite, "Món yêu thích")}
+            onPressDetail={() =>
+              onPressDetail(listFavorite, "Món yêu thích", 0)
+            }
             title={"Yêu thích"}
             isLoading={!listFavorite}
           />
         ) : listFavorite.length != 0 ? (
           <CardList
             cardData={listFavorite}
-            onPressDetail={() => onPressDetail(listFavorite, "Món yêu thích")}
+            onPressDetail={() =>
+              onPressDetail(listFavorite, "Món yêu thích", 0)
+            }
             title={"Yêu thích"}
             isLoading={!listFavorite}
           />
@@ -431,14 +436,14 @@ export default function (props) {
         {listRecently === null ? (
           <CardList
             cardData={listRecently}
-            onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây")}
+            onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây", 7)}
             title={"Đặt gần đây"}
             isLoading={isLoadingRecently}
           />
         ) : listRecently.length != 0 ? (
           <CardList
             cardData={listRecently}
-            onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây")}
+            onPressDetail={() => onPressDetail(listRecently, "Đặt gần đây", 7)}
             title={"Đặt gần đây"}
             isLoading={isLoadingRecently}
           />
@@ -447,14 +452,14 @@ export default function (props) {
         {listTop === null ? (
           <CardList
             cardData={listTop}
-            onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất")}
+            onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất", 6)}
             title={"Đặt nhiều nhất"}
             isLoading={isLoadingTop}
           />
         ) : listTop.length != 0 ? (
           <CardList
             cardData={listTop}
-            onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất")}
+            onPressDetail={() => onPressDetail(listTop, "Đặt nhiều nhất", 6)}
             title={"Đặt nhiều nhất"}
             isLoading={isLoadingTop}
           />
@@ -463,14 +468,14 @@ export default function (props) {
         {listLau === null ? (
           <CardList
             cardData={listLau}
-            onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet")}
+            onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet", 1)}
             title={"Lẩu - Buffet"}
             isLoading={isLoadingLau}
           />
         ) : listLau.length != 0 ? (
           <CardList
             cardData={listLau}
-            onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet")}
+            onPressDetail={() => onPressDetail(listLau, "Lẩu - Buffet", 1)}
             title={"Lẩu - Buffet"}
             isLoading={isLoadingLau}
           />
@@ -479,14 +484,14 @@ export default function (props) {
         {listHaisan === null ? (
           <CardList
             cardData={listHaisan}
-            onPressDetail={() => onPressDetail(listHaisan, "Hải sản")}
+            onPressDetail={() => onPressDetail(listHaisan, "Hải sản", 2)}
             title={"Hải sản"}
             isLoading={isLoadingHaisan}
           />
         ) : listHaisan.length != 0 ? (
           <CardList
             cardData={listHaisan}
-            onPressDetail={() => onPressDetail(listHaisan, "Hải sản")}
+            onPressDetail={() => onPressDetail(listHaisan, "Hải sản", 2)}
             title={"Hải sản"}
             isLoading={isLoadingHaisan}
           />
@@ -495,14 +500,14 @@ export default function (props) {
         {listRaucu === null ? (
           <CardList
             cardData={listRaucu}
-            onPressDetail={() => onPressDetail(listRaucu, "Rau củ")}
+            onPressDetail={() => onPressDetail(listRaucu, "Rau củ", 3)}
             title={"Rau củ"}
             isLoading={isLoadingRaucu}
           />
         ) : listRaucu.length != 0 ? (
           <CardList
             cardData={listRaucu}
-            onPressDetail={() => onPressDetail(listRaucu, "Rau củ")}
+            onPressDetail={() => onPressDetail(listRaucu, "Rau củ", 3)}
             title={"Rau củ"}
             isLoading={isLoadingRaucu}
           />
@@ -511,14 +516,14 @@ export default function (props) {
         {listThit === null ? (
           <CardList
             cardData={listThit}
-            onPressDetail={() => onPressDetail(listThit, "Thịt")}
+            onPressDetail={() => onPressDetail(listThit, "Thịt", 4)}
             title={"Thịt"}
             isLoading={isLoadingThit}
           />
         ) : listThit.length != 0 ? (
           <CardList
             cardData={listThit}
-            onPressDetail={() => onPressDetail(listThit, "Thịt")}
+            onPressDetail={() => onPressDetail(listThit, "Thịt", 4)}
             title={"Thịt"}
             isLoading={isLoadingThit}
           />
@@ -527,14 +532,14 @@ export default function (props) {
         {listDouong === null ? (
           <CardList
             cardData={listDouong}
-            onPressDetail={() => onPressDetail(listDouong, "Đồ uống")}
+            onPressDetail={() => onPressDetail(listDouong, "Đồ uống", 5)}
             title={"Đồ uống"}
             isLoading={isLoadingDouong}
           />
         ) : listDouong.length != 0 ? (
           <CardList
             cardData={listDouong}
-            onPressDetail={() => onPressDetail(listDouong, "Đồ uống")}
+            onPressDetail={() => onPressDetail(listDouong, "Đồ uống", 5)}
             title={"Đồ uống"}
             isLoading={isLoadingDouong}
           />
