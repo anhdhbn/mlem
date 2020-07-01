@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, TextInput, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  Alert,
+  ScrollView,
+} from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
+
+import { Avatar, Button, Overlay } from "react-native-elements";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -104,7 +114,11 @@ const Menu = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [filterText, setFilterText] = useState(null);
-  const [filterParams, setFilterParams] = useState(null);
+  const [filterParams, setFilterParams] = useState({});
+
+  const [skip, setSkip] = useState(0);
+  const [isLoadingSkip, setIsLoadingSkip] = useState(false);
+  const [isOutOfFood, setIsOutOfFood] = useState(false);
 
   const toggleEditMenu = (props) => {
     return () => {
@@ -127,7 +141,7 @@ const Menu = (props) => {
       .catch((error) => {
         setIsUploading(false);
         setIsUploaded(true);
-        createAlert(error.data);
+        createAlert("Lỗi khi xóa món");
       });
     getData();
   };
@@ -147,93 +161,88 @@ const Menu = (props) => {
         setIsUploading(false);
         setIsUploaded(true);
 
-        createAlert(error.data);
+        createAlert("Lỗi khi sửa món");
       });
     getData();
   };
 
   /* lấy data */
   const [data, setData] = useState([]);
+
   const getData = async () => {
-    setIsLoading(true);
-    await menuServices
-      .list({})
+    // console.log("Called get data");
+
+    let params = createParams();
+    console.log("Params: ", params);
+    let res = await menuServices
+      .list(params)
       .then((res) => {
-        setData(res);
-        // console.log("[INFO] Response after get Data: ", res);
-        setIsLoading(false);
+        console.log("[INFO] Response after get Data: ", res.length);
+        setSkip(skip + res.length);
+        if (res.length < 10) {
+          setIsOutOfFood(true);
+        }
+
+        return res;
       })
       .catch((error) => {
-        createAlert(error.data);
-        setIsLoading(false);
+        createAlert("Lỗi get data");
+
+        return [];
       });
+    await setData([]);
+    console.log("Length data before concat", data.length);
+    setData(data.concat(res));
+    console.log("Length data after concat", data.length);
+
+    setIsLoading(false);
+    setIsLoadingSkip(false);
   };
+
   /* xử lý filter */
-  const handleFilter = async (props) => {
-    setIsUploading(true);
+  const handleFilter = async (newParams) => {
+    console.log("FIlter");
+    setIsLoading(true);
+    // console.log("New filter params: ", newParams);
 
     // Thêm filter text
     // tự động thêm bằng biến filterText được sửa mỗi khi bấm vào thanh tìm kiếm.
-    let params = addFilterText(props);
-    setFilterParams(params);
-    // console.log("[INFO] Filter params in Menu Provider: ", params);
-    await menuServices
-      .list(params)
-      .then((res) => {
-        /* console.log('data: ',res) */
-        setData(res);
-        // console.log("[INFO] Resonse after use filter: ", res);
-        setIsUploading(false);
-        setIsUploaded(true);
-      })
-      .catch((error) => {
-        createAlert(error.data);
-        setIsUploading(false);
-        setIsUploaded(true);
-      });
+
+    newParams.foodGroupingId
+      ? (filterParams.foodGroupingId = newParams.foodGroupingId)
+      : null;
+    newParams.orderBy ? (filterParams.orderBy = newParams.orderBy) : null;
+    newParams.orderType ? (filterParams.orderType = newParams.orderType) : null;
+    newParams.statusId ? (filterParams.statusId = newParams.statusId) : null;
+    setSkip(0);
+    setData([]);
+    getData();
   };
 
-  const addFilterText = (paramsIn, text = null) => {
-    // console.log("[INFO] Filter text before add: ", filterText);
-    if (paramsIn) {
-      text
-        ? (paramsIn.name = { contain: text })
-        : (paramsIn.name = { contain: filterText });
-    } else {
-      let paramsIn = {
-        name: {
-          contain: text,
-        },
-      };
-      return paramsIn;
-    }
+  const handleFilterText = async (newText) => {
+    setIsLoading(true);
+    newText === ""
+      ? (filterParams.name = { contain: null })
+      : (filterParams.name = { contain: newText });
+    filterParams.skip = 0;
 
-    return paramsIn;
-  };
-
-  const handleFilterText = async (props) => {
-    props === "" ? setFilterText(null) : setFilterText(props);
-
-    setIsUploading(true);
-    let params = {};
-    props === ""
-      ? (params = addFilterText(filterParams, null))
-      : (params = addFilterText(filterParams, props));
+    // let params = {};
+    // props === ""
+    //   ? (params = addFilterText(filterParams, null))
+    //   : (params = addFilterText(filterParams, props));
 
     // console.log("[INFO] Filter params in Menu Provider: ", params);
-    await menuServices
-      .list(params)
-      .then((rs) => {
-        setData(rs);
-        // console.log("Response after search: ", rs);
-        setIsUploading(false);
-        setIsUploaded(true);
-      })
-      .catch((error) => {
-        createAlert(error.data);
-        setIsUploading(false);
-        setIsUploaded(true);
-      });
+    setSkip(0);
+    setData([]);
+    await getData();
+  };
+
+  const createParams = () => {
+    let params = filterParams;
+    filterParams.take = 10;
+    filterParams.skip = skip;
+    // console.log("[INFO] Create params in Menu Provider: ", params);
+    return params;
   };
 
   const pressChangeDish = (data = null) => {
@@ -258,6 +267,7 @@ const Menu = (props) => {
   };
 
   useEffect(() => {
+    setData([]);
     getData();
   }, []);
 
@@ -281,6 +291,29 @@ const Menu = (props) => {
     // console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
+  };
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    // const path =
+    //   listDishRender.length == 0
+    //     ? 200
+    //     : contentSize.height / listDishRender.length;
+
+    // const expectation = path * 7;
+
+    const threshhold = 320;
+    // console.log(
+    //   layoutMeasurement.height + contentOffset.y,
+    //   contentSize.height - threshhold
+    // );
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - threshhold
+    );
   };
 
   return (
@@ -335,12 +368,37 @@ const Menu = (props) => {
         ></TextInput>
       </View>
       <FilterBar handleFilter={handleFilter} />
-      {data !== [] && (
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={async ({ nativeEvent }) => {
+          const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+
+          if (isCloseToBottom(nativeEvent)) {
+            //do something
+            // console.log("Close to bottom");
+            // console.log("IsLoadingSkip: ", isLoadingSkip, isOutOfFood);
+            if (!isLoadingSkip) {
+              if (!isOutOfFood) {
+                setIsLoadingSkip(true);
+                await getData();
+                setIsLoadingSkip(false);
+              }
+            }
+          }
+        }}
+      >
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
+          </View>
+        ) : (
+          data.map((item, index) => {
             return (
               <TouchableOpacity
                 style={styles.card}
@@ -410,9 +468,20 @@ const Menu = (props) => {
                 </View>
               </TouchableOpacity>
             );
-          }}
-        />
-      )}
+          })
+        )}
+        {isLoadingSkip ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
+          </View>
+        ) : null}
+      </ScrollView>
       <ModalEditMenu
         visible={{ editMenuVisible, toggleEditMenu }}
         deleteDish={handleDelete}
