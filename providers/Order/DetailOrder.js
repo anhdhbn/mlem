@@ -157,8 +157,8 @@ export default function DetailOrder(props) {
             </Text>
             <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
               {data?.status?.name}{" "}
-              {moment(data.createdAt).format("HH:mm") + " - "}
-              {moment(data.createdAt).format("DD/MM/YYYY")}
+              {moment(data.updatedAt).format("HH:mm") + " - "}
+              {moment(data.updatedAt).format("DD/MM/YYYY")}
             </Text>
           </View>
           <TouchableOpacity onPress={handleCall}>

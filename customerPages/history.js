@@ -242,8 +242,8 @@ export default class History extends Component {
                   <ItemHistoryCard
                     key={item.code}
                     id={item.code}
-                    orderTime={item.createdAt}
-                    dmy={item.createdAt}
+                    orderTime={item.orderDate}
+                    dmy={item.orderDate}
                     price={item.total}
                     // // Gia goc
                     // subPrice={item.subTotal}
