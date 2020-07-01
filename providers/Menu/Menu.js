@@ -108,10 +108,29 @@ export default ({ navigation }) => (
 function reducer(data, action) {
   switch (action.type) {
     case "concat":
-      return data.concat(action.newData);
+      console.log("Length data:", data.length);
+      console.log("length new data", action.newData.length);
+      let newData = data.concat(action.newData);
+      return newData;
 
     case "reset":
       return [];
+
+    case "set":
+      return action.newData;
+
+    default:
+      return data;
+  }
+}
+
+function reducerSkip(data, action) {
+  switch (action.type) {
+    case "reset":
+      return 0;
+
+    case "count":
+      return data + action.newData;
 
     default:
       return data;
@@ -129,7 +148,7 @@ function Menu(props) {
   const [filterText, setFilterText] = useState(null);
   const [filterParams, setFilterParams] = useState({});
 
-  const [skip, setSkip] = useState(0);
+  const [skip, dispatchSkip] = React.useReducer(reducerSkip, 0);
   const [isLoadingSkip, setIsLoadingSkip] = useState(false);
   const [isOutOfFood, setIsOutOfFood] = useState(false);
 
@@ -186,15 +205,20 @@ function Menu(props) {
     // debugger;
 
     let params = createParams();
-    console.log("Params: ", params);
+    // console.log("Params: ", params);
     let res = await menuServices
       .list(params)
       .then((res) => {
-        console.log("[INFO] Response after get Data: ", res.length);
-        setSkip(skip + res.length);
+        // console.log("[INFO] Response after get Data: ", res.length);
+        dispatchSkip({ type: "count", newData: res.length });
         if (res.length < 10) {
           setIsOutOfFood(true);
         }
+
+        dispatch({
+          type: "concat",
+          newData: res,
+        });
 
         return res;
       })
@@ -203,9 +227,6 @@ function Menu(props) {
 
         return [];
       });
-    // console.log("Length data before concat", data.length);
-    // setData(data.concat(res));
-    // console.log("Length data after concat", data.length);
 
     setIsLoading(false);
     setIsLoadingSkip(false);
@@ -214,21 +235,28 @@ function Menu(props) {
 
   /* xử lý filter */
   const handleFilter = (newParams) => {
-    console.log("FIlter");
+    // console.log("FIlter");
     setIsLoading(true);
-    // console.log("New filter params: ", newParams);
+    console.log("New filter params: ", newParams);
+    // console.log("Params before get new: ", filterParams);
 
     // Thêm filter text
     // tự động thêm bằng biến filterText được sửa mỗi khi bấm vào thanh tìm kiếm.
 
-    newParams.foodGroupingId
-      ? (filterParams.foodGroupingId = newParams.foodGroupingId)
-      : null;
-    newParams.orderBy ? (filterParams.orderBy = newParams.orderBy) : null;
-    newParams.orderType ? (filterParams.orderType = newParams.orderType) : null;
-    newParams.statusId ? (filterParams.statusId = newParams.statusId) : null;
-    setSkip(0);
-    console.log("[INFO] Skip: ", skip);
+    // newParams.foodGroupingId
+    //   ? (filterParams.foodGroupingId = newParams.foodGroupingId)
+    //   : null;
+    // newParams.orderBy ? (filterParams.orderBy = newParams.orderBy) : null;
+    // newParams.orderType ? (filterParams.orderType = newParams.orderType) : null;
+    // newParams.statusId ? (filterParams.statusId = newParams.statusId) : null;
+    newParams.skip = filterParams.skip;
+    newParams.take = filterParams.take;
+    setFilterParams(newParams);
+    dispatch({ type: "reset" });
+    dispatchSkip({ type: "reset" });
+    setIsOutOfFood(false);
+    // console.log("[INFO] Skip: ", skip);
+    // console.log("Params after get new: ", filterParams);
     // setData([]);
     // console.log("[INFO] data: ", data);
 
@@ -238,25 +266,26 @@ function Menu(props) {
   const handleFilterText = async (newText) => {
     setIsLoading(true);
     newText === ""
-      ? (filterParams.name = { contain: null })
-      : (filterParams.name = { contain: newText });
-    filterParams.skip = 0;
-
+      ? setFilterParams({ ...filterParams, name: { contain: null } })
+      : setFilterParams({ ...filterParams, name: { contain: newText } });
+    dispatch({ type: "reset" });
+    dispatchSkip({ type: "reset" });
+    // console.log("[INFO] Skip: ", skip);
+    setIsOutOfFood(false);
     // let params = {};
     // props === ""
     //   ? (params = addFilterText(filterParams, null))
     //   : (params = addFilterText(filterParams, props));
 
     // console.log("[INFO] Filter params in Menu Provider: ", params);
-    setSkip(0);
     // setData([]);
     // await getData();
   };
 
   const createParams = () => {
     let params = filterParams;
-    filterParams.take = 10;
-    filterParams.skip = skip;
+    params.skip = skip;
+    params.take = 10;
     // console.log("[INFO] Create params in Menu Provider: ", params);
     return params;
   };
@@ -283,14 +312,7 @@ function Menu(props) {
   };
 
   useEffect(() => {
-    console.log("Called api");
-    getData().then((newdata) => {
-      const action = {
-        type: "concat",
-        newData: newdata,
-      };
-      console.log(dispatch(action));
-    });
+    getData();
   }, [filterParams]);
 
   const onDismissUploading = () => {
@@ -502,6 +524,19 @@ function Menu(props) {
             }}
           >
             <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
+          </View>
+        ) : null}
+        {isOutOfFood ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 15, color: "#D20000", padding: 4 }}>
+              Đã tải xong
+            </Text>
           </View>
         ) : null}
       </ScrollView>
