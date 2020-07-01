@@ -105,7 +105,18 @@ export default ({ navigation }) => (
   </MenuStack.Navigator>
 );
 
-// const reducer
+function reducer(data, action) {
+  switch (action.type) {
+    case "concat":
+      return data.concat(action.newData);
+
+    case "reset":
+      return [];
+
+    default:
+      return data;
+  }
+}
 
 function Menu(props) {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
@@ -122,7 +133,7 @@ function Menu(props) {
   const [isLoadingSkip, setIsLoadingSkip] = useState(false);
   const [isOutOfFood, setIsOutOfFood] = useState(false);
 
-  const [data, setData] = useState([]);
+  const [data, dispatch] = React.useReducer(reducer, []);
 
   const toggleEditMenu = (props) => {
     return () => {
@@ -218,8 +229,8 @@ function Menu(props) {
     newParams.statusId ? (filterParams.statusId = newParams.statusId) : null;
     setSkip(0);
     console.log("[INFO] Skip: ", skip);
-    setData([]);
-    console.log("[INFO] data: ", data);
+    // setData([]);
+    // console.log("[INFO] data: ", data);
 
     //getData();
   };
@@ -238,8 +249,8 @@ function Menu(props) {
 
     // console.log("[INFO] Filter params in Menu Provider: ", params);
     setSkip(0);
-    setData([]);
-    await getData();
+    // setData([]);
+    // await getData();
   };
 
   const createParams = () => {
@@ -272,7 +283,14 @@ function Menu(props) {
   };
 
   useEffect(() => {
-    getData();
+    console.log("Called api");
+    getData().then((newdata) => {
+      const action = {
+        type: "concat",
+        newData: newdata,
+      };
+      console.log(dispatch(action));
+    });
   }, [filterParams]);
 
   const onDismissUploading = () => {
