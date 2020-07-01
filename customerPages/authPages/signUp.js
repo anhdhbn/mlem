@@ -43,15 +43,16 @@ export default class SignUp extends Component {
       comparePasswordError: null,
       notification: null,
       loading: false,
-      email: "vietlinh15@coldmail.com",
-      phoneNumber: "1234567890",
-      password: "1234567890",
-      confirmPassword: "1234567890",
+      email: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
     };
 
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePhoneNumber = this.handlePhoneNumber.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
+    this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getSignUpData = this.getSignUpData.bind(this);
@@ -81,7 +82,7 @@ export default class SignUp extends Component {
     return {
       email: this.state.email.toString(),
       password: this.state.password.toString(),
-      confirmPassword: this.state.password.toString(),
+      confirmPassword: this.state.confirmPassword.toString(),
       phone: this.state.phoneNumber.toString(),
     };
   }
@@ -89,7 +90,7 @@ export default class SignUp extends Component {
   async onSubmit() {
     this.setLoading(true);
     let data = this.getSignUpData();
-    // console.log(data);
+     console.log(data);
     await authServices
       .createUser(data)
       .then(async res => {
@@ -101,10 +102,10 @@ export default class SignUp extends Component {
         const message = err.data.errors;
         console.log("[INFO] message in signUp: ", message);
         this.setState({
-          notification: message.email || message.phone || message.password || message.confirmPassword
+          notification: message.email ||message.phone ||message.password || message.confirmPassword
         })
         this.setAlert(true);
-        this.setLoading(false);
+        this.setLoading(false);  
       });
 
 
