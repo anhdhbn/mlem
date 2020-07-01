@@ -27,6 +27,7 @@ import authServices from "../../customerServices/authServices";
 import CTA from "../../components/CTA";
 import { Header, ErrorText } from "../../components/shared";
 import SnackBar from "../../components/common/snackbarUpdating";
+import Notification from "../../providers/Notification/Notification";
 
 export default class SignUp extends Component {
   constructor(props) {
@@ -35,18 +36,17 @@ export default class SignUp extends Component {
     this.state = {
       navigation: this.props,
       visibleAlert: false,
-
       emailError: null,
       phoneNumberError: null,
       passwordError: null,
       confirmPasswordError: null,
       comparePasswordError: null,
-
+      notification: null,
       loading: false,
-      email: "test@testInternet.com",
+      email: "vietlinh15@coldmail.com",
       phoneNumber: "1234567890",
-      password: "123456789",
-      confirmPassword: "123456789",
+      password: "1234567890",
+      confirmPassword: "1234567890",
     };
 
     this.handleEmail = this.handleEmail.bind(this);
@@ -87,57 +87,27 @@ export default class SignUp extends Component {
   }
 
   async onSubmit() {
-    let checkData = new CheckData();
-    if (checkData.checkEmail(this.state.email)) {
-      this.cleanEmailError();
-      if (checkData.checkPassword(this.state.password)) {
-        this.cleanPasswordError();
-        if (checkData.checkPassword(this.state.confirmPassword)) {
-          this.cleanConfirmPasswordError();
-          if (
-            checkData.comparePassword(
-              this.state.password,
-              this.state.confirmPassword
-            )
-          ) {
-            this.cleanComparePasswoedError();
-            if (checkData.checkPhoneNumber(this.state.phoneNumber)) {
-              this.cleanPhoneNumberError();
-              this.setLoading(true);
-              let data = this.getSignUpData();
-              // console.log(data);
+    this.setLoading(true);
+    let data = this.getSignUpData();
+    // console.log(data);
+    await authServices
+      .createUser(data)
+      .then(async res => {
+        await this.props.signIn(data, false);
+        this.setLoading(false);
+      })
+      .catch((err) => {
+        // console.log("==========================================");
+        const message = err.data.errors;
+        console.log("[INFO] message in signUp: ", message);
+        this.setState({
+          notification: message.email || message.phone || message.password || message.confirmPassword
+        })
+        this.setAlert(true);
+        this.setLoading(false);
+      });
 
-              let response = await authServices
-                .createUser(data)
-                .catch((reason) => {
-                  // console.log("==========================================");
-                  const message = reason.response.data;
-                  console.log("[INFO] message in signUp: ", message);
-                  this.setAlert(true);
-                });
 
-              this.setLoading(false);
-              this.props.navigation.navigate("SignIn");
-            } else {
-              // SDT khong hop le
-              this.setPhoneNumberError();
-            }
-          } else {
-            // Password khoong giong nhau
-            this.setComparePasswordError();
-          }
-        } else {
-          // Confirm Password khoong hop le
-          this.setConfirmPasswordError();
-        }
-      } else {
-        // Password khoong hop le
-        this.setPasswordError();
-      }
-    } else {
-      // Email khoong hop le
-      this.setEmailError();
-    }
   }
 
   setEmailError = () => {
@@ -198,7 +168,7 @@ export default class SignUp extends Component {
           _onDismissSnackBar={this._onDismissSnackBar}
           actionText="Hide"
           duration={5000}
-          text={"Thông tin đăng ký bị trùng"}
+          text={this.state.notification}
         />
         <View style={{ alignItems: "center" }}>
           <Text style={{ color: "white", fontWeight: "bold", marginTop: 10 }}>
@@ -343,15 +313,15 @@ export default class SignUp extends Component {
                 </TouchableOpacity>
               </View>
             ) : (
-              <View style={{ marginTop: 20, alignItems: "center" }}>
-                <TouchableOpacity
-                  style={styles.submitBtn}
-                  onPress={() => this.onSubmit()}
-                >
-                  <Text style={styles.textBtnSubmit}>Đăng ký</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+                <View style={{ marginTop: 20, alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={styles.submitBtn}
+                    onPress={() => this.onSubmit()}
+                  >
+                    <Text style={styles.textBtnSubmit}>Đăng ký</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
           </View>
           <View style={styles.footer}>
             <View style={{ flexDirection: "row", marginTop: 60 }}>
