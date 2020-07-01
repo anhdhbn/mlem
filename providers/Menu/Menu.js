@@ -237,7 +237,7 @@ function Menu(props) {
   const handleFilter = (newParams) => {
     // console.log("FIlter");
     setIsLoading(true);
-    console.log("New filter params: ", newParams);
+    // console.log("New filter params: ", newParams);
     // console.log("Params before get new: ", filterParams);
 
     // Thêm filter text
