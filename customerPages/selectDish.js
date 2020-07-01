@@ -678,7 +678,7 @@ export default class order extends Component {
     } else if (code == 4) {
       await this.getListThit();
     } else if (code == 5) {
-      await this.getListDouong;
+      await this.getListDouong();
     } else if (code == 6) {
       await this.getListTopOrder();
     } else if (code == 7) {
