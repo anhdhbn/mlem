@@ -55,13 +55,17 @@ export default function DetailOrder(props) {
     setSelectedTable(tmp);
   };
   /*  */
-  const handleCall = () => {
-    const args = {
-      number: "111", // String value with the number to call
-      prompt: false, // Optional boolean property. Determines if the user should be prompt prior to the call
-    };
-
-    Call(args).catch(console.error);
+  const handleCall = (props) => {
+    const args = data.account.phone == "PHONE_EMPTY" ?
+      {
+        number: '', // String value with the number to call
+        prompt: false
+      } :
+      {
+        number: data.account.phone, // String value with the number to call
+        prompt: false, // Optional boolean property. Determines if the user should be prompt prior to the call
+      };
+      Call(args).catch(console.error);
   };
   const handleApprove = async () => {
     const submitData = {
@@ -115,6 +119,7 @@ export default function DetailOrder(props) {
         setVisible={setVisible}
         handleSelectTable={handleSelectTable}
         orderDate={moment(data.orderDate)}
+        numOrderTable={data.numOfTable}
       />
       {/* modal approve a order */}
       <Modal
@@ -161,7 +166,7 @@ export default function DetailOrder(props) {
               {moment(data.updatedAt).format("DD/MM/YYYY")}
             </Text>
           </View>
-          <TouchableOpacity onPress={handleCall}>
+          <TouchableOpacity onPress={() => { data.account.phone != "PHONE_EMPTY"&& handleCall(data.account.phone)  }}>
             <Image
               source={PhoneIcon}
               style={{ width: 34, height: 34, top: 10, right: 5 }}
@@ -212,16 +217,16 @@ export default function DetailOrder(props) {
                       index < selectedTable.length - 1 ? (
                         <Text>{item.table.code}, </Text>
                       ) : (
-                        <Text>{item.table.code}</Text>
-                      )
+                          <Text>{item.table.code}</Text>
+                        )
                     )}
                   </View>
                 ) : (
-                  <Text>
-                    {selectedTable[0].table.code}, {selectedTable[1].table.code}
+                    <Text>
+                      {selectedTable[0].table.code}, {selectedTable[1].table.code}
                     , {selectedTable[2].table.code},...
-                  </Text>
-                )}
+                    </Text>
+                  )}
               </View>
             </View>
             <View
@@ -282,28 +287,28 @@ export default function DetailOrder(props) {
                     <Text>
                       {item.foodFoodTypeMapping.foodType.id === 1
                         ? formatPrice(
-                            (item.quantity *
-                              item.foodFoodTypeMapping.food.priceEach *
-                              (100 -
-                                item.foodFoodTypeMapping.food.discountRate)) /
-                              100
-                          )
+                          (item.quantity *
+                            item.foodFoodTypeMapping.food.priceEach *
+                            (100 -
+                              item.foodFoodTypeMapping.food.discountRate)) /
+                          100
+                        )
                         : item.foodFoodTypeMapping.foodType.id === 2
-                        ? formatPrice(
+                          ? formatPrice(
                             (item.quantity *
                               1.2 *
                               item.foodFoodTypeMapping.food.priceEach *
                               (100 -
                                 item.foodFoodTypeMapping.food.discountRate)) /
-                              100
+                            100
                           )
-                        : formatPrice(
+                          : formatPrice(
                             (item.quantity *
                               1.5 *
                               item.foodFoodTypeMapping.food.priceEach *
                               (100 -
                                 item.foodFoodTypeMapping.food.discountRate)) /
-                              100
+                            100
                           )}
                     </Text>
                   </View>
@@ -397,43 +402,43 @@ export default function DetailOrder(props) {
           </View>
         </View>
       ) : (
-        <View
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: 10,
-            height: 50,
-            bottom: 0,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 10,
-            },
-            shadowOpacity: 0.51,
-            shadowRadius: 13.16,
-            elevation: 20,
-          }}
-        >
           <View
             style={{
-              flexDirection: "row",
-              flex: 10,
-              justifyContent: "space-around",
-              alignItems: "center",
+              backgroundColor: "#ffffff",
+              borderRadius: 10,
+              height: 50,
+              bottom: 0,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 10,
+              },
+              shadowOpacity: 0.51,
+              shadowRadius: 13.16,
+              elevation: 20,
             }}
           >
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              Tổng cộng ({data?.orderContents?.length} món):
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 10,
+                justifyContent: "space-around",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                Tổng cộng ({data?.orderContents?.length} món):
             </Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              {formatPrice(data.total)}
-            </Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {formatPrice(data.total)}
+              </Text>
+            </View>
           </View>
-        </View>
-      )}
+        )}
     </SafeAreaView>
   ) : (
-    <Spinner />
-  );
+      <Spinner />
+    );
 }
 const styles = StyleSheet.create({
   container: {
