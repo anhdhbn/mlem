@@ -41,9 +41,10 @@ export default class SmartDishCard extends Component {
     } else {
       return (
         <>
-          <Text style={{ textDecorationLine: "line-through", color: "grey" }}>
+
+          {this.props.promoPrice != this.props.price && <Text style={{ textDecorationLine: "line-through", color: "grey" }}>
             {formatPrice(this.props.price)}
-          </Text>
+          </Text>}
           <Text>{formatPrice(this.props.promoPrice)}</Text>
         </>
       );
@@ -91,10 +92,10 @@ export default class SmartDishCard extends Component {
               source={
                 this.props.linkImageDish
                   ? {
-                      uri:
-                        "http://112.213.88.49:20000" +
-                        this.props.linkImageDish.url,
-                    }
+                    uri:
+                      "http://112.213.88.49:20000" +
+                      this.props.linkImageDish.url,
+                  }
                   : null
               }
               style={{ width: 100, height: 100, marginHorizontal: 10, flex: 3 }}
@@ -126,15 +127,15 @@ export default class SmartDishCard extends Component {
                     }}
                   />
                 ) : (
-                  <Image
-                    // source={require(this.props.linkIconInactive)}
-                    source={this.props.linkIconInactive}
-                    style={{
-                      height: 35,
-                      width: 35,
-                    }}
-                  />
-                )}
+                    <Image
+                      // source={require(this.props.linkIconInactive)}
+                      source={this.props.linkIconInactive}
+                      style={{
+                        height: 35,
+                        width: 35,
+                      }}
+                    />
+                  )}
               </TouchableOpacity>
             </View>
           </View>

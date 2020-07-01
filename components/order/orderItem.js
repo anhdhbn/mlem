@@ -44,14 +44,14 @@ export default function (props) {
           {props.dish.nameDish + " " + nameSize()}
         </Text>
         <View>
-          <Text
+          {props.dish.price!=props.dish.promoPrice&&<Text
             style={{
               textDecorationLine: "line-through",
               color: "grey",
             }}
           >
             {formatPrice(props.dish.price)}
-          </Text>
+          </Text>}
           <Text>{formatPrice(props.dish.promoPrice)}</Text>
         </View>
       </View>
