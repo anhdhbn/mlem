@@ -587,7 +587,10 @@ export default function (props) {
               alignItems: "center",
               justifyContent: "center",
             }}
-            onPress={testSignalIR}
+            onPress={()=>{
+              testSignalIR();
+              hiddenSignalContent();
+            }}
           >
             <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
               Gửi
