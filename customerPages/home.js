@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, TextInput, Text } from "react-native";
+import { View, StyleSheet, TextInput, Text,TouchableOpacity } from "react-native";
 import { Button as ButtonE, Overlay } from "react-native-elements";
 import { FAB } from "react-native-paper";
 import * as signalR from "@aspnet/signalr";
@@ -10,7 +10,7 @@ import homeServices from "../customerServices/homeServices";
 import HeaderImage from "../components/cardList/headerCardList";
 import CardList from "../components/cardList/cardList";
 import NavBar from "../components/cardList/NavBar";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView,  } from "react-native-gesture-handler";
 import Spinner from "../components/Spinner/Spinner";
 
 import { Fab, Button } from "native-base";
@@ -35,7 +35,7 @@ export default function (props) {
     thit: 4,
     douong: 5,
   });
-
+  const [notification, setNotification] = useState('');
   const [isLoadingAllDish, setIsLoadingAllDish] = useState(true);
   const [isLoadingFavourite, setIsLoadingFavourite] = useState(true);
   const [isLoadingRecently, setIsLoadingRecently] = useState(true);
@@ -270,12 +270,12 @@ export default function (props) {
   const onPressDetail = (cardData, titleHeader) => {
     cardData
       ? props.navigation.navigate("Detail", {
-          listDishs: cardData,
-          listFavourite: listLikedDish,
-          fetchFavourite: fetchFavourite,
-          setListLikedDish: setListLikedDish,
-          titleHeader: titleHeader,
-        })
+        listDishs: cardData,
+        listFavourite: listLikedDish,
+        fetchFavourite: fetchFavourite,
+        setListLikedDish: setListLikedDish,
+        titleHeader: titleHeader,
+      })
       : null;
   };
 
@@ -292,25 +292,25 @@ export default function (props) {
   };
 
   const testSignalIR = () => {
-    try {
-      let connection = new signalR.HubConnectionBuilder()
-        .withUrl(BASE_URL + "/signalr")
-        .build();
-
-      connection.on("sendToProvider", (user, data) => {
-        console.log("[INFO] call back data in signalR: ", user, data);
-      });
-
-      connection
-        .start()
-        .catch((error) => {
-          console.log(error);
-          return Promise.reject();
-        })
-        .then(() => homeServices.createNotification({ content: "dcm" }));
-    } catch (error) {
-      console.log("[INFO] Error in signalR: ", error);
-    }
+     try {
+       let connection = new signalR.HubConnectionBuilder()
+         .withUrl(BASE_URL + "/signalr")
+         .build();
+ 
+       connection.on("sendToProvider", (user, data) => {
+         console.log("[INFO] call back data in sigaanalR: ", user, data);
+       });
+ 
+       connection
+         .start()
+         .catch((error) => {
+           console.log(error);
+           return Promise.reject();
+         })
+         .then(() => homeServices.createNotification({ content: notification}));
+     } catch (error) {
+       console.log("[INFO] Error in signalR: ", error);
+     }
   };
 
   const navigateSearchPage = () => {
@@ -575,8 +575,9 @@ export default function (props) {
 
               elevation: 2,
             }}
-            // onChange={}
+            onChange={(e) => { setNotification(e.nativeEvent.text) }}
           />
+        
           <TouchableOpacity
             style={{
               width: 80,
@@ -586,6 +587,7 @@ export default function (props) {
               alignItems: "center",
               justifyContent: "center",
             }}
+            onPress={testSignalIR}
           >
             <Text style={{ fontSize: 16, fontWeight: "700", color: "white" }}>
               Gửi
