@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
-
 
 import Icon from "react-native-vector-icons/Ionicons";
 import viewMoreIcon from "../../assets/icon/view_more.png";
 import dropDownIcon from "../../assets/icon/drop_down.png";
 
+import { Avatar, Button, Overlay } from "react-native-elements";
+
 import orderServices from "../../providerServices/orderServices";
 import DetailOrder from "./DetailOrder";
 import Spinner from "../../components/Spinner/Spinner";
-import Filter from './Filter';
+import Filter from "./Filter";
 import Toaster from "../Components/Toaster";
 import Snackbar from "../../components/common/snackbarUpdating";
-import formatPrice from '../../components/formatPrice';
+import formatPrice from "../../components/formatPrice";
 const OrderStack = createStackNavigator();
 /*OrderStackScreen  */
 export default ({ navigation }) => (
@@ -65,9 +66,15 @@ export default ({ navigation }) => (
 );
 
 const Order = (props) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
+  const [filter, setFilter] = useState({});
+
+  const [skip, setSkip] = useState(0);
+  const [isLoadingSkip, setIsLoadingSkip] = useState(false);
+  const [isOutOfFood, setIsOutOfFood] = useState(false);
+
   // Alert
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
@@ -82,22 +89,52 @@ const Order = (props) => {
     setIsError(true);
   };
   useEffect(() => {
-     getData();
-  }, [isError]);
-  
-  const getData = async () => {
     setIsLoading(true);
-    let params = {};
-    let response = await orderServices.listOrdered(params);
-    setData(response);
+    getData();
+  }, [isError]);
+
+  const createParams = () => {
+    console.log("Filter to get params: ", filter);
+    let params = filter;
+    filter.skip = skip;
+    filter.take = 10;
+    // console.log("Params to get order: ", params);
+    return params;
+  };
+
+  const getData = async () => {
+    setIsLoadingSkip(true);
+    let params = createParams();
+    let response = await orderServices
+      .listOrdered(params)
+      .then((res) => {
+        setSkip(skip + res.length);
+        if (res.length < 10) {
+          setIsOutOfFood(true);
+        }
+        // console.log("Length response: ", res.length);
+        return res;
+      })
+      .catch((err) => {
+        // console.log("Error fetch order list: ", err.data);
+        return [];
+      });
+
+    await setData(data.concat(response));
+    setIsLoadingSkip(false);
     setIsLoading(false);
   };
   /* filter  */
-  const handleFilter = (props) => {
-    orderServices.listOrdered(props).then(res => {
-      setData(res)
-    });
-  }
+  const handleFilter = async (newFilter) => {
+    // console.log("Filter before: ", filter);
+    // console.log("Props filter: ", newFilter);
+    filter.createdAt = newFilter.createdAt;
+    filter.statusId = newFilter.statusId;
+    filter.skip = 0;
+    setSkip(0);
+    setData([]);
+    getData();
+  };
   const onselect = (code) => {
     // console.log("On select");
     let orderedData = data.find((item) => item.code === code);
@@ -106,9 +143,32 @@ const Order = (props) => {
       toasterVisible: {
         isError,
         onDismissError,
-        createAlert
-      }
+        createAlert,
+      },
     });
+  };
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    // const path =
+    //   listDishRender.length == 0
+    //     ? 200
+    //     : contentSize.height / listDishRender.length;
+
+    // const expectation = path * 7;
+
+    const threshhold = 320;
+    // console.log(
+    //   layoutMeasurement.height + contentOffset.y,
+    //   contentSize.height - threshhold
+    // );
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - threshhold
+    );
   };
 
   return (
@@ -133,11 +193,26 @@ const Order = (props) => {
         }}
       /> */}
       <Filter handleFilter={handleFilter} />
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        keyExtractor={(item) => item.code}
-        renderItem={({ item }) => {
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={async ({ nativeEvent }) => {
+          const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+
+          if (isCloseToBottom(nativeEvent)) {
+            //do something
+            // console.log("Close to bottom");
+            // console.log("IsLoadingSkip: ", isLoadingSkip, isOutOfFood);
+            if (!isLoadingSkip) {
+              if (!isOutOfFood) {
+                setIsLoadingSkip(true);
+                await getData();
+                setIsLoadingSkip(false);
+              }
+            }
+          }
+        }}
+      >
+        {data.map((item) => {
           return (
             <TouchableOpacity
               style={styles.card}
@@ -190,8 +265,19 @@ const Order = (props) => {
               </View>
             </TouchableOpacity>
           );
-        }}
-      />
+        })}
+        {isLoadingSkip ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
+          </View>
+        ) : null}
+      </ScrollView>
     </View>
   );
 };
