@@ -125,7 +125,7 @@ export default function DetailOrder(props) {
           </View>
           <TouchableOpacity
           onPress={
-            ()=>{handleCall(data.account.phone)}
+            ()=>{data.account.phone != "PHONE_EMPTY"&& handleCall(data.account.phone) }
           }>
             <Image
               source={PhoneIcon}

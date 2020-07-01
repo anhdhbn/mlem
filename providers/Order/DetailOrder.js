@@ -166,7 +166,7 @@ export default function DetailOrder(props) {
               {moment(data.createdAt).format("DD/MM/YYYY")}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => { handleCall(data.account.phone) }}>
+          <TouchableOpacity onPress={() => { data.account.phone != "PHONE_EMPTY"&& handleCall(data.account.phone)  }}>
             <Image
               source={PhoneIcon}
               style={{ width: 34, height: 34, top: 10, right: 5 }}
