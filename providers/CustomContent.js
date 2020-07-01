@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Avatar, Overlay } from "react-native-elements";
 import ImagePicker from "react-native-image-crop-picker";
+
+import * as baseRequest from "../customerServices/requests";
+import RNFetchBlob from "rn-fetch-blob";
+import profileServices from "../providerServices/profileServices";
 
 export default function CustomContent(props) {
   const [
@@ -12,25 +16,80 @@ export default function CustomContent(props) {
   ] = useState(false);
 
   const [ImageId, setImageId] = useState();
+  const [urlImage, setUrlImage] = useState();
+  const [data, setData] = useState(props.response);
 
   const hanlderBackgroundImage = async (func) => {
     func({
       width: 350,
-      height: 250,
+      height: 200,
       cropping: true,
     }).then(async (image) => {
       setVisibleBackgroundImageModal(false);
       const names = image.path.split("/");
       const name = names[names.length - 1];
-
-      this.setState({ isLoading: true });
-      this.setState({
-        visibleBackgroundImageModal: false,
-      });
-      await this.postImageWithUrl(image.path, name);
+      // console.log(name)
+      // this.setState({ isLoading: true });
+      await postImageWithUrl(image.path, name);
       // this._onsubmitModal();
     });
   };
+
+  const postImageWithUrl = async (url, filename) => {
+    const host = baseRequest.BASE_API_URL;
+    await RNFetchBlob.fetch(
+      "POST",
+      `${host}/api/image/upload`,
+      {
+        // dropbox upload headers
+
+        "Content-Type": "multipart/form-data",
+        // Change BASE64 encoded data to a file path with prefix `RNFetchBlob-file://`.
+        // Or simply wrap the file path with RNFetchBlob.wrap().
+      },
+      [
+        // element with property `filename` will be transformed into `file` in form data
+
+        {
+          name: "file",
+          filename: filename,
+          data: RNFetchBlob.wrap(url),
+        },
+        // custom content type
+      ]
+    )
+      .then((res) => {
+        let data = JSON.parse(res.data);
+        // console.log(data)
+        const path = `${baseRequest.BASE_API_URL}${data.url}`;
+        // setImageId(data.id)
+        setUrlImage(path)
+        changeImageId(data.id)
+      })
+      .catch((err) => {
+        // error handling ..
+        // Alert.log("Upload error");
+        console.log(err);
+      });
+    }
+
+  const changeImageId = async(id) => {
+    data.imageId = id;
+    let response = await profileServices.update(data).then(res => {
+      console.log(res)
+      console.log("Set new data")
+      setData(res);
+      
+    }).catch(err => {
+      console.log(err.data)
+    });
+  }
+
+
+ 
+  useEffect(() => {
+    console.log("Response after sign in: ", props.response)
+  }, [])
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -48,7 +107,7 @@ export default function CustomContent(props) {
           <View style={{ position: "absolute" }}>
             <Image
               style={{ width: 350, height: 200 }}
-              source={require("../assets/icon/bia.png")}
+              source={data.image?.url ? {uri: `${baseRequest.BASE_API_URL}${data.image?.url}`} : require("../assets/icon/bia.png")}
             />
           </View>
           <View
