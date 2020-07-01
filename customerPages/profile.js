@@ -31,6 +31,8 @@ import style from "../components/slider/style";
 import * as baseRequest from "../customerServices/requests";
 import RNFetchBlob from "rn-fetch-blob";
 
+import moment from "moment";
+
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -172,6 +174,7 @@ export default class Profile extends Component {
   };
 
   _setDate = (newDate) => {
+    newDate = moment(newDate).add(7, 'hours')
     this.setState({
       ...this.state,
       modal: {
@@ -179,7 +182,7 @@ export default class Profile extends Component {
         dob: newDate,
       },
     });
-    console.log(("ngay sinh:", newDate));
+    console.log("ngay sinh:", newDate);
   };
 
   hanlderAvatar = async (func) => {
@@ -349,6 +352,7 @@ export default class Profile extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode={"default"}
+                    format={"YYYY-MM-DD"}
                     placeHolderText="Chọn ngày"
                     textStyle={{ color: "#000" }}
                     placeHolderTextStyle={{ color: "#d3d3d3" }}
