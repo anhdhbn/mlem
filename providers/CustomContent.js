@@ -76,8 +76,7 @@ export default function CustomContent(props) {
   const changeImageId = async(id) => {
     data.imageId = id;
     let response = await profileServices.update(data).then(res => {
-      console.log(res)
-      console.log("Set new data")
+      // console.log(res)
       setData(res);
       
     }).catch(err => {
