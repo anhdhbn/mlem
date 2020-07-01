@@ -678,7 +678,7 @@ export default function (props) {
         <Overlay
           visible={visibleAvaModal}
           onBackdropPress={() => {
-            setApproveVisible(false);
+            setVisibleAvaModal(false);
           }}
         >
           <View style={{ height: 100, width: 300, justifyContent: "center" }}>
