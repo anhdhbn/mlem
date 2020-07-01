@@ -40,8 +40,8 @@ class SignIn extends Component {
       response: null,
       // email: null,
       // password: null,
-      email: "vietlinh15@coldmail.com",
-      password: "1234567890",
+      email: "",
+      password: "",
     };
 
     this.handleEmail = this.handleEmail.bind(this);
@@ -333,14 +333,6 @@ class SignIn extends Component {
                   onPress={() => this.onSubmit()}
                 >
                   <Text style={styles.textBtnSubmit}>Đăng nhập</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ marginTop: 20, alignItems: "center" }}>
-                <TouchableOpacity
-                  style={styles.submitBtn}
-                  onPress={() => this.loginProvider()}
-                >
-                  <Text style={styles.textBtnSubmit}>Đăng nhập Provider</Text>
                 </TouchableOpacity>
               </View>
             </>
