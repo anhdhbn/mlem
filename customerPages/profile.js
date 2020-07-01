@@ -344,7 +344,7 @@ export default class Profile extends Component {
                     // defaultDate={new Date(1999, 1, 1)}
                     minimumDate={new Date(1970, 1, 1)}
                     maximumDate={new Date(2018, 12, 31)}
-                    locale={"vi"}
+                    // locale={"vi"}
                     timeZoneOffsetInMinutes={undefined}
                     modalTransparent={false}
                     animationType={"fade"}
