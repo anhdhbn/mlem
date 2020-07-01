@@ -23,6 +23,7 @@ export default function (props) {
   // 5	Đồ uống
   const orderDate = props.orderDate;
   const [emptyTable, setEmptyTable] = useState([]);
+  const {numOrderTable} = props
   const getEmptyTable = async () => {
     const result = await OrderSerives.listReservation({
       date: {
@@ -44,16 +45,36 @@ export default function (props) {
   useEffect(() => {
     getEmptyTable();
   }, []);
-  const onselect = (id) => {
+  const onselect = async (id) => {
     /* console.log("[INFO] Code in modal select food: ", id); */
     let lengthData = emptyTable.length;
     let newData = [];
+    let numClicked = 0;
+    for (let index = 0; index < lengthData; index++) {
+        if(emptyTable[index].isCliked==true){
+          numClicked ++
+        }
+    }
+    console.log(numOrderTable);
+    
     for (let index = 0; index < lengthData; index++) {
       if (emptyTable[index].id === id) {
-        newData.push({
-          ...emptyTable[index],
-          isCliked: !emptyTable[index].isCliked,
-        });
+        if(emptyTable[index].isCliked==true){
+          newData.push({
+            ...emptyTable[index],
+            isCliked: !emptyTable[index].isCliked,
+          });
+        }else{
+          if (numClicked<numOrderTable) {
+            newData.push({
+              ...emptyTable[index],
+              isCliked: !emptyTable[index].isCliked,
+            });
+          }else{
+            newData.push(emptyTable[index]);
+          }
+        }
+        
       } else {
         newData.push(emptyTable[index]);
       }

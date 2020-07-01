@@ -3,11 +3,15 @@ import { Text, View, StyleSheet, Image, TextInput } from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
+import Delete from "react-native-vector-icons/AntDesign"
 import * as signalR from "@aspnet/signalr";
 const BASE_URL = "http://112.213.88.49:20000";
-
+import moment from "moment";
 import TickIcon from "../../assets/icon/tick.png";
 import NotifyServices from "../../providerServices/notifyServices";
+import notifyServices from "../../providerServices/notifyServices";
+import { set } from "react-native-reanimated";
+const defaultImage = 'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png'
 const NotificationStack = createStackNavigator();
 /*  NotificationStackScreen*/
 export default ({ navigation }) => (
@@ -21,55 +25,77 @@ export default ({ navigation }) => (
     }}
   >
     <NotificationStack.Screen
-      name="Notification"
+      name="NotificationPage"
       component={Notification}
-      options={{
-        title: "Thông báo",
-        headerLeft: () => (
-          <Icon.Button
-            name="ios-menu"
-            size={25}
-            backgroundColor="#D20000"
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          ></Icon.Button>
-        ),
-      }}
+      options={({navigation,route})=>(
+        {
+          title: "Thông báo",
+          headerLeft: () => (
+            <Icon.Button
+              name="ios-menu"
+              size={25}
+              backgroundColor="#D20000"
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            ></Icon.Button>
+          ),
+          
+        }
+      )}
     />
   </NotificationStack.Navigator>
 );
+
+/*  */
 const Notification = (props) => {
-  const [data, setData] = useState([
-    {
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      tableNum: "001",
-      buzzTime: "1 phút trước",
-      id: "1",
-    },
-    {
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      tableNum: "002",
-      buzzTime: "1 phút trước",
-      id: "2",
-    },
-    {
-      image: "https://reactnative.dev/img/tiny_logo.png",
-      tableNum: "003",
-      buzzTime: "1 phút trước",
-      id: "3",
-    },
-  ]);
-
+  const [data, setData] = useState([]);
+  const [skip, setSkip] = useState(0)
   useEffect(() => {
-    testSignalIR();
-  });
+    testSignalIR()
+    getNotify()
+  }, []);
+  const handelDelete=async()=>{
+   await notifyServices.deleteNotify({});
+   getNotify();
+  }
+  React.useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <Delete.Button
+            name="delete"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+            handelDelete()
+            }}
+          />
+      ),
+    });
+  }, [props.navigation]);
+  const getNotify = () => {
+    NotifyServices.list({
+      take: 10,
+      skip: 0,
+    }).then(res => {
+      if (res.length > 0) {
+        setData(res)
+      }
+    });
+  }
+  const getMoreNotify = async (props) => {
+    NotifyServices.list({
+      take: 10,
+      skip: props
+    }).then(res => {
+      if (res.length > 0) {
+        let mang = data.concat(res);
+        setData(mang);
+        setSkip(skip + 10);
+      }
+    });
 
-  getNotify = async () => {
-    let res = NotifyServices.list({});
-    console.log("[INFO] Data after get ")
   };
-
   const testSignalIR = () => {
     console.log("[INFO] Called SignalR");
     try {
@@ -89,6 +115,7 @@ const Notification = (props) => {
         })
         .then(() => {
           connection.on("sendToProvider", (user, data) => {
+           getNotify()
             console.log("[INFO] call back data in signalR: ", user, data);
           });
         });
@@ -96,6 +123,12 @@ const Notification = (props) => {
       console.log("[INFO] Error in signalR: ", error);
     }
   };
+  const handleChecked = (index) => {
+    let mang = data.concat();
+    mang[index].unread = true;
+    setData(mang)
+    notifyServices.update(mang[index]);
+  }
   return (
     <View style={styles.container}>
       <FlatList
@@ -103,14 +136,32 @@ const Notification = (props) => {
         keyExtractor={(item) => {
           item.id;
         }}
-        renderItem={({ item }) => {
+        /* onEndReached ={()=>{
+          getMoreNotify(skip+10);
+          console.log('aaaaaaaa');
+          
+        }} */
+        onEndReached={
+          () => {
+            getMoreNotify(skip + 10);
+          }
+        }
+        onEndReachedThreshold={0.1}
+        renderItem={({ index, item }) => {
           return (
-            <TouchableOpacity style={styles.cardView}>
+            <TouchableOpacity style={{
+              ...styles.cardView,
+              backgroundColor: item.unread == true ? "#FFE2E2" : "#FFFFFF"
+            }}
+              onPress={() => {
+                handleChecked(index)
+              }}
+            >
               <View style={{ flexDirection: "row" }}>
-                <Image source={{ uri: item.image }} style={styles.avatar} />
+                <Image source={{ uri: item.account.image !== null ? `http://112.213.88.49:20000${item.account.image.url}` : defaultImage }} style={styles.avatar} />
                 <View>
                   <Text style={{ fontFamily: "Regular", fontSize: 18 }}>
-                    {item.tableNum}
+                    {item.account.displayName}
                   </Text>
                   <Text
                     style={{
@@ -119,7 +170,7 @@ const Notification = (props) => {
                       color: "#8A8F9C",
                     }}
                   >
-                    Buzz!!!
+                    {item.content}
                   </Text>
                   <Text
                     style={{
@@ -128,14 +179,10 @@ const Notification = (props) => {
                       color: "#8A8F9C",
                     }}
                   >
-                    {item.buzzTime}
+                    {moment(item.time).startOf('hour').fromNow()}
                   </Text>
                 </View>
               </View>
-              <Image
-                source={TickIcon}
-                style={{ height: 18, width: 18, top: 25 }}
-              />
             </TouchableOpacity>
           );
         }}

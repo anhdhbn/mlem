@@ -10,7 +10,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import moment from "moment";
-
+import Call from "react-native-phone-call";
 import BackICon from "../../assets/icon/provider/back.png";
 import PhoneIcon from "../../assets/icon/provider/phone.png";
 import { FlatList } from "react-native-gesture-handler";
@@ -28,6 +28,18 @@ export default function DetailOrder(props) {
     onDismissError,
     createAlert,
   } = props.route.params.toasterVisible;
+  const handleCall = (props) => {
+    const args = data.account.phone == "PHONE_EMPTY" ?
+    {
+      number: '', // String value with the number to call
+      prompt: false
+    } :
+    {
+      number: data.account.phone, // String value with the number to call
+      prompt: false, // Optional boolean property. Determines if the user should be prompt prior to the call
+    };
+    Call(args).catch(console.error);
+  };
   const handlePay = async () => {
     props.navigation.navigate("PaymentScreen");
     setModalPayVisible(false);
@@ -107,11 +119,14 @@ export default function DetailOrder(props) {
             </Text>
             <Text style={{ fontSize: 14, color: "#8A8F9C" }}>
               {data?.status?.name}{" "}
-              {moment(data.createdAt).format("HH:mm") + " - "}
-              {moment(data.createdAt).format("DD/MM/YYYY")}
+              {moment(data.updatedAt).format("HH:mm") + " - "}
+              {moment(data.updatedAt).format("DD/MM/YYYY")}
             </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+          onPress={
+            ()=>{data.account.phone != "PHONE_EMPTY"&& handleCall(data.account.phone) }
+          }>
             <Image
               source={PhoneIcon}
               style={{ width: 34, height: 34, top: 10, right: 5 }}
