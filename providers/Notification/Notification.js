@@ -56,8 +56,8 @@ const Notification = (props) => {
     getNotify()
   }, []);
   const handelDelete=async()=>{
-   await notifyServices.deleteNotify({});
-   getNotify();
+    notifyServices.deleteNotify({})
+    .then(res=>setData([]))
   }
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
