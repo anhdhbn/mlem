@@ -28,6 +28,8 @@ import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
 import menuServices from "../../providerServices/menuServices";
 import FilterBar from "./Filter";
+
+import formatPrice from "../../components/formatPrice";
 const base_url = "http://112.213.88.49:20000";
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
@@ -108,8 +110,8 @@ export default ({ navigation }) => (
 function reducer(data, action) {
   switch (action.type) {
     case "concat":
-      console.log("Length data:", data.length);
-      console.log("length new data", action.newData.length);
+      // console.log("Length data:", data.length);
+      // console.log("length new data", action.newData.length);
       let newData = data.concat(action.newData);
       return newData;
 
@@ -496,7 +498,15 @@ function Menu(props) {
                     )}
                   </View>
                 </View>
-                <View style={{ flexDirection: "row", top: 10 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+
+                    height: 50,
+                    top: 18,
+                  }}
+                >
                   <Text
                     style={{
                       fontFamily: "Reguler",
@@ -504,7 +514,7 @@ function Menu(props) {
                       fontSize: 20,
                     }}
                   >
-                    {item.priceEach}
+                    {formatPrice(item.priceEach)}
                   </Text>
                   <Image
                     source={viewMoreIcon}
