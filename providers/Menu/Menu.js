@@ -105,7 +105,9 @@ export default ({ navigation }) => (
   </MenuStack.Navigator>
 );
 
-const Menu = (props) => {
+// const reducer
+
+function Menu(props) {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
   const [selectedDish, setselectedDish] = useState();
 
@@ -120,6 +122,8 @@ const Menu = (props) => {
   const [isLoadingSkip, setIsLoadingSkip] = useState(false);
   const [isOutOfFood, setIsOutOfFood] = useState(false);
 
+  const [data, setData] = useState([]);
+
   const toggleEditMenu = (props) => {
     return () => {
       !editMenuVisible && setselectedDish(props);
@@ -127,11 +131,11 @@ const Menu = (props) => {
     };
   };
   /* xoá món ăn đang được chọn */
-  const handleDelete = async () => {
+  const handleDelete = () => {
     setIsUploading(true);
     setEditMenuVisible(false);
     // console.log("[TEST] Delete: ", selectedDish);
-    await menuServices
+    menuServices
       .deleteDish(selectedDish)
       .then((res) => {
         setIsUploading(false);
@@ -166,11 +170,9 @@ const Menu = (props) => {
     getData();
   };
 
-  /* lấy data */
-  const [data, setData] = useState([]);
-
   const getData = async () => {
     // console.log("Called get data");
+    // debugger;
 
     let params = createParams();
     console.log("Params: ", params);
@@ -190,17 +192,17 @@ const Menu = (props) => {
 
         return [];
       });
-    await setData([]);
-    console.log("Length data before concat", data.length);
-    setData(data.concat(res));
-    console.log("Length data after concat", data.length);
+    // console.log("Length data before concat", data.length);
+    // setData(data.concat(res));
+    // console.log("Length data after concat", data.length);
 
     setIsLoading(false);
     setIsLoadingSkip(false);
+    return res;
   };
 
   /* xử lý filter */
-  const handleFilter = async (newParams) => {
+  const handleFilter = (newParams) => {
     console.log("FIlter");
     setIsLoading(true);
     // console.log("New filter params: ", newParams);
@@ -215,8 +217,11 @@ const Menu = (props) => {
     newParams.orderType ? (filterParams.orderType = newParams.orderType) : null;
     newParams.statusId ? (filterParams.statusId = newParams.statusId) : null;
     setSkip(0);
+    console.log("[INFO] Skip: ", skip);
     setData([]);
-    getData();
+    console.log("[INFO] data: ", data);
+
+    //getData();
   };
 
   const handleFilterText = async (newText) => {
@@ -267,9 +272,8 @@ const Menu = (props) => {
   };
 
   useEffect(() => {
-    setData([]);
     getData();
-  }, []);
+  }, [filterParams]);
 
   const onDismissUploading = () => {
     setIsUploading(false);
@@ -402,6 +406,7 @@ const Menu = (props) => {
             return (
               <TouchableOpacity
                 style={styles.card}
+                key={item.id}
                 onLongPress={toggleEditMenu(item)}
                 onPress={() => {
                   setselectedDish(item);
@@ -489,7 +494,7 @@ const Menu = (props) => {
       />
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
