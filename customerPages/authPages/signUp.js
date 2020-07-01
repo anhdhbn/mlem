@@ -82,7 +82,7 @@ export default class SignUp extends Component {
     return {
       email: this.state.email.toString(),
       password: this.state.password.toString(),
-      confirmPassword: this.state.password.toString(),
+      confirmPassword: this.state.confirmPassword.toString(),
       phone: this.state.phoneNumber.toString(),
     };
   }
@@ -99,26 +99,13 @@ export default class SignUp extends Component {
       })
       .catch((err) => {
         // console.log("==========================================");
-        const message = err;
+        const message = err.data.errors;
         console.log("[INFO] message in signUp: ", message);
-        /* message.errors.email!=undefined
-        ?this.setState({
-          notification: message.errors.email 
+        this.setState({
+          notification: message.email ||message.phone ||message.password || message.confirmPassword
         })
-        :message.errors.phone!= null 
-        ? this.setState({
-          notification:  message.errors.phone 
-        })
-        :message.errors.password!=null
-        ?this.setState({
-          notification: message.errors.password 
-        })
-        :message.errors.confirmPassword !=null 
-        ?this.setState({
-          notification:message.errors.confirmPassword
-        }):null
-        this.setAlert(true);*/
-        this.setLoading(false); 
+        this.setAlert(true);
+        this.setLoading(false);  
       });
 
 
