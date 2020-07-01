@@ -17,7 +17,7 @@ export default function (propsIn) {
     <drawer.Navigator
       initialRouteName="Home"
       drawerContent={(props) => (
-        <CustomContent {...props} signOut={propsIn.signOut} />
+        <CustomContent {...props} response={propsIn.response} signOut={propsIn.signOut} />
       )}
     >
       <drawer.Screen name="Home" component={OrderStackScreen} />
