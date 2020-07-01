@@ -151,10 +151,10 @@ export default function (props) {
           source={
             props.modal.linkImageDish
               ? {
-                  uri:
-                    "http://112.213.88.49:20000" +
-                    props.modal.linkImageDish.url,
-                }
+                uri:
+                  "http://112.213.88.49:20000" +
+                  props.modal.linkImageDish.url,
+              }
               : null
           }
           style={{
@@ -169,7 +169,7 @@ export default function (props) {
           <Text style={{ fontSize: 10 }}>{props.modal.describeDish}</Text>
           {props.modal.promoPrice ? (
             <View>
-              <Text
+              {props.modal.promoPrice != props.modal.price && <Text
                 style={{
                   textDecorationLine: "line-through",
                   color: "grey",
@@ -177,18 +177,18 @@ export default function (props) {
                 }}
               >
                 {formatPrice(props.modal.price)}
-              </Text>
+              </Text>}
               <Text style={{ fontSize: 20 }}>
                 {formatPrice(props.modal.promoPrice)}
               </Text>
             </View>
           ) : (
-            <View>
-              <Text style={{ fontSize: 20 }}>
-                {formatPrice(props.modal.price)}
-              </Text>
-            </View>
-          )}
+              <View>
+                <Text style={{ fontSize: 20 }}>
+                  {formatPrice(props.modal.price)}
+                </Text>
+              </View>
+            )}
         </View>
         <View style={{ right: 20, marginTop: 50 }}>
           <View style={{ flexDirection: "row" }}>
@@ -235,211 +235,211 @@ export default function (props) {
           <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
         </View>
       ) : (
-        <View>
-          {!smallSize ? (
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                padding: 2,
-              }}
-            >
-              <View>
-                <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>Nhỏ</Text>
-                <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
-                  {formatPrice(props.modal.promoPrice)}
-                </Text>
+          <View>
+            {!smallSize ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  position: "relative",
+                  padding: 2,
+                }}
+              >
+                <View>
+                  <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>Nhỏ</Text>
+                  <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
+                    {formatPrice(props.modal.promoPrice)}
+                  </Text>
+                </View>
               </View>
-            </View>
-          ) : (
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                padding: 2,
-              }}
-            >
-              <View>
-                <Text style={{ paddingLeft: 10 }}>Nhỏ</Text>
-                <Text style={{ paddingLeft: 10 }}>
-                  {formatPrice(props.modal.promoPrice)}
-                </Text>
-              </View>
-              <View style={{ right: -30, position: "absolute" }}>
-                <CheckBox
-                  checked={props.modal.smallSize}
-                  checkedColor="red"
-                  onPress={() => {
-                    let selectSize = {
-                      smallSize: true,
-                      normalSize: false,
-                      bigSize: false,
-                    };
-
-                    props.selectOrderSize(selectSize);
-
-                    // console.log("[INFO] smail type: ", props.modal.smallSize);
-                  }}
-                />
-              </View>
-            </View>
-          )}
-          {normalSize ? (
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                padding: 2,
-              }}
-            >
-              <View>
-                <Text style={{ paddingLeft: 10 }}>Vừa (+ 20%)</Text>
-                <Text style={{ paddingLeft: 10 }}>
-                  {formatPrice(props.modal.promoPrice * 1.2)}
-                </Text>
-              </View>
-              <View style={{ right: -30, position: "absolute" }}>
-                <CheckBox
-                  checked={props.modal.normalSize}
-                  checkedColor="red"
-                  onPress={() => {
-                    let selectSize = {
-                      smallSize: false,
-                      normalSize: true,
-                      bigSize: false,
-                    };
-
-                    props.selectOrderSize(selectSize);
-                  }}
-                />
-              </View>
-            </View>
-          ) : (
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                padding: 2,
-              }}
-            >
-              <View>
-                <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
-                  Vừa (+ 20%)
-                </Text>
-                <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
-                  {formatPrice(props.modal.promoPrice * 1.2)}
-                </Text>
-              </View>
-            </View>
-          )}
-          {bigSize ? (
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                padding: 2,
-              }}
-            >
-              <View>
-                <Text style={{ paddingLeft: 10 }}>Lớn (+ 50%)</Text>
-                <Text style={{ paddingLeft: 10 }}>
-                  {formatPrice(props.modal.promoPrice * 1.5)}
-                </Text>
-              </View>
-              <View style={{ right: -30, position: "absolute" }}>
-                <CheckBox
-                  checked={props.modal.bigSize}
-                  checkedColor="red"
-                  onPress={() => {
-                    let selectSize = {
-                      smallSize: false,
-                      normalSize: false,
-                      bigSize: true,
-                    };
-                    props.selectOrderSize(selectSize);
-                  }}
-                />
-              </View>
-            </View>
-          ) : (
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                padding: 2,
-              }}
-            >
-              <View>
-                <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
-                  Lớn (+ 50%)
-                </Text>
-                <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
-                  {formatPrice(props.modal.promoPrice * 1.5)}
-                </Text>
-              </View>
-            </View>
-          )}
-          <View
-            style={{
-              bottom: 0,
-              backgroundColor: "#fff",
-              borderRadius: 10,
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                position: "relative",
-                height: 40,
-                padding: 10,
-                marginBottom: 30,
-                marginTop: 10,
-              }}
-            >
-              <View style={{ paddingLeft: 10 }}>
-                <Text style={{ fontSize: 19, fontWeight: "bold" }}>
-                  {formatPrice(props.totalPromoPrice)}
-                </Text>
-                <Text
+            ) : (
+                <View
                   style={{
-                    textDecorationLine: "line-through",
-                    color: "grey",
+                    flexDirection: "row",
+                    position: "relative",
+                    padding: 2,
                   }}
                 >
-                  {formatPrice(props.totalPrice)}
-                </Text>
+                  <View>
+                    <Text style={{ paddingLeft: 10 }}>Nhỏ</Text>
+                    <Text style={{ paddingLeft: 10 }}>
+                      {formatPrice(props.modal.promoPrice)}
+                    </Text>
+                  </View>
+                  <View style={{ right: -30, position: "absolute" }}>
+                    <CheckBox
+                      checked={props.modal.smallSize}
+                      checkedColor="red"
+                      onPress={() => {
+                        let selectSize = {
+                          smallSize: true,
+                          normalSize: false,
+                          bigSize: false,
+                        };
+
+                        props.selectOrderSize(selectSize);
+
+                        // console.log("[INFO] smail type: ", props.modal.smallSize);
+                      }}
+                    />
+                  </View>
+                </View>
+              )}
+            {normalSize ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  position: "relative",
+                  padding: 2,
+                }}
+              >
+                <View>
+                  <Text style={{ paddingLeft: 10 }}>Vừa (+ 20%)</Text>
+                  <Text style={{ paddingLeft: 10 }}>
+                    {formatPrice(props.modal.promoPrice * 1.2)}
+                  </Text>
+                </View>
+                <View style={{ right: -30, position: "absolute" }}>
+                  <CheckBox
+                    checked={props.modal.normalSize}
+                    checkedColor="red"
+                    onPress={() => {
+                      let selectSize = {
+                        smallSize: false,
+                        normalSize: true,
+                        bigSize: false,
+                      };
+
+                      props.selectOrderSize(selectSize);
+                    }}
+                  />
+                </View>
               </View>
-              <View style={{ position: "absolute", right: 20 }}>
-                <TouchableOpacity
+            ) : (
+                <View
                   style={{
-                    backgroundColor: "#DC0000",
-                    borderRadius: 8,
-                    width: 100,
-                    height: 45,
-                    marginTop: 10,
-                  }}
-                  onPress={() => {
-                    props.addDish2Order();
-                    props.hideModal();
+                    flexDirection: "row",
+                    position: "relative",
+                    padding: 2,
                   }}
                 >
-                  <Text
+                  <View>
+                    <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
+                      Vừa (+ 20%)
+                </Text>
+                    <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
+                      {formatPrice(props.modal.promoPrice * 1.2)}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            {bigSize ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  position: "relative",
+                  padding: 2,
+                }}
+              >
+                <View>
+                  <Text style={{ paddingLeft: 10 }}>Lớn (+ 50%)</Text>
+                  <Text style={{ paddingLeft: 10 }}>
+                    {formatPrice(props.modal.promoPrice * 1.5)}
+                  </Text>
+                </View>
+                <View style={{ right: -30, position: "absolute" }}>
+                  <CheckBox
+                    checked={props.modal.bigSize}
+                    checkedColor="red"
+                    onPress={() => {
+                      let selectSize = {
+                        smallSize: false,
+                        normalSize: false,
+                        bigSize: true,
+                      };
+                      props.selectOrderSize(selectSize);
+                    }}
+                  />
+                </View>
+              </View>
+            ) : (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    position: "relative",
+                    padding: 2,
+                  }}
+                >
+                  <View>
+                    <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
+                      Lớn (+ 50%)
+                </Text>
+                    <Text style={{ paddingLeft: 10, color: "#8A8F9C" }}>
+                      {formatPrice(props.modal.promoPrice * 1.5)}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            <View
+              style={{
+                bottom: 0,
+                backgroundColor: "#fff",
+                borderRadius: 10,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  position: "relative",
+                  height: 40,
+                  padding: 10,
+                  marginBottom: 30,
+                  marginTop: 10,
+                }}
+              >
+                <View style={{ paddingLeft: 10 }}>
+                  <Text style={{ fontSize: 19, fontWeight: "bold" }}>
+                    {formatPrice(props.totalPromoPrice)}
+                  </Text>
+                  {props.totalPromoPrice != props.totalPrice && <Text
                     style={{
-                      fontSize: 15,
-                      padding: 8,
-                      paddingBottom: 8,
-                      paddingLeft: 10,
-                      color: "#fff",
+                      textDecorationLine: "line-through",
+                      color: "grey",
                     }}
                   >
-                    Thêm món
+                    {formatPrice(props.totalPrice)}
+                  </Text>}
+                </View>
+                <View style={{ position: "absolute", right: 20 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#DC0000",
+                      borderRadius: 8,
+                      width: 100,
+                      height: 45,
+                      marginTop: 10,
+                    }}
+                    onPress={() => {
+                      props.addDish2Order();
+                      props.hideModal();
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        padding: 8,
+                        paddingBottom: 8,
+                        paddingLeft: 10,
+                        color: "#fff",
+                      }}
+                    >
+                      Thêm món
                   </Text>
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      )}
+        )}
     </Overlay>
   );
 }
