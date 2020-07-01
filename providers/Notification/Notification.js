@@ -27,39 +27,52 @@ export default ({ navigation }) => (
     <NotificationStack.Screen
       name="NotificationPage"
       component={Notification}
-      options={{
-        title: "Thông báo",
-        headerLeft: () => (
-          <Icon.Button
-            name="ios-menu"
-            size={25}
-            backgroundColor="#D20000"
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          ></Icon.Button>
-        ),
-        headerRight: () => (
-          <Delete.Button
-            name="delete"
-            size={25}
-            backgroundColor="#D20000"
-            onPress={() => {
-             // notifyServices.deleteNotify({})
-              handleDeleteNotify()
-            }}
-          />
-        )
-      }}
+      options={({navigation,route})=>(
+        {
+          title: "Thông báo",
+          headerLeft: () => (
+            <Icon.Button
+              name="ios-menu"
+              size={25}
+              backgroundColor="#D20000"
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            ></Icon.Button>
+          ),
+          
+        }
+      )}
     />
   </NotificationStack.Navigator>
 );
+
+/*  */
 const Notification = (props) => {
   const [data, setData] = useState([]);
   const [skip, setSkip] = useState(0)
   useEffect(() => {
+    testSignalIR()
     getNotify()
   }, []);
+  const handelDelete=async()=>{
+   await notifyServices.deleteNotify({});
+   getNotify();
+  }
+  React.useLayoutEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <Delete.Button
+            name="delete"
+            size={25}
+            backgroundColor="#D20000"
+            onPress={() => {
+            handelDelete()
+            }}
+          />
+      ),
+    });
+  }, [props.navigation]);
   const getNotify = () => {
     NotifyServices.list({
       take: 10,
@@ -102,7 +115,7 @@ const Notification = (props) => {
         })
         .then(() => {
           connection.on("sendToProvider", (user, data) => {
-            getNotify()
+           getNotify()
             console.log("[INFO] call back data in signalR: ", user, data);
           });
         });
@@ -118,8 +131,6 @@ const Notification = (props) => {
   }
   return (
     <View style={styles.container}>
-      {console.log(data[0])
-      }
       <FlatList
         data={data}
         keyExtractor={(item) => {
@@ -147,7 +158,7 @@ const Notification = (props) => {
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                <Image source={{ uri: item.account.image !== null ? `http://112.213.88.49:20000/${item.account.image.url}` : defaultImage }} style={styles.avatar} />
+                <Image source={{ uri: item.account.image !== null ? `http://112.213.88.49:20000${item.account.image.url}` : defaultImage }} style={styles.avatar} />
                 <View>
                   <Text style={{ fontFamily: "Regular", fontSize: 18 }}>
                     {item.account.displayName}
