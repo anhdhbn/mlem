@@ -43,15 +43,16 @@ export default class SignUp extends Component {
       comparePasswordError: null,
       notification: null,
       loading: false,
-      email: "vietlinh15@coldmail.com",
-      phoneNumber: "1234567890",
-      password: "1234567890",
-      confirmPassword: "1234567890",
+      email: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
     };
 
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePhoneNumber = this.handlePhoneNumber.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
+    this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
     this.setLoading = this.setLoading.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.getSignUpData = this.getSignUpData.bind(this);
@@ -89,7 +90,7 @@ export default class SignUp extends Component {
   async onSubmit() {
     this.setLoading(true);
     let data = this.getSignUpData();
-    // console.log(data);
+     console.log(data);
     await authServices
       .createUser(data)
       .then(async res => {
@@ -98,13 +99,26 @@ export default class SignUp extends Component {
       })
       .catch((err) => {
         // console.log("==========================================");
-        const message = err.data.errors;
+        const message = err;
         console.log("[INFO] message in signUp: ", message);
-        this.setState({
-          notification: message.email || message.phone || message.password || message.confirmPassword
+        /* message.errors.email!=undefined
+        ?this.setState({
+          notification: message.errors.email 
         })
-        this.setAlert(true);
-        this.setLoading(false);
+        :message.errors.phone!= null 
+        ? this.setState({
+          notification:  message.errors.phone 
+        })
+        :message.errors.password!=null
+        ?this.setState({
+          notification: message.errors.password 
+        })
+        :message.errors.confirmPassword !=null 
+        ?this.setState({
+          notification:message.errors.confirmPassword
+        }):null
+        this.setAlert(true);*/
+        this.setLoading(false); 
       });
 
 
