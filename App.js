@@ -189,6 +189,7 @@ export default function App({ navigation }) {
 
           return true;
         } else if (typeData === "gg") {
+          
           await AsyncStorage.setItem("typeToken", "gg");
           await AsyncStorage.setItem("Id", data.Id);
           await AsyncStorage.setItem("DisplayName", data.DisplayName);
@@ -249,7 +250,7 @@ export default function App({ navigation }) {
             headerShown: false,
           }}
         >
-          {checkNoInternet() ? (
+          {false ? (
             <Stack.Screen name="NoInternet" component={NoInternetScreen} />
           ) : state.isLoading ? (
             // We haven't finished checking for the token yet

@@ -419,11 +419,11 @@ export default (props) => {
                           rounded
                           size={45}
                           source={
-                            item.account.image.url
+                            item.account.image?.url
                               ? {
                                   uri:
                                     "http://112.213.88.49:20000" +
-                                    item.account.image.url,
+                                    item.account.image?.url,
                                 }
                               : require("../assets/icon/user.png")
                           }
@@ -463,7 +463,7 @@ export default (props) => {
                         <View style={{ flexDirection: "row" }}>
                           <AirbnbRating
                             count={5}
-                            defaultRating={item.foodAccountMapping.rate}
+                            defaultRating={item.foodAccountMapping?.rate}
                             isDisabled={true}
                             size={15}
                             showRating={false}
