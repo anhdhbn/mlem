@@ -22,7 +22,7 @@ import Call from "react-native-phone-call";
 export default function DetailOrder(props) {
   const [data, setData] = useState(null);
   useEffect(() => {
-    // console.log(props.route.params.data);
+    // //console.log(props.route.params.data);
     setData(props.route.params.data);
     props.route.params.data.orderContents.map((item) => {
       return item.quantity;

@@ -35,7 +35,7 @@ export default function DetailOrder(props) {
     isError,
   } = props.route.params.toasterVisible;
   useEffect(() => {
-    // console.log(props.route.params.data);
+    // //console.log(props.route.params.data);
     setData(props.route.params.data);
     props.route.params.data.orderContents.map((item) => {
       return item.quantity;
@@ -82,7 +82,7 @@ export default function DetailOrder(props) {
       .catch((err) => {
         createAlert(err.data.errors.reservations);
       });
-    /* console.log(JSON.stringify(res)) */
+    /* //console.log(JSON.stringify(res)) */
     /* res.errors !== null
       ?
       setToasterApproveVis({ status: true, title: res.errors.statusId })

@@ -91,7 +91,7 @@ export default function (props) {
                     borderRadius: 10,
                   }}
                   onPress={() => {
-                    // console.log("[INFO] Click item in cardList.js: ", item);
+                    // //console.log("[INFO] Click item in cardList.js: ", item);
                     navigation.navigate("Review", { data: item });
                   }}
                 >

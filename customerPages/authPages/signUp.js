@@ -90,7 +90,7 @@ export default class SignUp extends Component {
   async onSubmit() {
     this.setLoading(true);
     let data = this.getSignUpData();
-     console.log(data);
+     //console.log(data);
     await authServices
       .createUser(data)
       .then(async res => {
@@ -98,60 +98,14 @@ export default class SignUp extends Component {
         this.setLoading(false);
       })
       .catch((err) => {
-        // console.log("==========================================");
         const message = err.data.errors;
-        console.log("[INFO] message in signUp: ", message);
         this.setState({
           notification: message.email ||message.phone ||message.password || message.confirmPassword
         })
         this.setAlert(true);
         this.setLoading(false);  
       });
-
-
   }
-
-  setEmailError = () => {
-    this.setState({ emailError: "Email không hợp lệ" });
-  };
-
-  cleanEmailError = () => {
-    this.setState({ emailError: null });
-  };
-
-  setPhoneNumberError = () => {
-    this.setState({ phoneNumberError: "SDT không hợp lệ" });
-  };
-
-  cleanPhoneNumberError = () => {
-    this.setState({ phoneNumberError: null });
-  };
-
-  setPasswordError = () => {
-    this.setState({ passwordError: "Mật khẩu không hợp lệ" });
-  };
-
-  cleanPasswordError = () => {
-    this.setState({ passwordError: null });
-  };
-
-  setConfirmPasswordError = () => {
-    this.setState({ confirmPasswordError: "Mật khẩu không hợp lệ" });
-  };
-
-  cleanConfirmPasswordError = () => {
-    this.setState({ confirmPasswordError: null });
-  };
-
-  setComparePasswordError = () => {
-    this.setState({
-      comparePasswordError: "Mật khẩu xác nhận không trùng khớp",
-    });
-  };
-
-  cleanComparePasswoedError = () => {
-    this.setState({ comparePasswordError: null });
-  };
 
   setAlert = (visible) => {
     this.setState({ visibleAlert: visible });

@@ -11,7 +11,7 @@ import CustomContent from "./CustomContent";
 export default function (propsIn) {
   const drawer = createDrawerNavigator();
   // useEffect(() => {
-  //   console.log("Props in slidebar: ", propsIn);
+  //   //console.log("Props in slidebar: ", propsIn);
   // }, []);
   return (
     <drawer.Navigator

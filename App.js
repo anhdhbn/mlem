@@ -143,8 +143,8 @@ export default function App({ navigation }) {
       // dispatch({ type: "RESTORE_TOKEN", token: userToken });
 
       if (typeToken && response) {
-        console.log("[INFO] Reuse token type : ", typeToken);
-        console.log(response);
+        ////console.log("[INFO] Reuse token type : ", typeToken);
+        ////console.log(response);
         dispatch({
           type: "SIGN_IN",
           token: "userToken",
@@ -166,7 +166,7 @@ export default function App({ navigation }) {
 
   const checkNoInternet = () => {
     const netInfo = useNetInfo();
-    // console.log("[INFO] Use netinfo: ", netInfo.isConnected);
+    // //console.log("[INFO] Use netinfo: ", netInfo.isConnected);
     return !netInfo.isConnected;
   };
 
@@ -177,8 +177,8 @@ export default function App({ navigation }) {
           await AsyncStorage.setItem("typeToken", "fb");
           await AsyncStorage.setItem("userToken", data);
           let response = await authServices.postTokenFB({ token: data });
-          console.log("[INFO] Response after auth with fb: ", response);
-          console.log(data);
+          ////console.log("[INFO] Response after auth with fb: ", response);
+          //console.log(data);
 
           dispatch({
             type: "SIGN_IN",
@@ -194,8 +194,8 @@ export default function App({ navigation }) {
           await AsyncStorage.setItem("DisplayName", data.DisplayName);
           await AsyncStorage.setItem("Email", data.Email);
           let response = await authServices.postTokenGG(data);
-          // console.log("[INFO] Response after auth with gg: ", response);
-          // console.log(data);
+          // //console.log("[INFO] Response after auth with gg: ", response);
+          // //console.log(data);
 
           dispatch({
             type: "SIGN_IN",
@@ -211,9 +211,9 @@ export default function App({ navigation }) {
           // After getting token, we need to persist the token using `AsyncStorage`
           // In the example, we'll use a dummy token
           let response = await authServices.login(data).catch((reason) => {
-            // console.log("==========================================");
+            // //console.log("==========================================");
             const message = reason.response.data;
-            console.log(message);
+            //console.log(message);
 
             return false;
           });
@@ -230,7 +230,7 @@ export default function App({ navigation }) {
         try {
           AsyncStorage.removeItem("userToken");
           AsyncStorage.removeItem("typeToken");
-          console.log("Remove usertoken");
+          //console.log("Remove usertoken");
         } catch (e) {
           // remove error
         }

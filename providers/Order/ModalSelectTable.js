@@ -46,7 +46,7 @@ export default function (props) {
     getEmptyTable();
   }, []);
   const onselect = async (id) => {
-    /* console.log("[INFO] Code in modal select food: ", id); */
+    /* //console.log("[INFO] Code in modal select food: ", id); */
     let lengthData = emptyTable.length;
     let newData = [];
     let numClicked = 0;
@@ -55,7 +55,7 @@ export default function (props) {
           numClicked ++
         }
     }
-    console.log(numOrderTable);
+    //console.log(numOrderTable);
     
     for (let index = 0; index < lengthData; index++) {
       if (emptyTable[index].id === id) {

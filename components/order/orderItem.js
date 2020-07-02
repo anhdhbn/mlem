@@ -38,7 +38,7 @@ export default function (props) {
         flexDirection: "row",
       }}
     >
-      {/* {console.log("Props in orderItem: ", props.dish)} */}
+      {/* {//console.log("Props in orderItem: ", props.dish)} */}
       <View style={{ flex: 5, flexDirection: "column", marginLeft: 10 }}>
         <Text style={{ fontSize: 20 }}>
           {props.dish.nameDish + " " + nameSize()}

@@ -102,7 +102,7 @@ export default class order extends Component {
 
   setIsLoadingList = (id, value) => {
     if (id >= 9) {
-      console.log("Out of range loading list");
+      //console.log("Out of range loading list");
     } else {
       let newIsLoadingList = [];
       for (let index = 0; index < 9; index++) {
@@ -114,7 +114,7 @@ export default class order extends Component {
       }
 
       this.setState({ isLoadingList: newIsLoadingList });
-      console.log("INFO: newIsLoadingList: ", newIsLoadingList);
+      //console.log("INFO: newIsLoadingList: ", newIsLoadingList);
     }
   };
 
@@ -141,13 +141,13 @@ export default class order extends Component {
   };
 
   setIsLoadingSkip = (value) => {
-    console.log("IsLoading: ", value);
+    //console.log("IsLoading: ", value);
     this.setState({ isLoadingSkip: value });
   };
 
   createParams = (code = 0) => {
     if (code >= this.state.skipFoods.length) {
-      console.log("Không tìm thấy code của món để tăng skip. Code = ", code);
+      //console.log("Không tìm thấy code của món để tăng skip. Code = ", code);
       return {};
     } else if (code === 0) {
       let params = {
@@ -184,7 +184,7 @@ export default class order extends Component {
         skip: this.state.skipFoods[code].skip,
         take: 10,
       };
-      // console.log(params);
+      // //console.log(params);
       return params;
     }
   };
@@ -202,7 +202,7 @@ export default class order extends Component {
         newSkipFoods.push(this.state.skipFoods[index]);
       }
     }
-    // console.log("[INFO] New skipFoods: ", newSkipFoods);
+    // //console.log("[INFO] New skipFoods: ", newSkipFoods);
     this.setState({ skipFoods: newSkipFoods });
   };
 
@@ -219,7 +219,7 @@ export default class order extends Component {
         newSkipFoods.push(this.state.skipFoods[index]);
       }
     }
-    // console.log("[INFO] New skipFoods: ", newSkipFoods);
+    // //console.log("[INFO] New skipFoods: ", newSkipFoods);
     this.setState({ skipFoods: newSkipFoods });
   };
 
@@ -228,10 +228,10 @@ export default class order extends Component {
       let newList = this.state.listAllDish.concat(addList);
       await this.setState({ listAllDish: newList });
     } else if (code == 1) {
-      // console.log("Before concat: ", this.state.listLau.length);
-      // console.log("Add concat: ", addList.length);
+      // //console.log("Before concat: ", this.state.listLau.length);
+      // //console.log("Add concat: ", addList.length);
       let newList = this.state.listLau.concat(addList);
-      // console.log("After concat: ", newList.length);
+      // //console.log("After concat: ", newList.length);
       await this.setState({ listLau: newList });
     } else if (code == 2) {
       let newList = this.state.listHaisan.concat(addList);
@@ -264,15 +264,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(1);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(1, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(1);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(1);
           }
@@ -280,7 +280,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -295,15 +295,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(2);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(2, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(2);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(2);
           }
@@ -311,7 +311,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -326,15 +326,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(3);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(3, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(3);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(3);
           }
@@ -342,7 +342,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -357,15 +357,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(4);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(4, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(4);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(4);
           }
@@ -373,7 +373,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -388,15 +388,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(5);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(5, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(5);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(5);
           }
@@ -404,7 +404,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -419,15 +419,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(6);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(6, true);
 
       let response = await orderSevices
         .listFoodTopOrder(params)
         .then((res) => {
           this.countSkips(6);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(6);
           }
@@ -435,7 +435,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -450,15 +450,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(7);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(7, true);
 
       let response = await orderSevices
         .listFoodRecently(params)
         .then((res) => {
           this.countSkips(7);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(7);
           }
@@ -466,7 +466,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -481,15 +481,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(8);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(8, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(8);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(8);
           }
@@ -497,7 +497,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -512,15 +512,15 @@ export default class order extends Component {
       this.createAlert("Đã tải xong danh sách");
     } else {
       let params = this.createParams(0);
-      // console.log("[INFO] Params to get list lau: ", params);
+      // //console.log("[INFO] Params to get list lau: ", params);
       this.setIsLoadingList(0, true);
 
       let response = await orderSevices
         .listFood(params)
         .then((res) => {
           this.countSkips(0);
-          // console.log("Respone in ", JSON.stringify(res));
-          // console.log("Length response: ", res.length);
+          // //console.log("Respone in ", JSON.stringify(res));
+          // //console.log("Length response: ", res.length);
           if (res.length < 10) {
             this.setOutOfDish(0);
           }
@@ -528,7 +528,7 @@ export default class order extends Component {
           return res;
         })
         .catch((err) => {
-          console.log("Error in get list lau", err.data);
+          //console.log("Error in get list lau", err.data);
           this.createAlert(err.data);
           return [];
         });
@@ -540,18 +540,18 @@ export default class order extends Component {
   };
 
   handClickIcon = (dish) => {
-    console.log("DISH click: ", dish);
+    //console.log("DISH click: ", dish);
     this.toggleModal(dish);
     // this.props.route.params.addOrderDish(nameDish);
   };
 
   toggleModal = (dish) => {
-    // console.log("[INFO] dish input: ", dish);
+    // //console.log("[INFO] dish input: ", dish);
     this.setState({
       showModal: !this.state.showModal,
       modal: { ...dish, smallSize: false, normalSize: true, bigSize: false },
     });
-    // console.log("[INFO] Modal dish: ", this.state.modal);
+    // //console.log("[INFO] Modal dish: ", this.state.modal);
   };
 
   hideModal = () => {
@@ -559,7 +559,7 @@ export default class order extends Component {
   };
 
   subNumOfDish = () => {
-    // console.log("[INFO] Press sub num of dish.", nameDish);
+    // //console.log("[INFO] Press sub num of dish.", nameDish);
     this.setState(
       {
         modal: {
@@ -581,7 +581,7 @@ export default class order extends Component {
   };
 
   addNumOfDish = () => {
-    // console.log("[INFO] Press add num of dish.", nameDish);
+    // //console.log("[INFO] Press add num of dish.", nameDish);
     this.setState(
       {
         modal: {
@@ -604,7 +604,7 @@ export default class order extends Component {
   };
 
   selectOrderSize = (selectSize) => {
-    // console.log("[INFO] Select size: ", selectSize);
+    // //console.log("[INFO] Select size: ", selectSize);
     this.removeDish2Order();
     this.setState(
       {
@@ -627,7 +627,7 @@ export default class order extends Component {
 
   addDish2Order = () => {
     // B52
-    // console.log("Add dish to order: ", this.state.modal);
+    // //console.log("Add dish to order: ", this.state.modal);
     this.props.route.params.addDish2Order(this.state.modal);
   };
 
@@ -709,7 +709,7 @@ export default class order extends Component {
     } else if (code == 8) {
       this.setState({ listDishRender: this.state.listDishSortL2H });
     }
-    // console.log("[INFO] New List Dish: ", this.state.listDishRender);
+    // //console.log("[INFO] New List Dish: ", this.state.listDishRender);
   };
 
   isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
@@ -721,7 +721,7 @@ export default class order extends Component {
     // const expectation = path * 7;
 
     const threshhold = 320;
-    // console.log(
+    // //console.log(
     //   layoutMeasurement.height + contentOffset.y,
     //   contentSize.height - threshhold
     // );
@@ -733,7 +733,7 @@ export default class order extends Component {
 
   // Cho modal thông báo
   createAlert = (textAlert) => {
-    console.log("Create alert");
+    //console.log("Create alert");
     this.setState({ textAlert: textAlert }, () => {
       this.setAlert(true);
     });
@@ -774,7 +774,7 @@ export default class order extends Component {
 
               if (this.isCloseToBottom(nativeEvent)) {
                 //do something
-                console.log("Close to bottom");
+                //console.log("Close to bottom");
                 if (!this.state.isLoadingSkip) {
                   if (
                     !this.state.skipFoods[this.state.codeRender].isOutOfFood
@@ -865,7 +865,7 @@ export default class order extends Component {
             </View>
 
             {/* <SafeAreaView style={{ height: 350 }}> */}
-            {/* {console.log(
+            {/* {//console.log(
             "[LIST dish to render] ",
             JSON.stringify(this.state.listDishRender)
           )} */}

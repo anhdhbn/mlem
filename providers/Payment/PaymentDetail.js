@@ -49,12 +49,12 @@ export default function DetailOrder(props) {
         createAlert("Thanh toán đơn hàng thành công");
       })
       .catch((err) => {
-        // console.log(err.data.errors.statusId);
+        // //console.log(err.data.errors.statusId);
         createAlert(err.data.errors.statusId);
       });
   };
   const handleDelete = async () => {
-    //console.log('delete');
+    ////console.log('delete');
     props.navigation.navigate("PaymentScreen");
     setModalDelVisible(false);
     const res = await orderServices
@@ -63,19 +63,19 @@ export default function DetailOrder(props) {
         createAlert("Xóa đơn hàng thành công");
       })
       .catch((err) => {
-        // console.log(err.data.errors.statusId);
+        // //console.log(err.data.errors.statusId);
 
         createAlert(err.data.errors.statusId);
       });
   };
   useEffect(() => {
-    // console.log(props.route.params.data);
+    // //console.log(props.route.params.data);
     setData(props.route.params.data);
     let newArrayQuantity = props.route.params.data.orderContents.map((item) => {
       return item.quantity;
     });
     setTotalQuantity(newArrayQuantity.reduce((a, b) => a + b, 0));
-    // console.log(newArrayQuantity.reduce((a, b) => a + b, 0));
+    // //console.log(newArrayQuantity.reduce((a, b) => a + b, 0));
   }, []);
   return data ? (
     <SafeAreaView style={styles.container}>

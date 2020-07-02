@@ -56,7 +56,7 @@ export default class FilterBar extends Component {
   };
 
   setDate = (pickedDate) => {
-    // console.log("[INFO] Picked date: ", pickedDate);
+    // //console.log("[INFO] Picked date: ", pickedDate);
     this.props.renderOrdered(
       this.state.valueFilterTime,
       this.state.valueFilterStatus,

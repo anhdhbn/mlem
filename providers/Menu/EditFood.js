@@ -108,9 +108,9 @@ export default function EditFood(props) {
     }
 
     setFoodGroupMapping(newFoodGroup);
-    console.log("[INFO] Food group mapping: ", foodGroupMapping);
+    //console.log("[INFO] Food group mapping: ", foodGroupMapping);
 
-    // console.log(JSON.stringify(res));
+    // //console.log(JSON.stringify(res));
   };
 
   useEffect(() => {
@@ -180,8 +180,8 @@ export default function EditFood(props) {
         )
           .then((res) => {
             let data = JSON.parse(res.data);
-            // console.log(data.url);
-            // console.log(
+            // //console.log(data.url);
+            // //console.log(
             //   "[INFO] Uri image: ",
             //   "http://112.213.88.49:20000" + data.url
             // );
@@ -194,7 +194,7 @@ export default function EditFood(props) {
           .catch((err) => {
             // error handling ..
             Alert.log("Upload error");
-            console.log(err);
+            //console.log(err);
             setStateAvatar(false);
           });
       }
@@ -217,7 +217,7 @@ export default function EditFood(props) {
 
     let foodFoodGroupingMappings = [];
 
-    // console.log(foodGroupMapping);
+    // //console.log(foodGroupMapping);
     if (foodGroupMapping) {
       for (let index = 0; index < foodGroupMapping.length; index++) {
         foodFoodGroupingMappings.push({
@@ -243,7 +243,7 @@ export default function EditFood(props) {
 
   const submit = () => {
     let params = createParams();
-    // console.log("{INFO] Params: ", params);
+    // //console.log("{INFO] Params: ", params);
     changeFood(params);
     props.navigation.navigate("MenuProvider");
   };
@@ -259,7 +259,7 @@ export default function EditFood(props) {
 
   return (
     <>
-      {/* {console.log("[TEST] Props in edit menu: ", props.route.params)} */}
+      {/* {//console.log("[TEST] Props in edit menu: ", props.route.params)} */}
 
       <Modal
         data={{
@@ -462,7 +462,7 @@ export default function EditFood(props) {
                   }}
                   onPress={() => setvisibleFoodGroup(true)}
                 >
-                  {/* {console.log(foodGroupMapping)} */}
+                  {/* {//console.log(foodGroupMapping)} */}
 
                   {/* {setIsShowedGroupMapping(false)} BUG many render */}
                   {foodGroupMapping ? (
@@ -486,7 +486,7 @@ export default function EditFood(props) {
                       </View>
                     ) : (
                       <>
-                        {/* {console.log(
+                        {/* {//console.log(
                         "[TEST] Food group mapping: ",
                         foodGroupMapping
                       )} */}

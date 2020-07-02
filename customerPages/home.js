@@ -192,7 +192,7 @@ export default function (props) {
   const getAllFoods = async () => {
     let params = {};
     let response = await homeServices.list(params);
-    // console.log("[INFO] Response in getAllFoods: ", response);
+    // //console.log("[INFO] Response in getAllFoods: ", response);
     return response;
   };
 
@@ -205,7 +205,7 @@ export default function (props) {
 
     var currentSec = new Date().getSeconds();
     if (currentSec != delaySearch) {
-      // console.log("[INFO] params to search dish: ", params);
+      // //console.log("[INFO] params to search dish: ", params);
       setDelayDearch(currentSec);
       let response = await homeServices.list(params);
 
@@ -229,16 +229,16 @@ export default function (props) {
       },
     };
     let response = await homeServices.list(params);
-    // console.log("[INFO] Response in home after getListFoods: ", response);
+    // //console.log("[INFO] Response in home after getListFoods: ", response);
     return response;
   };
 
   const getListFavouriteFoods = async () => {
     let response = await homeServices.listFavorite({});
-    console.log(
+    /*console.log(
       "[INFO] Response in home after getListFavouriteFoods: ",
       response
-    );
+    );*/
     return response;
   };
 
@@ -249,7 +249,7 @@ export default function (props) {
       // },
     };
     let response = await homeServices.listRecently(params);
-    // console.log(
+    // //console.log(
     //   "[INFO] Response in home after getListRecentlyFoods: ",
     //   response
     // );
@@ -263,7 +263,7 @@ export default function (props) {
       // },
     };
     let response = await homeServices.listTopOrder(params);
-    // console.log("[INFO] Response in home after listTopOrder: ", response);
+    // //console.log("[INFO] Response in home after listTopOrder: ", response);
     return response;
   };
 
@@ -299,18 +299,18 @@ export default function (props) {
          .build();
  
        connection.on("sendToProvider", (user, data) => {
-         console.log("[INFO] call back data in sigaanalR: ", user, data);
+         //console.log("[INFO] call back data in sigaanalR: ", user, data);
        });
  
        connection
          .start()
          .catch((error) => {
-           console.log(error);
+           //console.log(error);
            return Promise.reject();
          })
          .then(() => homeServices.createNotification({ content: notification}));
      } catch (error) {
-       console.log("[INFO] Error in signalR: ", error);
+       //console.log("[INFO] Error in signalR: ", error);
      }
   };
 
@@ -349,7 +349,7 @@ export default function (props) {
         big
         icon="bell-o"
         onPress={() => {
-          console.log("[INFO] Pressed button SIGNALR");
+          //console.log("[INFO] Pressed button SIGNALR");
           testSignalIR();
         }}
       /> */}
@@ -401,7 +401,7 @@ export default function (props) {
         <ButtonE title="Cập nhật thông tin ngay" onPress={_onsubmitModal} />
       </Overlay>
 
-      {/* {console.log("Start Rendering")} */}
+      {/* {//console.log("Start Rendering")} */}
       <ScrollView style={styles.home}>
         <HeaderImage navigateSearchPage={navigateSearchPage} />
         <NavBar

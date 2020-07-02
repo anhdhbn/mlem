@@ -65,9 +65,9 @@ class verifyCode extends Component {
       }
     })
     .catch((err) => {
-      // console.log("==========================================");
+      // //console.log("==========================================");
       const message = err.data;
-      // console.log("[INFO] message in signUp: ", message);
+      // //console.log("[INFO] message in signUp: ", message);
       
       this.setState({error:err.data})
       this.setAlert(true);
@@ -103,7 +103,7 @@ class verifyCode extends Component {
 
   // _onFinishCheckingCode(isValid, code) {
   //   this.props.navigation.navigate("RecoveryPassStep2");
-  //   console.log(isValid);
+  //   //console.log(isValid);
   //   if (!isValid) {
   //     Alert.alert("Confirmation Code", "Code not match!", [{ text: "OK" }], {
   //       cancelable: false,

@@ -34,7 +34,7 @@ export default function (props) {
   };
 
   const createAlert = async (textAlert) => {
-    // console.log("Create alert");
+    // //console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
   };
@@ -59,7 +59,7 @@ export default function (props) {
   };
 
   useEffect(() => {
-    // console.log("[INFO] Props modal in modalSelectDish: ", props.modal);
+    // //console.log("[INFO] Props modal in modalSelectDish: ", props.modal);
     fetchSize();
     setSmallSize(false);
     setNormalSize(false);
@@ -67,28 +67,28 @@ export default function (props) {
   }, [props.modal.id]);
 
   const fetchSize = async () => {
-    // console.log("Call fetch size in modalSelectDish");
+    // //console.log("Call fetch size in modalSelectDish");
     if (props.modal.id) {
       let params = { id: props.modal.id };
-      console.log(params);
+      //console.log(params);
       setIsLoading(true);
       let res = await orderServices
         .getFood(params)
         .then((res) => {
-          console.log(
+          /*console.log(
             "[INFO] Response fetch size in modalSelectDish",
             JSON.stringify(res)
-          );
+          );*/
           setFood(res);
           processSize(res);
           setIsLoading(false);
         })
         .catch((err) => {
-          // console.log(
+          // //console.log(
           //   "[INFO] Error fecch size in modalSelectDish",
           //   JSON.stringify(err)
           // );
-          console.log("[INFO] Error fetch size in modalSelectDish: ", err.data);
+          //console.log("[INFO] Error fetch size in modalSelectDish: ", err.data);
           setIsLoading(false);
           createAlert(err.data);
         });
@@ -117,7 +117,7 @@ export default function (props) {
         text={error}
       />
 
-      {/* {console.log("[INFO] Props in modelSelectDish: ", props.modal)} */}
+      {/* {//console.log("[INFO] Props in modelSelectDish: ", props.modal)} */}
       {/* {props.modal.nameDish ? props.addDish2Order() : null} */}
       <View style={{ alignItems: "center", borderBottomWidth: 0.5 }}>
         <Text
@@ -278,7 +278,7 @@ export default function (props) {
 
                         props.selectOrderSize(selectSize);
 
-                        // console.log("[INFO] smail type: ", props.modal.smallSize);
+                        // //console.log("[INFO] smail type: ", props.modal.smallSize);
                       }}
                     />
                   </View>

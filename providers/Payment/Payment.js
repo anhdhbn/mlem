@@ -73,7 +73,7 @@ const Payment = (props) => {
   };
 
   const createAlert = async (textAlert) => {
-    // console.log("Create alert");
+    // //console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
   };
@@ -99,7 +99,7 @@ const Payment = (props) => {
     });
   };
   const onselect = (code) => {
-    // console.log("On select");
+    // //console.log("On select");
     let orderedData = data.find((item) => item.code === code);
     props.navigation.navigate("PaymentDetail", {
       data: orderedData,
@@ -118,7 +118,7 @@ const Payment = (props) => {
           <Spinner />
         </View>
       ) : null}
-      {/* {console.log(props)} */}
+      {/* {//console.log(props)} */}
       <Snackbar
         visible={isError}
         _onDismissSnackBar={onDismissError}
@@ -135,14 +135,14 @@ const Payment = (props) => {
             <TouchableOpacity
               style={styles.card}
               // onpress={() => {
-              //   console.log("OnPress in Flatlist");
+              //   //console.log("OnPress in Flatlist");
               //   props.navigation.navigate("OrderedDetail");
               // }}
               onPress={() => {
                 onselect(item.code);
               }}
             >
-              {/* {console.log("Navigation in Flatlist: ", props.navigation)} */}
+              {/* {//console.log("Navigation in Flatlist: ", props.navigation)} */}
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                   {item.account.displayName}

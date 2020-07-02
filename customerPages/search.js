@@ -27,10 +27,10 @@ export default function (props) {
   const [listSearch, setListSearch] = useState([]);
   const [isUpdating, setIsUpdating] = useState(false);
   useEffect(() => {
-    console.log("[INFO] List Favourite: ", props.route.params.listFavourite);
+    //console.log("[INFO] List Favourite: ", props.route.params.listFavourite);
   }, []);
   const handClickIcon = async (newDish) => {
-    console.log("[INFO] Clicked dish: ", newDish);
+    //console.log("[INFO] Clicked dish: ", newDish);
     let newListFavourite = [];
     let isAdded = false;
     for (let index = 0; index < listFavourite.length; index++) {
@@ -50,17 +50,17 @@ export default function (props) {
 
     setIsUpdating(true);
     let params = { account_AccountFoodFavorites: newListFavourite };
-    console.log("[INFO] Params to updateLikeFood: ", JSON.stringify(params));
+    //console.log("[INFO] Params to updateLikeFood: ", JSON.stringify(params));
     let response = await homeServices.updateLikedFood(params);
     setIsUpdating(false);
     props.route.params.setListLikedDish(response.account_AccountFoodFavorites);
 
     props.route.params.fetchFavourite();
 
-    console.log(
+    /*console.log(
       "[INFO] Response in detail.js, called updateLikedFood. New list: ",
       response.account_AccountFoodFavorites
-    );
+    );*/
   };
 
   checkLikedFood = (id2Check) => {
@@ -116,7 +116,7 @@ export default function (props) {
                 placeholderTextColor="#B21"
                 onChangeText={(text) => {
                   props.route.params.searchDish(text).then((data) => {
-                    // console.log("[INFO] Response after search: ", data);
+                    // //console.log("[INFO] Response after search: ", data);
                     setListSearch(data);
                   });
                 }}

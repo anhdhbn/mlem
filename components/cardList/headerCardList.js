@@ -39,7 +39,7 @@ export default function (props) {
                 // onChangeText={(text) => {
                 //   props.searchDish(text).then((data) => {
                 //     setResponseSearch(data);
-                //     console.log("[INFO] Response after search: ", data);
+                //     //console.log("[INFO] Response after search: ", data);
                 //   });
                 // }}
               ></TextInput> */}

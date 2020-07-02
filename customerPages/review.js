@@ -46,7 +46,7 @@ export default (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const ratingCompleted = (rating) => {
-    // console.log("Rating is: " + rating);
+    // //console.log("Rating is: " + rating);
     setRate(rating);
     setChangeReview(true);
   };
@@ -56,8 +56,8 @@ export default (props) => {
     createAlert("Đang cập nhật");
     let paramsVote = { foodId: data.id, rate: rate };
     let paramsComment = { foodId: data.id, content: comment };
-    // console.log("INFO Param to vote: ", paramsVote);
-    // console.log("INFO Param to comment: ", paramsComment);
+    // //console.log("INFO Param to vote: ", paramsVote);
+    // //console.log("INFO Param to comment: ", paramsComment);
     await reviewServices
       .vote(paramsComment)
       .then((res) => {
@@ -80,23 +80,23 @@ export default (props) => {
   };
 
   useEffect(() => {
-    // console.log("Props in review: ", props.route.params.data);
+    // //console.log("Props in review: ", props.route.params.data);
 
     getReview(props.route.params.data.id);
   }, [props.route.params.data.id]);
 
   const getReview = async (id) => {
     let params = { id: id };
-    // console.log("[INFO] Params to get review: ", params);
+    // //console.log("[INFO] Params to get review: ", params);
     setIsLoading(true);
     await reviewServices
       .get(params)
       .then((res) => {
-        // console.log("response in get food: ", JSON.stringify(res));
+        // //console.log("response in get food: ", JSON.stringify(res));
         setData(res);
       })
       .catch((err) => {
-        // console.log("Error in get food: ", err);
+        // //console.log("Error in get food: ", err);
         createAlert("Lỗi: ", err.data);
       });
     setIsLoading(false);
@@ -111,7 +111,7 @@ export default (props) => {
   };
 
   const createAlert = async (textAlert) => {
-    // console.log("Create alert");
+    // //console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
   };

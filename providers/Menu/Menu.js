@@ -116,12 +116,12 @@ const Menu = (props) => {
   const handleDelete = async () => {
     setIsUploading(true);
     setEditMenuVisible(false);
-    // console.log("[TEST] Delete: ", selectedDish);
+    // //console.log("[TEST] Delete: ", selectedDish);
     await menuServices
       .deleteDish(selectedDish)
       .then((res) => {
         setIsUploading(false);
-        // console.log("[INFO] Response after delete food: ", res);
+        // //console.log("[INFO] Response after delete food: ", res);
         setIsUploaded(true);
       })
       .catch((error) => {
@@ -134,13 +134,13 @@ const Menu = (props) => {
 
   // Tùy chỉnh món ăn đang được chọn
   const handleChangeDish = async (dish) => {
-    // console.log("[INFO] Params to change dish: ", dish);
+    // //console.log("[INFO] Params to change dish: ", dish);
     setIsUploading(true);
     await menuServices
       .updateDish(dish)
       .then((res) => {
         setIsUploading(false);
-        // console.log("[INFO] Response after change dish: ", res);
+        // //console.log("[INFO] Response after change dish: ", res);
         setIsUploaded(true);
       })
       .catch((error) => {
@@ -160,7 +160,7 @@ const Menu = (props) => {
       .list({})
       .then((res) => {
         setData(res);
-        // console.log("[INFO] Response after get Data: ", res);
+        // //console.log("[INFO] Response after get Data: ", res);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -176,13 +176,13 @@ const Menu = (props) => {
     // tự động thêm bằng biến filterText được sửa mỗi khi bấm vào thanh tìm kiếm.
     let params = addFilterText(props);
     setFilterParams(params);
-    // console.log("[INFO] Filter params in Menu Provider: ", params);
+    // //console.log("[INFO] Filter params in Menu Provider: ", params);
     await menuServices
       .list(params)
       .then((res) => {
-        /* console.log('data: ',res) */
+        /* //console.log('data: ',res) */
         setData(res);
-        // console.log("[INFO] Resonse after use filter: ", res);
+        // //console.log("[INFO] Resonse after use filter: ", res);
         setIsUploading(false);
         setIsUploaded(true);
       })
@@ -194,7 +194,7 @@ const Menu = (props) => {
   };
 
   const addFilterText = (paramsIn, text = null) => {
-    // console.log("[INFO] Filter text before add: ", filterText);
+    // //console.log("[INFO] Filter text before add: ", filterText);
     if (paramsIn) {
       text
         ? (paramsIn.name = { contain: text })
@@ -220,12 +220,12 @@ const Menu = (props) => {
       ? (params = addFilterText(filterParams, null))
       : (params = addFilterText(filterParams, props));
 
-    // console.log("[INFO] Filter params in Menu Provider: ", params);
+    // //console.log("[INFO] Filter params in Menu Provider: ", params);
     await menuServices
       .list(params)
       .then((rs) => {
         setData(rs);
-        // console.log("Response after search: ", rs);
+        // //console.log("Response after search: ", rs);
         setIsUploading(false);
         setIsUploaded(true);
       })
@@ -278,15 +278,15 @@ const Menu = (props) => {
   };
 
   const createAlert = async (textAlert) => {
-    // console.log("Create alert");
+    // //console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
   };
 
   return (
     <View style={styles.container}>
-      {/* {console.log("Uploading: ", isUploading)}
-      {console.log("Uploaded: ", isUploaded)} */}
+      {/* {//console.log("Uploading: ", isUploading)}
+      {//console.log("Uploaded: ", isUploaded)} */}
       {/* <Toaster
         notification={"Đang cập nhật"}
         visible={isUploading}

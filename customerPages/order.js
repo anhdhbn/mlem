@@ -137,7 +137,7 @@ export default class order extends Component {
         dish.normalSize === dishOrdered.normalSize &&
         dish.smallSize === dishOrdered.smallSize
       ) {
-        // console.log("Remove -----------------------------");
+        // //console.log("Remove -----------------------------");
         dishOrdered.quantity = dishOrdered.quantity + 1;
         newListDish.push(dishOrdered);
       } else {
@@ -163,7 +163,7 @@ export default class order extends Component {
         dish.normalSize === dishOrdered.normalSize &&
         dish.smallSize === dishOrdered.smallSize
       ) {
-        // console.log("Remove -----------------------------");
+        // //console.log("Remove -----------------------------");
         if (dishOrdered.quantity === 1) {
           this.removeDish2Order(dish);
           return;
@@ -189,9 +189,9 @@ export default class order extends Component {
     var tpp = 0;
     if (this.state.listDish) {
       this.state.listDish.map((dishOrdered) => {
-        // console.log("[INFO] Dish price: ", dish.price);
-        // console.log("[INFO] Dish quantity: ", dish.quantity);
-        // console.log("[INFO] Dish promo price: ", dish.promoPrice);
+        // //console.log("[INFO] Dish price: ", dish.price);
+        // //console.log("[INFO] Dish quantity: ", dish.quantity);
+        // //console.log("[INFO] Dish promo price: ", dish.promoPrice);
         tp += dishOrdered.smallSize
           ? 1 * dishOrdered.quantity * dishOrdered.price
           : dishOrdered.normalSize
@@ -203,7 +203,7 @@ export default class order extends Component {
           ? 1.2 * dishOrdered.quantity * dishOrdered.promoPrice
           : 1.5 * dishOrdered.quantity * dishOrdered.promoPrice;
       });
-      // console.log(tp, tpp);
+      // //console.log(tp, tpp);
       this.setState({
         totalPrice: tp,
         totalPromoPrice: tpp,
@@ -212,7 +212,7 @@ export default class order extends Component {
   };
 
   removeDish2Order = (dish) => {
-    // console.log("Called remove dish: ", dish);
+    // //console.log("Called remove dish: ", dish);
     let newListDish = [];
 
     let lengthListDish = this.state.listDish.length;
@@ -224,7 +224,7 @@ export default class order extends Component {
         dish.normalSize === dishOrdered.normalSize &&
         dish.smallSize === dishOrdered.smallSize
       ) {
-        // console.log("Remove -----------------------------");
+        // //console.log("Remove -----------------------------");
         continue;
       } else {
         newListDish.push(dishOrdered);
@@ -238,10 +238,10 @@ export default class order extends Component {
   };
 
   addDish2Order = (dish) => {
-    // console.log("-----------------------------------------------------");
-    // console.log("=====");
+    // //console.log("-----------------------------------------------------");
+    // //console.log("=====");
     let newListDish = [];
-    // console.log(
+    // //console.log(
     //   "[INFO] Add Order Dish is called. lishDish before added",
     let added = false;
     let lengthListDish = this.state.listDish.length;
@@ -259,21 +259,21 @@ export default class order extends Component {
         newListDish.push(dishOrdered);
       }
     }
-    // console.log("[INFO] newListDish: ", newListDish);
-    // console.log("[TEST] Found dish in lishDish");
+    // //console.log("[INFO] newListDish: ", newListDish);
+    // //console.log("[TEST] Found dish in lishDish");
     // Check neu chuwa duocjw them
 
     if (!added) {
       newListDish.push(dish);
     }
-    // console.log("[INFO] newListDish: ", newListDish);
+    // //console.log("[INFO] newListDish: ", newListDish);
 
     this.setState({ listDish: newListDish }, () => {
       this.calculatePrice();
     });
 
-    // console.log("=====");
-    // console.log("-----------------------------------------------------");
+    // //console.log("=====");
+    // //console.log("-----------------------------------------------------");
     // this.setState({
     //   listDish: { ...this.state.listDish, dish },
     // });
@@ -286,7 +286,7 @@ export default class order extends Component {
       },
     };
     let response = await orderServices.getNumTableAvailable(params);
-    // console.log("[INFO] Reponse in getNumTableAvailble: ", response);
+    // //console.log("[INFO] Reponse in getNumTableAvailble: ", response);
     this.setTableAvailable(response);
   };
 
@@ -342,25 +342,25 @@ export default class order extends Component {
       total: this.state.totalPrice,
       subTotal: this.state.totalPromoPrice,
     };
-    console.log("[INFO] Params to create order: ", JSON.stringify(params));
+    //console.log("[INFO] Params to create order: ", JSON.stringify(params));
     let response = await orderServices
       .createOrder(params)
       .then((res) => {
-        console.log("Đặt bàn thành công");
+        //console.log("Đặt bàn thành công");
         this.createAlert("Đặt bàn thành công");
         this.resetOrder();
         return res;
       })
       .catch((err) => {
-        console.log("Đặt bàn thất bại", err);
+        //console.log("Đặt bàn thất bại", err);
         this.createAlert("Đặt bàn thất bại");
         return null;
       });
-    console.log("[INFO] Reponse in createOrder: ", response);
+    //console.log("[INFO] Reponse in createOrder: ", response);
   };
 
   setDate = (date) => {
-    // console.log("[INFO] Date: ", date);
+    // //console.log("[INFO] Date: ", date);
     this.getNumTableAvailable(this.state.date, this.state.time);
     this.setState({ date: date });
   };
@@ -368,11 +368,11 @@ export default class order extends Component {
   setTime = (time) => {
     this.setState({ time: time });
     this.getNumTableAvailable(this.state.date, time);
-    // console.log("[INFO] Time: ", time);
+    // //console.log("[INFO] Time: ", time);
   };
 
   createAlert = (textAlert) => {
-    console.log("Create alert");
+    //console.log("Create alert");
     this.setState({ textAlert: textAlert }, () => {
       this.setAlert(true);
     });
@@ -397,8 +397,8 @@ export default class order extends Component {
   render() {
     return (
       <>
-        {/* {console.log("[INFO] Visible Alert: ", this.state.visibleAlert)}
-        {console.log("[INFO] Text Alert: ", this.state.textAlert)} */}
+        {/* {//console.log("[INFO] Visible Alert: ", this.state.visibleAlert)}
+        {//console.log("[INFO] Text Alert: ", this.state.textAlert)} */}
         <Snackbar
           visible={this.state.visibleAlert}
           _onDismissSnackBar={this._onDismissSnackBar}

@@ -28,7 +28,7 @@ export default function CustomContent(props) {
       setVisibleBackgroundImageModal(false);
       const names = image.path.split("/");
       const name = names[names.length - 1];
-      // console.log(name)
+      // //console.log(name)
       // this.setState({ isLoading: true });
       await postImageWithUrl(image.path, name);
       // this._onsubmitModal();
@@ -60,7 +60,7 @@ export default function CustomContent(props) {
     )
       .then((res) => {
         let data = JSON.parse(res.data);
-        // console.log(data)
+        // //console.log(data)
         const path = `${baseRequest.BASE_API_URL}${data.url}`;
         // setImageId(data.id)
         setUrlImage(path)
@@ -69,25 +69,25 @@ export default function CustomContent(props) {
       .catch((err) => {
         // error handling ..
         // Alert.log("Upload error");
-        console.log(err);
+        //console.log(err);
       });
     }
 
   const changeImageId = async(id) => {
     data.imageId = id;
     let response = await profileServices.update(data).then(res => {
-      // console.log(res)
+      // //console.log(res)
       setData(res);
       
     }).catch(err => {
-      console.log(err.data)
+      //console.log(err.data)
     });
   }
 
 
  
   useEffect(() => {
-    console.log("Response after sign in: ", props.response)
+    //console.log("Response after sign in: ", props.response)
   }, [])
   return (
     <View style={{ flex: 1 }}>
@@ -216,7 +216,7 @@ export default function CustomContent(props) {
           )}
           label="Đăng xuất"
           onPress={() => {
-            // console.log("[INFO] sign out props: ", props);
+            // //console.log("[INFO] sign out props: ", props);
             props.signOut();
           }}
         />

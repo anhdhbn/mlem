@@ -130,8 +130,8 @@ export default function (props) {
     )
       .then((res) => {
         let data = JSON.parse(res.data);
-        // console.log(data.url);
-        // console.log(
+        // //console.log(data.url);
+        // //console.log(
         //   "[INFO] Uri image: ",
         //   "http://112.213.88.49:20000" + data.url
         // );
@@ -143,7 +143,7 @@ export default function (props) {
       .catch((err) => {
         // error handling ..
         Alert.log("Upload error");
-        console.log(err);
+        //console.log(err);
         setStateAvatar(false);
       });
   };
@@ -164,7 +164,7 @@ export default function (props) {
 
     let foodFoodGroupingMappings = [];
 
-    // console.log(foodGroupMapping);
+    // //console.log(foodGroupMapping);
 
     if (foodGroupMapping) {
       for (let index = 0; index < foodGroupMapping.length; index++) {
@@ -200,16 +200,16 @@ export default function (props) {
   const createFood = async () => {
     let params = createParams();
 
-    // console.log("{INFO] Params: ", params);
+    // //console.log("{INFO] Params: ", params);
     let response = await menuServices.createDish(params).catch(
       ((response) => {
-        console.log("[INFO] Response after create food: ", response);
+        //console.log("[INFO] Response after create food: ", response);
       })((error) => {
-        console.log("[INFO] Error after create food: ", error);
+        //console.log("[INFO] Error after create food: ", error);
       })
     );
     props.navigation.navigate("MenuProvider");
-    console.log("[INFO] Response in create Food: ", response);
+    //console.log("[INFO] Response in create Food: ", response);
   };
 
   return (
@@ -391,7 +391,7 @@ export default function (props) {
               }}
               onPress={() => setvisibleFoodGroup(true)}
             >
-              {/* {console.log(foodGroupMapping)} */}
+              {/* {//console.log(foodGroupMapping)} */}
               {foodGroupMapping ? (
                 <FlatList
                   showsHorizontalScrollIndicator={false}

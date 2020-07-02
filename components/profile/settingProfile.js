@@ -67,7 +67,7 @@ export default class SettingProfile extends Component {
     if (typeToken === null) {
       this.setVisibleModalChangePass(true);
     } else {
-      console.log("[INFO] Type token: ", typeToken);
+      //console.log("[INFO] Type token: ", typeToken);
       if (typeToken == "gg") {
         this.createAlert(
           "Không thể đổi mật khẩu khi đăng nhập bằng tài khoản Google"
@@ -82,7 +82,7 @@ export default class SettingProfile extends Component {
 
   // Cho modal thông báo
   createAlert = (textAlert) => {
-    console.log("Create alert");
+    //console.log("Create alert");
     this.setState({ textAlert: textAlert }, () => {
       this.setAlert(true);
     });
@@ -108,7 +108,7 @@ export default class SettingProfile extends Component {
   _onsubmitModal = async () => {
     this.hideModalChangePass();
     let params = this.createParams();
-    console.log("[INFO] Params to update password: ", params);
+    //console.log("[INFO] Params to update password: ", params);
     this.createAlert("Đang cập nhật");
 
     await authServices.changePassword(params).then(

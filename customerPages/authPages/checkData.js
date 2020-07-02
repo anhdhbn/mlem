@@ -1,11 +1,11 @@
 export default class CheckData {
   checkEmail(email) {
     if (email === null) {
-      console.log("Email null");
+      //console.log("Email null");
       return false;
     }
     if (email.length < 8) {
-      console.log("Email length");
+      //console.log("Email length");
       return false;
     }
 

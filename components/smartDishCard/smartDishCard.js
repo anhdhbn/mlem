@@ -30,7 +30,7 @@ export default class SmartDishCard extends Component {
     } else if (this.props.linkIcon) {
       return true;
     } else {
-      console.log("[ERROR] SmartDishCard Icon just work with 2 type. ");
+      //console.log("[ERROR] SmartDishCard Icon just work with 2 type. ");
       return false;
     }
   }
@@ -52,7 +52,7 @@ export default class SmartDishCard extends Component {
   }
 
   handPressIcon = () => {
-    // console.log("[INFO] Hand press icon in smartDishCard.js");
+    // //console.log("[INFO] Hand press icon in smartDishCard.js");
     let dish = {
       id: this.props.id,
       linkImageDish: this.props.linkImageDish,

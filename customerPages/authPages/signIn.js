@@ -81,13 +81,13 @@ class SignIn extends Component {
   //   if (this.checkData()) {
   //     this.setLoading(true);
   //     let data = this.getSignInData();
-  //     // console.log(data);
+  //     // //console.log(data);
 
   //     let response = await authServices.login(data);
   //     this.setLoading(false);
   //     if (response.token !== null) {
   //       this.props.navigation.navigate("MainBody", { response: response });
-  //       // console.log(response);
+  //       // //console.log(response);
   //     } else {
   //       Alert.alert("User name or password wrong :(");
   //     }
@@ -107,12 +107,12 @@ class SignIn extends Component {
         this.setLoading(true);
         let data = this.getSignInData();
 
-        // console.log("[INFO] Props in signIn: ", this.props.navigation);
-        console.log("[INFO] Sign in data: ", data);
+        // //console.log("[INFO] Props in signIn: ", this.props.navigation);
+        //console.log("[INFO] Sign in data: ", data);
 
         let isWrong = await this.props.signIn(data, false);
 
-        // console.log("[INFO] Return isWrong: ", isWrong);
+        // //console.log("[INFO] Return isWrong: ", isWrong);
         this.setIsWrong(isWrong);
 
         this.setLoading(false);
@@ -165,7 +165,7 @@ class SignIn extends Component {
   // }
 
   _onDismissSnackBar = () => {
-    console.log("Called on dissmis");
+    //console.log("Called on dissmis");
     this.setIsWrong(false);
   };
 
@@ -173,7 +173,7 @@ class SignIn extends Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log("[INFO] User info: ", userInfo);
+      //console.log("[INFO] User info: ", userInfo);
       this.setState({ userInfo });
       let params = {
         Id: userInfo.user.id,

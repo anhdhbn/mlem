@@ -66,7 +66,7 @@ const Statistic = (props) => {
     handleFilter({ TypeId: { Equal: 1 } });
   }, []);
   const onselect = (code) => {
-    // console.log("On select");
+    // //console.log("On select");
     let orderedData = data.orders.find((item) => item.code === code);
     props.navigation.navigate("StatisticDetail", {
       data: orderedData,

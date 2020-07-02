@@ -85,14 +85,17 @@ export default class recoveryPassStep2 extends Component {
               setTimeout(() => {
                 this.props.navigation.navigate("SignIn");
                 
-              }, 2000);
+              }, 5000);
             })
-            .catch(async(err) => {
-              //console.log('error: ', err);
-              await this.setState({notification:err.data})
+            .catch((err) => {
+              const message = err
+              this.setState({
+                notification: message
+              })
               this.setAlert(true);
+              this.setLoading(false);  
             });
-          this.setLoading(false);
+            this.setLoading(false);  
         }
       }
     }
@@ -100,7 +103,7 @@ export default class recoveryPassStep2 extends Component {
 
     /* if (checkData.checkPassword(this.state.password)) {
       this.cleanPasswordError();
-      console.log('aaaa');
+      //console.log('aaaa');
       
       if (checkData.checkPassword(this.state.confirmPassword)) {
         this.cleanConfirmPasswordError();
@@ -113,14 +116,14 @@ export default class recoveryPassStep2 extends Component {
           this.cleanComparePasswoedError();
           this.setLoading(true);
           let data = this.getData();
-          console.log(data);
+          //console.log(data);
 
           let response = await authServices
             .recoveryPass(data)
             .catch((reason) => {
-              // console.log("==========================================");
+              // //console.log("==========================================");
               const message = reason.response.data;
-              // console.log("[INFO] message in signUp: ", message);
+              // //console.log("[INFO] message in signUp: ", message);
               this.setAlert(true);
             });
           this.setLoading(false);
@@ -135,7 +138,7 @@ export default class recoveryPassStep2 extends Component {
       }
     } else {
       // Mat khau khong hop le
-      console.log('aaaaaaaâ');
+      //console.log('aaaaaaaâ');
       
       this.setPasswordError();
     } */

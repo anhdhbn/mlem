@@ -40,7 +40,7 @@ export default class History extends Component {
     let history = [];
     for (let index = length - 1; index >= 0; index--) {
       history.push(newHistory[index]);
-      // console.log("PUSH: ", newHistory[index].createdAt);
+      // //console.log("PUSH: ", newHistory[index].createdAt);
     }
     this.setState({ history: history });
   };
@@ -57,7 +57,7 @@ export default class History extends Component {
   getListOrder = async () => {
     let params = {};
     this.setIsLoading(true);
-    // console.log("[INFO] Params in getListOrder(): ", params);
+    // //console.log("[INFO] Params in getListOrder(): ", params);
     await historyServices
       .list(params)
       .then((res) => {
@@ -70,7 +70,7 @@ export default class History extends Component {
       });
     //let length = response.length;
     // for (let index = 0; index < length; index++) {
-    //   console.log("[INFO] Response in history: ", response[index].total);
+    //   //console.log("[INFO] Response in history: ", response[index].total);
     // }
 
     this.setIsLoading(false);
@@ -91,11 +91,11 @@ export default class History extends Component {
         this.renderOrderedInDay(codeStatus, pickedDate);
         break;
     }
-    console.log(codeTime, codeStatus, pickedDate);
+    //console.log(codeTime, codeStatus, pickedDate);
   };
 
   renderAllOrdered = async (codeStatus) => {
-    console.log("[INFO] List all rendered: ", codeStatus);
+    //console.log("[INFO] List all rendered: ", codeStatus);
     this.setIsLoading(true);
 
     let params = {
@@ -121,7 +121,7 @@ export default class History extends Component {
     this.setIsLoading(true);
     let dateEnd = moment().add(1, "days"); //"2020-05-18T03:14:35.294Z"
     let dateStart = moment().add(-7, "days"); //"2020-05-11T03:14:35.294Z"
-    console.log("[INFO] Range render ordered Date: ", dateStart, dateEnd);
+    //console.log("[INFO] Range render ordered Date: ", dateStart, dateEnd);
     let params = {
       createdAt: {
         greater: dateStart,
@@ -148,7 +148,7 @@ export default class History extends Component {
     this.setIsLoading(true);
     let dateEnd = moment().add(1, "days"); //"2020-05-18T03:14:35.294Z"
     let dateStart = moment().add(-30, "days"); //"2020-05-11T03:14:35.294Z"
-    console.log("[INFO] Range render ordered Date: ", dateStart, dateEnd);
+    //console.log("[INFO] Range render ordered Date: ", dateStart, dateEnd);
     let params = {
       createdAt: {
         greater: dateStart,
@@ -173,7 +173,7 @@ export default class History extends Component {
   };
 
   renderOrderedInDay = async (codeStatus, pickedDate) => {
-    console.log("[INFO] List rendered in day: ", codeStatus, pickedDate);
+    //console.log("[INFO] List rendered in day: ", codeStatus, pickedDate);
     this.setIsLoading(true);
 
     let params = {
@@ -198,7 +198,7 @@ export default class History extends Component {
   };
 
   createAlert = (textAlert) => {
-    console.log("Create alert");
+    //console.log("Create alert");
     this.setState({ textAlert: textAlert }, () => {
       this.setAlert(true);
     });
@@ -221,7 +221,7 @@ export default class History extends Component {
           duration={5000}
           text={this.state.textAlert}
         />
-        <Header title="Lịch sử" />
+        <Header title="Nhật ký" />
         <FilterBar renderOrdered={this.renderOrdered} />
 
         {this.state.isLoading ? (

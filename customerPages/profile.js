@@ -39,7 +39,7 @@ export default class Profile extends Component {
 
     this.createParams = this.createParams.bind(this);
     this.postImageWithUrl = this.postImageWithUrl.bind(this);
-    // console.log(props.route.params)
+    // //console.log(props.route.params)
     this.state = {
       // For react-native-image-picker
       options: {
@@ -76,7 +76,7 @@ export default class Profile extends Component {
 
   async update() {
     let params = this.createParams();
-    console.log("[INFO] Params in profile: ", params);
+    //console.log("[INFO] Params in profile: ", params);
     let response = await profileService.update(params);
     return response;
   }
@@ -106,8 +106,8 @@ export default class Profile extends Component {
     )
       .then((res) => {
         let data = JSON.parse(res.data);
-        // console.log(data);
-        // console.log(
+        // //console.log(data);
+        // //console.log(
         //   "[INFO] Uri image: ",
         //   "http://112.213.88.49:20000" + data.url
         // );
@@ -122,12 +122,12 @@ export default class Profile extends Component {
             imageId: imageId,
           },
         });
-        console.log(imageId, this.state.modal.imageId);
+        //console.log(imageId, this.state.modal.imageId);
       })
       .catch((err) => {
         // error handling ..
         Alert.log("Upload error");
-        console.log(err);
+        //console.log(err);
       });
   }
 
@@ -167,7 +167,7 @@ export default class Profile extends Component {
   _onsubmitModal = async () => {
     await this.setState({ isLoading: true });
     this.update().then((response) => {
-      console.log(response);
+      //console.log(response);
       this.setState({ data: response, isLoading: false });
     });
     this.setState({ visible: false });
@@ -182,7 +182,7 @@ export default class Profile extends Component {
         dob: newDate,
       },
     });
-    console.log("ngay sinh:", newDate);
+    //console.log("ngay sinh:", newDate);
   };
 
   hanlderAvatar = async (func) => {
@@ -191,7 +191,7 @@ export default class Profile extends Component {
       height: 300,
       cropping: true,
     }).then(async (image) => {
-      // console.log(image.path)
+      // //console.log(image.path)
       // const source = "data:image/jpeg;base64," + image.data;
       this._hideModal();
 
@@ -215,11 +215,11 @@ export default class Profile extends Component {
   };
 
   _onDismissSnackBar = () => {
-    console.log("[INFO] Ondimiss snackbar");
+    //console.log("[INFO] Ondimiss snackbar");
   };
   render() {
     return (
-      // console.log("[INFO] Props in profile: ", this.state.response),
+      // //console.log("[INFO] Props in profile: ", this.state.response),
       <>
         <SnackbarUpdating
           visible={this.state.isLoading}

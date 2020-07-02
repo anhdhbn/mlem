@@ -59,18 +59,20 @@ export default class recoveryPassStep1 extends Component {
       let isWrongEmail = false;
       this.setLoading(true);
       let data = this.getData();
-      console.log(data);
+      //console.log(data);
 
-      let response = await authServices.forgotPassword(data).catch((reason) => {
-        // console.log("==========================================");
-        const message = reason.response.data;
-        // console.log("[INFO] message in signUp: ", message);
+      let response = await authServices.forgotPassword(data)
+      .catch((err) => {
+        const message = err
+        this.setState({
+          notification: message
+        })
         this.setAlert(true);
-        isWrongEmail = true;
+        this.setLoading(false);  
       });
       this.setLoading(false);
       // TODO: Handle mail incorrect
-      // console.log("{INFO] Response in recoveryPassStep1: ", response);
+      // //console.log("{INFO] Response in recoveryPassStep1: ", response);
       if (!isWrongEmail) {    
        this.props.navigation.navigate("VerifyCode", {
           response: response,

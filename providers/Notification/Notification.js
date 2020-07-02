@@ -97,30 +97,30 @@ const Notification = (props) => {
 
   };
   const testSignalIR = () => {
-    console.log("[INFO] Called SignalR");
+    //console.log("[INFO] Called SignalR");
     try {
       let connection = new signalR.HubConnectionBuilder()
         .withUrl(BASE_URL + "/signalr")
         .build();
 
       // connection.on("sendToProvider", (user, data) => {
-      //   console.log("[INFO] call back data in signalR: ", user, data);
+      //   //console.log("[INFO] call back data in signalR: ", user, data);
       // });
 
       connection
         .start()
         .catch((error) => {
-          console.log(error);
+          //console.log(error);
           return Promise.reject();
         })
         .then(() => {
           connection.on("sendToProvider", (user, data) => {
            getNotify()
-            console.log("[INFO] call back data in signalR: ", user, data);
+            //console.log("[INFO] call back data in signalR: ", user, data);
           });
         });
     } catch (error) {
-      console.log("[INFO] Error in signalR: ", error);
+      //console.log("[INFO] Error in signalR: ", error);
     }
   };
   const handleChecked = (index) => {
@@ -138,7 +138,7 @@ const Notification = (props) => {
         }}
         /* onEndReached ={()=>{
           getMoreNotify(skip+10);
-          console.log('aaaaaaaa');
+          //console.log('aaaaaaaa');
           
         }} */
         onEndReached={

@@ -75,7 +75,7 @@ export default class FilterBar extends Component {
   };
 
   setDate = async(pickedDate) => {
-    // console.log("[INFO] Picked date: ", pickedDate);
+    // //console.log("[INFO] Picked date: ", pickedDate);
    await this.setState({
      date:pickedDate
    });

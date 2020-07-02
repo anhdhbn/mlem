@@ -112,7 +112,7 @@ export default class MainBody extends Component {
       //     </View>
       //   </ScrollableTabView>
       // </SafeAreaView>
-      // console.log("[INFO] Props in body: ", this.props),
+      // //console.log("[INFO] Props in body: ", this.props),
       <Tab.Navigator
         initialRouteName="HomeStack"
         tabBarPosition="bottom"
@@ -150,7 +150,7 @@ export default class MainBody extends Component {
           name="Diary"
           component={HistoryStackScreen}
           options={{
-            tabBarLabel: "Lịch sử",
+            tabBarLabel: "Nhật ký",
             tabBarIcon: ({ _, color }) => (
               <Icon name="address-book" color={color} size={24} />
             ),
