@@ -57,13 +57,13 @@ export default (props) => {
     createAlert("Đang cập nhật");
     let paramsVote = { foodId: data.id, rate: rate };
     let paramsComment = { foodId: data.id, content: comment };
-    console.log("INFO Param to vote: ", paramsVote);
-    console.log("INFO Param to comment: ", paramsComment);
+    // console.log("INFO Param to vote: ", paramsVote);
+    // console.log("INFO Param to comment: ", paramsComment);
     await reviewServices
       .comment(paramsComment)
       .then((res) => {
         createAlert("Chúng tôi đã nhận được nhận xét của bạn");
-        console.log("[INFO] Response after comment: ", res);
+        // console.log("[INFO] Response after comment: ", res);
       })
       .catch((err) => {
         createAlert("Cập nhật đánh giá sao thất bại");
@@ -73,7 +73,7 @@ export default (props) => {
       .vote(paramsVote)
       .then((res) => {
         createAlert("Cập nhật đánh giá sao thành công");
-        console.log("[INFO] Response after vote: ", res);
+        // console.log("[INFO] Response after vote: ", res);
       })
       .catch((err) => {
         createAlert("Cập nhật đánh giá sao thất bại");
