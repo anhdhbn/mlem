@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, TextInput, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  Alert,
+  ScrollView,
+} from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
+
+import { Avatar, Button, Overlay } from "react-native-elements";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -18,6 +28,8 @@ import CreateFood from "./AddNewFood";
 import EditFood from "./EditFood";
 import menuServices from "../../providerServices/menuServices";
 import FilterBar from "./Filter";
+
+import formatPrice from "../../components/formatPrice";
 const base_url = "http://112.213.88.49:20000";
 const MenuStack = createStackNavigator();
 /* MenuStackScreen */
@@ -95,7 +107,39 @@ export default ({ navigation }) => (
   </MenuStack.Navigator>
 );
 
-const Menu = (props) => {
+function reducer(data, action) {
+  switch (action.type) {
+    case "concat":
+      // console.log("Length data:", data.length);
+      // console.log("length new data", action.newData.length);
+      let newData = data.concat(action.newData);
+      return newData;
+
+    case "reset":
+      return [];
+
+    case "set":
+      return action.newData;
+
+    default:
+      return data;
+  }
+}
+
+function reducerSkip(data, action) {
+  switch (action.type) {
+    case "reset":
+      return 0;
+
+    case "count":
+      return data + action.newData;
+
+    default:
+      return data;
+  }
+}
+
+function Menu(props) {
   const [editMenuVisible, setEditMenuVisible] = useState(false);
   const [selectedDish, setselectedDish] = useState();
 
@@ -104,7 +148,13 @@ const Menu = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [filterText, setFilterText] = useState(null);
-  const [filterParams, setFilterParams] = useState(null);
+  const [filterParams, setFilterParams] = useState({});
+
+  const [skip, dispatchSkip] = React.useReducer(reducerSkip, 0);
+  const [isLoadingSkip, setIsLoadingSkip] = useState(false);
+  const [isOutOfFood, setIsOutOfFood] = useState(false);
+
+  const [data, dispatch] = React.useReducer(reducer, []);
 
   const toggleEditMenu = (props) => {
     return () => {
@@ -113,127 +163,133 @@ const Menu = (props) => {
     };
   };
   /* xoá món ăn đang được chọn */
-  const handleDelete = async () => {
+  const handleDelete = () => {
     setIsUploading(true);
     setEditMenuVisible(false);
-    // //console.log("[TEST] Delete: ", selectedDish);
-    await menuServices
+    // console.log("[TEST] Delete: ", selectedDish);
+    menuServices
       .deleteDish(selectedDish)
       .then((res) => {
         setIsUploading(false);
-        // //console.log("[INFO] Response after delete food: ", res);
+        // console.log("[INFO] Response after delete food: ", res);
         setIsUploaded(true);
       })
       .catch((error) => {
         setIsUploading(false);
         setIsUploaded(true);
-        createAlert(error.data);
+        createAlert("Lỗi khi xóa món");
       });
     getData();
   };
 
   // Tùy chỉnh món ăn đang được chọn
   const handleChangeDish = async (dish) => {
-    // //console.log("[INFO] Params to change dish: ", dish);
+    // console.log("[INFO] Params to change dish: ", dish);
     setIsUploading(true);
     await menuServices
       .updateDish(dish)
       .then((res) => {
         setIsUploading(false);
-        // //console.log("[INFO] Response after change dish: ", res);
+        // console.log("[INFO] Response after change dish: ", res);
         setIsUploaded(true);
       })
       .catch((error) => {
         setIsUploading(false);
         setIsUploaded(true);
 
-        createAlert(error.data);
+        createAlert("Lỗi khi sửa món");
       });
     getData();
   };
 
-  /* lấy data */
-  const [data, setData] = useState([]);
   const getData = async () => {
-    setIsLoading(true);
-    await menuServices
-      .list({})
+    // console.log("Called get data");
+    // debugger;
+
+    let params = createParams();
+    // console.log("Params: ", params);
+    let res = await menuServices
+      .list(params)
       .then((res) => {
-        setData(res);
-        // //console.log("[INFO] Response after get Data: ", res);
-        setIsLoading(false);
+        // console.log("[INFO] Response after get Data: ", res.length);
+        dispatchSkip({ type: "count", newData: res.length });
+        if (res.length < 10) {
+          setIsOutOfFood(true);
+        }
+
+        dispatch({
+          type: "concat",
+          newData: res,
+        });
+
+        return res;
       })
       .catch((error) => {
-        createAlert(error.data);
-        setIsLoading(false);
+        createAlert("Lỗi get data");
+
+        return [];
       });
+
+    setIsLoading(false);
+    setIsLoadingSkip(false);
+    return res;
   };
+
   /* xử lý filter */
-  const handleFilter = async (props) => {
-    setIsUploading(true);
+  const handleFilter = (newParams) => {
+    // console.log("FIlter");
+    setIsLoading(true);
+    // console.log("New filter params: ", newParams);
+    // console.log("Params before get new: ", filterParams);
 
     // Thêm filter text
     // tự động thêm bằng biến filterText được sửa mỗi khi bấm vào thanh tìm kiếm.
-    let params = addFilterText(props);
-    setFilterParams(params);
-    // //console.log("[INFO] Filter params in Menu Provider: ", params);
-    await menuServices
-      .list(params)
-      .then((res) => {
-        /* //console.log('data: ',res) */
-        setData(res);
-        // //console.log("[INFO] Resonse after use filter: ", res);
-        setIsUploading(false);
-        setIsUploaded(true);
-      })
-      .catch((error) => {
-        createAlert(error.data);
-        setIsUploading(false);
-        setIsUploaded(true);
-      });
+
+    // newParams.foodGroupingId
+    //   ? (filterParams.foodGroupingId = newParams.foodGroupingId)
+    //   : null;
+    // newParams.orderBy ? (filterParams.orderBy = newParams.orderBy) : null;
+    // newParams.orderType ? (filterParams.orderType = newParams.orderType) : null;
+    // newParams.statusId ? (filterParams.statusId = newParams.statusId) : null;
+    newParams.skip = filterParams.skip;
+    newParams.take = filterParams.take;
+    setFilterParams(newParams);
+    dispatch({ type: "reset" });
+    dispatchSkip({ type: "reset" });
+    setIsOutOfFood(false);
+    // console.log("[INFO] Skip: ", skip);
+    // console.log("Params after get new: ", filterParams);
+    // setData([]);
+    // console.log("[INFO] data: ", data);
+
+    //getData();
   };
 
-  const addFilterText = (paramsIn, text = null) => {
-    // //console.log("[INFO] Filter text before add: ", filterText);
-    if (paramsIn) {
-      text
-        ? (paramsIn.name = { contain: text })
-        : (paramsIn.name = { contain: filterText });
-    } else {
-      let paramsIn = {
-        name: {
-          contain: text,
-        },
-      };
-      return paramsIn;
-    }
+  const handleFilterText = async (newText) => {
+    setIsLoading(true);
+    newText === ""
+      ? setFilterParams({ ...filterParams, name: { contain: null } })
+      : setFilterParams({ ...filterParams, name: { contain: newText } });
+    dispatch({ type: "reset" });
+    dispatchSkip({ type: "reset" });
+    // console.log("[INFO] Skip: ", skip);
+    setIsOutOfFood(false);
+    // let params = {};
+    // props === ""
+    //   ? (params = addFilterText(filterParams, null))
+    //   : (params = addFilterText(filterParams, props));
 
-    return paramsIn;
+    // console.log("[INFO] Filter params in Menu Provider: ", params);
+    // setData([]);
+    // await getData();
   };
 
-  const handleFilterText = async (props) => {
-    props === "" ? setFilterText(null) : setFilterText(props);
-
-    setIsUploading(true);
-    let params = {};
-    props === ""
-      ? (params = addFilterText(filterParams, null))
-      : (params = addFilterText(filterParams, props));
-
-    // //console.log("[INFO] Filter params in Menu Provider: ", params);
-    await menuServices
-      .list(params)
-      .then((rs) => {
-        setData(rs);
-        // //console.log("Response after search: ", rs);
-        setIsUploading(false);
-        setIsUploaded(true);
-      })
-      .catch((error) => {
-        createAlert(error.data);
-        setIsUploading(false);
-        setIsUploaded(true);
-      });
+  const createParams = () => {
+    let params = filterParams;
+    params.skip = skip;
+    params.take = 10;
+    // console.log("[INFO] Create params in Menu Provider: ", params);
+    return params;
   };
 
   const pressChangeDish = (data = null) => {
@@ -259,7 +315,7 @@ const Menu = (props) => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [filterParams]);
 
   const onDismissUploading = () => {
     setIsUploading(false);
@@ -278,15 +334,38 @@ const Menu = (props) => {
   };
 
   const createAlert = async (textAlert) => {
-    // //console.log("Create alert");
+    // console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
   };
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    // const path =
+    //   listDishRender.length == 0
+    //     ? 200
+    //     : contentSize.height / listDishRender.length;
+
+    // const expectation = path * 7;
+
+    const threshhold = 320;
+    // console.log(
+    //   layoutMeasurement.height + contentOffset.y,
+    //   contentSize.height - threshhold
+    // );
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - threshhold
+    );
+  };
+
   return (
     <View style={styles.container}>
-      {/* {//console.log("Uploading: ", isUploading)}
-      {//console.log("Uploaded: ", isUploaded)} */}
+      {/* {console.log("Uploading: ", isUploading)}
+      {console.log("Uploaded: ", isUploaded)} */}
       {/* <Toaster
         notification={"Đang cập nhật"}
         visible={isUploading}
@@ -335,15 +414,41 @@ const Menu = (props) => {
         ></TextInput>
       </View>
       <FilterBar handleFilter={handleFilter} />
-      {data !== [] && (
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => {
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={async ({ nativeEvent }) => {
+          const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+
+          if (isCloseToBottom(nativeEvent)) {
+            //do something
+            // console.log("Close to bottom");
+            // console.log("IsLoadingSkip: ", isLoadingSkip, isOutOfFood);
+            if (!isLoadingSkip) {
+              if (!isOutOfFood) {
+                setIsLoadingSkip(true);
+                await getData();
+                setIsLoadingSkip(false);
+              }
+            }
+          }
+        }}
+      >
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
+          </View>
+        ) : (
+          data.map((item, index) => {
             return (
               <TouchableOpacity
                 style={styles.card}
+                key={item.id}
                 onLongPress={toggleEditMenu(item)}
                 onPress={() => {
                   setselectedDish(item);
@@ -393,7 +498,15 @@ const Menu = (props) => {
                     )}
                   </View>
                 </View>
-                <View style={{ flexDirection: "row", top: 10 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+
+                    height: 50,
+                    top: 18,
+                  }}
+                >
                   <Text
                     style={{
                       fontFamily: "Reguler",
@@ -401,7 +514,7 @@ const Menu = (props) => {
                       fontSize: 20,
                     }}
                   >
-                    {item.priceEach}
+                    {formatPrice(item.priceEach)}
                   </Text>
                   <Image
                     source={viewMoreIcon}
@@ -410,9 +523,33 @@ const Menu = (props) => {
                 </View>
               </TouchableOpacity>
             );
-          }}
-        />
-      )}
+          })
+        )}
+        {isLoadingSkip ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button type="clear" loading={true} loadingStyle={{ height: 50 }} />
+          </View>
+        ) : null}
+        {isOutOfFood ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 15, color: "#D20000", padding: 4 }}>
+              Đã tải xong
+            </Text>
+          </View>
+        ) : null}
+      </ScrollView>
       <ModalEditMenu
         visible={{ editMenuVisible, toggleEditMenu }}
         deleteDish={handleDelete}
@@ -420,7 +557,7 @@ const Menu = (props) => {
       />
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

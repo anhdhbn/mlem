@@ -7,6 +7,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import moment from "moment";
 import { Avatar, Button, Overlay } from "react-native-elements";
@@ -46,7 +47,7 @@ export default (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const ratingCompleted = (rating) => {
-    // //console.log("Rating is: " + rating);
+    // console.log("Rating is: " + rating);
     setRate(rating);
     setChangeReview(true);
   };
@@ -56,12 +57,13 @@ export default (props) => {
     createAlert("Đang cập nhật");
     let paramsVote = { foodId: data.id, rate: rate };
     let paramsComment = { foodId: data.id, content: comment };
-    // //console.log("INFO Param to vote: ", paramsVote);
-    // //console.log("INFO Param to comment: ", paramsComment);
+    console.log("INFO Param to vote: ", paramsVote);
+    console.log("INFO Param to comment: ", paramsComment);
     await reviewServices
-      .vote(paramsComment)
+      .comment(paramsComment)
       .then((res) => {
         createAlert("Chúng tôi đã nhận được nhận xét của bạn");
+        console.log("[INFO] Response after comment: ", res);
       })
       .catch((err) => {
         createAlert("Cập nhật đánh giá sao thất bại");
@@ -71,6 +73,7 @@ export default (props) => {
       .vote(paramsVote)
       .then((res) => {
         createAlert("Cập nhật đánh giá sao thành công");
+        console.log("[INFO] Response after vote: ", res);
       })
       .catch((err) => {
         createAlert("Cập nhật đánh giá sao thất bại");
@@ -80,23 +83,23 @@ export default (props) => {
   };
 
   useEffect(() => {
-    // //console.log("Props in review: ", props.route.params.data);
+    // console.log("Props in review: ", props.route.params.data);
 
     getReview(props.route.params.data.id);
   }, [props.route.params.data.id]);
 
   const getReview = async (id) => {
     let params = { id: id };
-    // //console.log("[INFO] Params to get review: ", params);
+    // console.log("[INFO] Params to get review: ", params);
     setIsLoading(true);
     await reviewServices
       .get(params)
       .then((res) => {
-        // //console.log("response in get food: ", JSON.stringify(res));
+        // console.log("response in get food: ", JSON.stringify(res));
         setData(res);
       })
       .catch((err) => {
-        // //console.log("Error in get food: ", err);
+        // console.log("Error in get food: ", err);
         createAlert("Lỗi: ", err.data);
       });
     setIsLoading(false);
@@ -111,7 +114,7 @@ export default (props) => {
   };
 
   const createAlert = async (textAlert) => {
-    // //console.log("Create alert");
+    // console.log("Create alert");
     await setError(textAlert);
     setIsError(true);
   };
@@ -288,22 +291,59 @@ export default (props) => {
                     {data.descreption}
                   </Text>
                 </View>
-                <SafeAreaView>
+                <KeyboardAvoidingView behavior="padding">
                   <View
                     style={{
                       flexDirection: "column",
                     }}
                   >
-                    <Text
+                    <View
                       style={{
-                        marginHorizontal: 10,
-                        fontFamily: "Regular",
-                        fontSize: 17,
-                        color: "#232A2F",
+                        flexDirection: "row",
+                        flex: 1,
+                        justifyContent: "center",
                       }}
                     >
-                      Đánh giá món ăn này
-                    </Text>
+                      <View style={{ flex: 1, justifyContent: "center" }}>
+                        <Text
+                          style={{
+                            marginHorizontal: 10,
+                            fontFamily: "Regular",
+                            fontSize: 17,
+                            color: "#232A2F",
+                          }}
+                        >
+                          Đánh giá món ăn này
+                        </Text>
+                      </View>
+                      {changeReview ? (
+                        <View
+                          style={{
+                            alignItems: "flex-end",
+                            flex: 1,
+                            fontSize: 17,
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() => {
+                              submitReview();
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "#DF0000",
+                                fontSize: 17,
+                                padding: 10,
+                                right: 0,
+                              }}
+                            >
+                              Gửi đánh giá
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
+                    </View>
                     <View style={{ marginVertical: 10 }}>
                       <AirbnbRating
                         count={5}
@@ -330,28 +370,10 @@ export default (props) => {
                           mode="outlined"
                           onChangeText={(text) => setComment(text)}
                         />
-                        <View style={{ right: 0, alignItems: "flex-end" }}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              submitReview();
-                            }}
-                          >
-                            <Text
-                              style={{
-                                color: "#DF0000",
-                                fontSize: 17,
-                                padding: 10,
-                                right: 0,
-                              }}
-                            >
-                              Gửi
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
                       </View>
                     ) : null}
                   </View>
-                </SafeAreaView>
+                </KeyboardAvoidingView>
               </View>
 
               <View style={{ margin: 10 }}>
@@ -471,7 +493,7 @@ export default (props) => {
                 })}
               </View>
             </ScrollView>
-            <View
+            {/* <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
@@ -515,7 +537,7 @@ export default (props) => {
                   />
                 </View>
               </View>
-            </View>
+            </View> */}
           </>
         )}
       </Overlay>
