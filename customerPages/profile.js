@@ -174,7 +174,7 @@ export default class Profile extends Component {
   };
 
   _setDate = (newDate) => {
-    newDate = moment(newDate).add(7, 'hours')
+    // newDate = moment(newDate).add(7, 'hours')
     this.setState({
       ...this.state,
       modal: {

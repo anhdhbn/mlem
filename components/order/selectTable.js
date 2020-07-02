@@ -25,14 +25,14 @@ export default function (props) {
         {props.numOfTable === 0 ? (
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icon/-.png")}
+              source={require("../../assets/icon/sub.png")}
               style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => props.subTable()}>
             <Image
-              source={require("../../assets/icon/-.png")}
+              source={require("../../assets/icon/sub.png")}
               style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
@@ -44,14 +44,14 @@ export default function (props) {
         {props.numOfTable < props.tableAvailable ? (
           <TouchableOpacity onPress={() => props.addTable()}>
             <Image
-              source={require("../../assets/icon/+.png")}
+              source={require("../../assets/icon/add.png")}
               style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icon/+.png")}
+              source={require("../../assets/icon/add.png")}
               style={{ width: 24, height: 24 }}
             />
           </TouchableOpacity>
@@ -70,14 +70,14 @@ export default function (props) {
         {props.numOfPeople ? (
           <TouchableOpacity onPress={() => props.subPeople()}>
             <Image
-              source={require("../../assets/icon/-.png")}
+              source={require("../../assets/icon/sub.png")}
               style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity>
             <Image
-              source={require("../../assets/icon/-.png")}
+              source={require("../../assets/icon/sub.png")}
               style={{ width: 24, height: 24 }}
             />
           </TouchableOpacity>
@@ -88,7 +88,7 @@ export default function (props) {
         </Text>
         <TouchableOpacity onPress={() => props.addPeople()}>
           <Image
-            source={require("../../assets/icon/+.png")}
+            source={require("../../assets/icon/add.png")}
             style={{ width: 25, height: 25 }}
           />
         </TouchableOpacity>

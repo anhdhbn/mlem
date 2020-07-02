@@ -18,8 +18,8 @@ import BackICon from "../../assets/icon/provider/back.png";
 import TickIcon from "../../assets/icon/tick.png";
 import CircleIcon from "../../assets/icon/circle.png";
 import ViewMore from "../../assets/icon/view_more.png";
-import addIcon from "../../assets/icon/+.png";
-import subIcon from "../../assets/icon/-.png";
+import addIcon from "../../assets/icon/add.png";
+import subIcon from "../../assets/icon/sub.png";
 
 import ModalSelectFoodGroup from "./ModalSelectFoodGroup";
 import Modal from "../Components/Modal";

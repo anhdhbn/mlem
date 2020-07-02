@@ -65,13 +65,45 @@ export default ({ navigation }) => (
   </OrderStack.Navigator>
 );
 
+function reducer(data, action) {
+  switch (action.type) {
+    case "concat":
+      // console.log("Length data:", data.length);
+      // console.log("length new data", action.newData.length);
+      let newData = data.concat(action.newData);
+      return newData;
+
+    case "reset":
+      return [];
+
+    case "set":
+      return action.newData;
+
+    default:
+      return data;
+  }
+}
+
+function reducerSkip(data, action) {
+  switch (action.type) {
+    case "reset":
+      return 0;
+
+    case "count":
+      return data + action.newData;
+
+    default:
+      return data;
+  }
+}
+
 const Order = (props) => {
-  const [data, setData] = useState([]);
+  const [data, dispatch] = React.useReducer(reducer, []);
   const [isLoading, setIsLoading] = useState(true);
 
   const [filter, setFilter] = useState({});
 
-  const [skip, setSkip] = useState(0);
+  const [skip, dispatchSkip] = React.useReducer(reducerSkip, 0);
   const [isLoadingSkip, setIsLoadingSkip] = useState(false);
   const [isOutOfFood, setIsOutOfFood] = useState(false);
 
@@ -89,9 +121,8 @@ const Order = (props) => {
     setIsError(true);
   };
   useEffect(() => {
-    setIsLoading(true);
     getData();
-  }, [isError]);
+  }, [filter]);
 
   const createParams = () => {
     console.log("Filter to get params: ", filter);
@@ -108,10 +139,15 @@ const Order = (props) => {
     let response = await orderServices
       .listOrdered(params)
       .then((res) => {
-        setSkip(skip + res.length);
+        dispatchSkip({ type: "count", newData: res.length });
         if (res.length < 10) {
           setIsOutOfFood(true);
         }
+
+        dispatch({
+          type: "concat",
+          newData: res,
+        });
         // console.log("Length response: ", res.length);
         return res;
       })
@@ -120,7 +156,6 @@ const Order = (props) => {
         return [];
       });
 
-    await setData(data.concat(response));
     setIsLoadingSkip(false);
     setIsLoading(false);
   };
@@ -128,13 +163,22 @@ const Order = (props) => {
   const handleFilter = async (newFilter) => {
     // console.log("Filter before: ", filter);
     // console.log("Props filter: ", newFilter);
-    filter.createdAt = newFilter.createdAt;
-    filter.statusId = newFilter.statusId;
-    filter.skip = 0;
-    setSkip(0);
-    setData([]);
-    getData();
+    // filter.createdAt = newFilter.createdAt;
+    // filter.statusId = newFilter.statusId;
+    // filter.skip = 0;
+    // setSkip(0);
+    // setData([]);
+    // getData();
+
+    setIsLoading(true);
+    newFilter.skip = filter.skip;
+    newFilter.take = filter.take;
+    setFilter(newFilter);
+    dispatch({ type: "reset" });
+    dispatchSkip({ type: "reset" });
+    setIsOutOfFood(false);
   };
+
   const onselect = (code) => {
     // //console.log("On select");
     let orderedData = data.find((item) => item.code === code);
@@ -173,11 +217,7 @@ const Order = (props) => {
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <View>
-          <Spinner />
-        </View>
-      ) : null}
+      {isLoading ? <View>{/* <Spinner /> */}</View> : null}
       {/* {//console.log(props)} */}
       <Snackbar
         visible={isError}

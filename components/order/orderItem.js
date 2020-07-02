@@ -44,14 +44,16 @@ export default function (props) {
           {props.dish.nameDish + " " + nameSize()}
         </Text>
         <View>
-          {props.dish.price!=props.dish.promoPrice&&<Text
-            style={{
-              textDecorationLine: "line-through",
-              color: "grey",
-            }}
-          >
-            {formatPrice(props.dish.price)}
-          </Text>}
+          {props.dish.price != props.dish.promoPrice && (
+            <Text
+              style={{
+                textDecorationLine: "line-through",
+                color: "grey",
+              }}
+            >
+              {formatPrice(props.dish.price)}
+            </Text>
+          )}
           <Text>{formatPrice(props.dish.promoPrice)}</Text>
         </View>
       </View>
@@ -60,7 +62,7 @@ export default function (props) {
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity onPress={() => props.subNumOfDish(props.dish)}>
             <Image
-              source={require("../../assets/icon/-.png")}
+              source={require("../../assets/icon/sub.png")}
               style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>
@@ -69,7 +71,7 @@ export default function (props) {
           </Text>
           <TouchableOpacity onPress={() => props.addNumOfDish(props.dish)}>
             <Image
-              source={require("../../assets/icon/+.png")}
+              source={require("../../assets/icon/add.png")}
               style={{ width: 25, height: 25 }}
             />
           </TouchableOpacity>

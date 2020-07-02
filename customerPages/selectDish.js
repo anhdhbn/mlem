@@ -900,8 +900,8 @@ export default class order extends Component {
                             : null
                         }
                         // For icon
-                        linkIconActive={require("../assets/icon/+.png")}
-                        linkIconInactive={require("../assets/icon/+.png")}
+                        linkIconActive={require("../assets/icon/add.png")}
+                        linkIconInactive={require("../assets/icon/add.png")}
                         handClickIcon={this.handClickIcon}
                         isActive={true}
                       />

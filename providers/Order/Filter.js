@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-} from "react-native";
+import { View } from "react-native";
 
 import { Picker } from "native-base";
 
@@ -23,11 +21,15 @@ export default class FilterBar extends Component {
     let params = {};
     if (this.state.valueFilterTime == "0") {
       params = {
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {
+          equal:
+            this.state.valueFilterStatus != 0
+              ? this.state.valueFilterStatus
+              : null,
+        },
       };
-      await this.props.handleFilter(params)
-      return (res);
-    } else if (this.state.valueFilterTime == '1') {
+      await this.props.handleFilter(params);
+    } else if (this.state.valueFilterTime == "1") {
       let dateEnd = moment().add(1, "days"); //"2020-05-18T03:14:35.294Z"
       let dateStart = moment().add(-7, "days"); //"2020-05-11T03:14:35.294Z"
       params = {
@@ -35,10 +37,15 @@ export default class FilterBar extends Component {
           greater: dateStart,
           less: dateEnd,
         },
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {
+          equal:
+            this.state.valueFilterStatus != 0
+              ? this.state.valueFilterStatus
+              : null,
+        },
       };
-      await this.props.handleFilter(params)
-    } else if (this.state.valueFilterTime == '2') {
+      await this.props.handleFilter(params);
+    } else if (this.state.valueFilterTime == "2") {
       let dateEnd = moment().add(1, "days"); //"2020-05-18T03:14:35.294Z"
       let dateStart = moment().add(-30, "days"); //"2020-05-11T03:14:35.294Z"
       params = {
@@ -46,18 +53,27 @@ export default class FilterBar extends Component {
           greater: dateStart,
           less: dateEnd,
         },
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {
+          equal:
+            this.state.valueFilterStatus != 0
+              ? this.state.valueFilterStatus
+              : null,
+        },
       };
-      await this.props.handleFilter(params)
-    } else if (this.state.valueFilterTime == '3') {
-
+      await this.props.handleFilter(params);
+    } else if (this.state.valueFilterTime == "3") {
       params = {
         createdAt: {
-          equal: this.state.date
+          equal: this.state.date,
         },
-        statusId: { equal: this.state.valueFilterStatus != 0 ? this.state.valueFilterStatus : null },
+        statusId: {
+          equal:
+            this.state.valueFilterStatus != 0
+              ? this.state.valueFilterStatus
+              : null,
+        },
       };
-      await this.props.handleFilter(params)
+      await this.props.handleFilter(params);
     }
   }
   onValueFilterStatusChange = async (value) => {
@@ -67,19 +83,19 @@ export default class FilterBar extends Component {
     this.handleGetData();
   };
 
-  onValueFilterTimeChange = async(value) => {
+  onValueFilterTimeChange = async (value) => {
     await this.setState({
       valueFilterTime: value,
     });
     this.handleGetData();
   };
 
-  setDate = async(pickedDate) => {
+  setDate = async (pickedDate) => {
     // //console.log("[INFO] Picked date: ", pickedDate);
-   await this.setState({
-     date:pickedDate
-   });
-   this.handleGetData();
+    await this.setState({
+      date: pickedDate,
+    });
+    this.handleGetData();
   };
 
   render() {
